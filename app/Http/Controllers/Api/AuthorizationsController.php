@@ -6,11 +6,17 @@ use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthorizationRequest;
 use App\Models\AdminUser;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AuthorizationsController extends Controller
 {
-    public function store(AuthorizationRequest $request)
+    /**
+     * @param AuthorizationRequest $request
+     * @return JsonResponse
+     * @throws InvalidRequestException
+     */
+    public function store(AuthorizationRequest $request): JsonResponse
     {
         $username = $request->username;
         $password = $request->password;
