@@ -1563,16 +1563,16 @@
         },
         {
             "name": "laravel-lang/actions",
-            "version": "1.10.0",
+            "version": "1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/actions.git",
-                "reference": "7d6be7a2ff7f2d4c0f35eb7a6b9e2ca04363b74b"
+                "reference": "61ccf44b51382bf198a4178446062c2ede1322c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/actions/zipball/7d6be7a2ff7f2d4c0f35eb7a6b9e2ca04363b74b",
-                "reference": "7d6be7a2ff7f2d4c0f35eb7a6b9e2ca04363b74b",
+                "url": "https://api.github.com/repos/Laravel-Lang/actions/zipball/61ccf44b51382bf198a4178446062c2ede1322c6",
+                "reference": "61ccf44b51382bf198a4178446062c2ede1322c6",
                 "shasum": ""
             },
             "require": {
@@ -1624,22 +1624,22 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/actions/issues",
-                "source": "https://github.com/Laravel-Lang/actions/tree/1.10.0"
+                "source": "https://github.com/Laravel-Lang/actions/tree/1.10.1"
             },
-            "time": "2025-02-25T02:36:52+00:00"
+            "time": "2025-03-10T17:07:52+00:00"
         },
         {
             "name": "laravel-lang/attributes",
-            "version": "2.13.1",
+            "version": "2.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/attributes.git",
-                "reference": "394329d99eaa990626c194c5eb39648e881ecc35"
+                "reference": "80927aa4433d9950f891b8bb72a239e421a43c7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/attributes/zipball/394329d99eaa990626c194c5eb39648e881ecc35",
-                "reference": "394329d99eaa990626c194c5eb39648e881ecc35",
+                "url": "https://api.github.com/repos/Laravel-Lang/attributes/zipball/80927aa4433d9950f891b8bb72a239e421a43c7c",
+                "reference": "80927aa4433d9950f891b8bb72a239e421a43c7c",
                 "shasum": ""
             },
             "require": {
@@ -1693,9 +1693,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/attributes/issues",
-                "source": "https://github.com/Laravel-Lang/attributes/tree/2.13.1"
+                "source": "https://github.com/Laravel-Lang/attributes/tree/2.13.3"
             },
-            "time": "2025-03-04T07:28:17+00:00"
+            "time": "2025-03-10T12:59:26+00:00"
         },
         {
             "name": "laravel-lang/common",
@@ -1861,16 +1861,16 @@
         },
         {
             "name": "laravel-lang/http-statuses",
-            "version": "3.10.1",
+            "version": "3.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/http-statuses.git",
-                "reference": "061870d98bf213bccfdc8e7421a820ee7916922d"
+                "reference": "32f9c3e9a93179ea6769844eaddfe8ae4cf3df63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/http-statuses/zipball/061870d98bf213bccfdc8e7421a820ee7916922d",
-                "reference": "061870d98bf213bccfdc8e7421a820ee7916922d",
+                "url": "https://api.github.com/repos/Laravel-Lang/http-statuses/zipball/32f9c3e9a93179ea6769844eaddfe8ae4cf3df63",
+                "reference": "32f9c3e9a93179ea6769844eaddfe8ae4cf3df63",
                 "shasum": ""
             },
             "require": {
@@ -1922,9 +1922,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/http-statuses/issues",
-                "source": "https://github.com/Laravel-Lang/http-statuses/tree/3.10.1"
+                "source": "https://github.com/Laravel-Lang/http-statuses/tree/3.10.3"
             },
-            "time": "2025-03-02T15:29:55+00:00"
+            "time": "2025-03-11T20:03:32+00:00"
         },
         {
             "name": "laravel-lang/json-fallback",
@@ -1979,16 +1979,16 @@
         },
         {
             "name": "laravel-lang/lang",
-            "version": "15.19.3",
+            "version": "15.19.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/lang.git",
-                "reference": "fde46e06f8e36ef5c93c48a97d89a879cc95f415"
+                "reference": "47f466b3c592dffae3db18e9dc608a5b690f6ea4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/fde46e06f8e36ef5c93c48a97d89a879cc95f415",
-                "reference": "fde46e06f8e36ef5c93c48a97d89a879cc95f415",
+                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/47f466b3c592dffae3db18e9dc608a5b690f6ea4",
+                "reference": "47f466b3c592dffae3db18e9dc608a5b690f6ea4",
                 "shasum": ""
             },
             "require": {
@@ -2038,7 +2038,7 @@
                 "issues": "https://github.com/Laravel-Lang/lang/issues",
                 "source": "https://github.com/Laravel-Lang/lang"
             },
-            "time": "2025-03-03T22:50:34+00:00"
+            "time": "2025-03-05T13:41:45+00:00"
         },
         {
             "name": "laravel-lang/locale-list",
@@ -2255,16 +2255,16 @@
         },
         {
             "name": "laravel-lang/moonshine",
-            "version": "1.3.3",
+            "version": "1.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/moonshine.git",
-                "reference": "d9803af6b5a367782f8f76c878d60b633d5c036f"
+                "reference": "54e1d0bb23945ce772a12ea9bf55c3dfe56984ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/moonshine/zipball/d9803af6b5a367782f8f76c878d60b633d5c036f",
-                "reference": "d9803af6b5a367782f8f76c878d60b633d5c036f",
+                "url": "https://api.github.com/repos/Laravel-Lang/moonshine/zipball/54e1d0bb23945ce772a12ea9bf55c3dfe56984ca",
+                "reference": "54e1d0bb23945ce772a12ea9bf55c3dfe56984ca",
                 "shasum": ""
             },
             "require": {
@@ -2317,9 +2317,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/moonshine/issues",
-                "source": "https://github.com/Laravel-Lang/moonshine/tree/1.3.3"
+                "source": "https://github.com/Laravel-Lang/moonshine/tree/1.3.5"
             },
-            "time": "2025-03-04T07:23:17+00:00"
+            "time": "2025-03-06T15:18:50+00:00"
         },
         {
             "name": "laravel-lang/native-country-names",
@@ -2705,16 +2705,16 @@
         },
         {
             "name": "laravel-lang/starter-kits",
-            "version": "1.1.0",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/starter-kits.git",
-                "reference": "09d3e56279a7cc07f0bbf667b5d1254d327ce7aa"
+                "reference": "99d0ddd80671d21d721c0930ec1d7e59c42cc01b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/starter-kits/zipball/09d3e56279a7cc07f0bbf667b5d1254d327ce7aa",
-                "reference": "09d3e56279a7cc07f0bbf667b5d1254d327ce7aa",
+                "url": "https://api.github.com/repos/Laravel-Lang/starter-kits/zipball/99d0ddd80671d21d721c0930ec1d7e59c42cc01b",
+                "reference": "99d0ddd80671d21d721c0930ec1d7e59c42cc01b",
                 "shasum": ""
             },
             "require": {
@@ -2766,22 +2766,22 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/starter-kits/issues",
-                "source": "https://github.com/Laravel-Lang/starter-kits/tree/1.1.0"
+                "source": "https://github.com/Laravel-Lang/starter-kits/tree/1.3.3"
             },
-            "time": "2025-03-04T07:56:55+00:00"
+            "time": "2025-03-09T08:20:05+00:00"
         },
         {
             "name": "laravel/framework",
-            "version": "v12.1.0",
+            "version": "v12.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "09f4a014c3fea7726c6824f5e04fca6ee165e328"
+                "reference": "9be5738f1ca1530055bb9d6db81f909a7ed34842"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/09f4a014c3fea7726c6824f5e04fca6ee165e328",
-                "reference": "09f4a014c3fea7726c6824f5e04fca6ee165e328",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/9be5738f1ca1530055bb9d6db81f909a7ed34842",
+                "reference": "9be5738f1ca1530055bb9d6db81f909a7ed34842",
                 "shasum": ""
             },
             "require": {
@@ -2983,7 +2983,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-03-04T16:10:42+00:00"
+            "time": "2025-03-05T15:31:19+00:00"
         },
         {
             "name": "laravel/horizon",
@@ -8480,16 +8480,16 @@
         },
         {
             "name": "laravel/pint",
-            "version": "v1.21.0",
+            "version": "v1.21.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/pint.git",
-                "reference": "531fa0871fbde719c51b12afa3a443b8f4e4b425"
+                "reference": "c44bffbb2334e90fba560933c45948fa4a3f3e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/531fa0871fbde719c51b12afa3a443b8f4e4b425",
-                "reference": "531fa0871fbde719c51b12afa3a443b8f4e4b425",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/c44bffbb2334e90fba560933c45948fa4a3f3e86",
+                "reference": "c44bffbb2334e90fba560933c45948fa4a3f3e86",
                 "shasum": ""
             },
             "require": {
@@ -8500,9 +8500,9 @@
                 "php": "^8.2.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.68.5",
-                "illuminate/view": "^11.42.0",
-                "larastan/larastan": "^3.0.4",
+                "friendsofphp/php-cs-fixer": "^3.70.2",
+                "illuminate/view": "^11.44.1",
+                "larastan/larastan": "^3.1.0",
                 "laravel-zero/framework": "^11.36.1",
                 "mockery/mockery": "^1.6.12",
                 "nunomaduro/termwind": "^2.3",
@@ -8542,7 +8542,7 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-            "time": "2025-02-18T03:18:57+00:00"
+            "time": "2025-03-11T03:22:21+00:00"
         },
         {
             "name": "laravel/sail",
@@ -10016,12 +10016,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "e7cacb4409da236548159072e5eff2c30cd3bf9c"
+                "reference": "71049148a240f6e59dde72a36469acd56b1470ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e7cacb4409da236548159072e5eff2c30cd3bf9c",
-                "reference": "e7cacb4409da236548159072e5eff2c30cd3bf9c",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/71049148a240f6e59dde72a36469acd56b1470ec",
+                "reference": "71049148a240f6e59dde72a36469acd56b1470ec",
                 "shasum": ""
             },
             "conflict": {
@@ -10122,7 +10122,7 @@
                 "codiad/codiad": "<=2.8.4",
                 "components/jquery": ">=1.0.3,<3.5",
                 "composer/composer": "<1.10.27|>=2,<2.2.24|>=2.3,<2.7.7",
-                "concrete5/concrete5": "<9.3.4",
+                "concrete5/concrete5": "<9.4.0.0-RC1-dev",
                 "concrete5/core": "<8.5.8|>=9,<9.1",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
                 "contao/comments-bundle": ">=2,<4.13.40|>=5.0.0.0-RC1-dev,<5.3.4",
@@ -10244,7 +10244,7 @@
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
                 "friendsoftypo3/openid": ">=4.5,<4.5.31|>=4.7,<4.7.16|>=6,<6.0.11|>=6.1,<6.1.6",
                 "froala/wysiwyg-editor": "<3.2.7|>=4.0.1,<=4.1.3",
-                "froxlor/froxlor": "<=2.2.0.0-RC3",
+                "froxlor/froxlor": "<=2.2.5",
                 "frozennode/administrator": "<=5.0.12",
                 "fuel/core": "<1.8.1",
                 "funadmin/funadmin": "<=5.0.2",
@@ -10349,7 +10349,7 @@
                 "lara-zeus/artemis": ">=1,<=1.0.6",
                 "lara-zeus/dynamic-dashboard": ">=3,<=3.0.1",
                 "laravel/fortify": "<1.11.1",
-                "laravel/framework": "<6.20.45|>=7,<7.30.7|>=8,<8.83.28|>=9,<9.52.17|>=10,<10.48.23|>=11,<11.31",
+                "laravel/framework": "<11.44.1|>=12,<12.1.1",
                 "laravel/laravel": ">=5.4,<5.4.22",
                 "laravel/pulse": "<1.3.1",
                 "laravel/reverb": "<1.4",
@@ -10369,6 +10369,7 @@
                 "limesurvey/limesurvey": "<6.5.12",
                 "livehelperchat/livehelperchat": "<=3.91",
                 "livewire/livewire": "<2.12.7|>=3.0.0.0-beta1,<3.5.2",
+                "livewire/volt": "<1.7",
                 "lms/routes": "<2.1.1",
                 "localizationteam/l10nmgr": "<7.4|>=8,<8.7|>=9,<9.2",
                 "luyadev/yii-helpers": "<1.2.1",
@@ -10502,7 +10503,7 @@
                 "phpmyadmin/phpmyadmin": "<5.2.2",
                 "phpmyfaq/phpmyfaq": "<3.2.5|==3.2.5|>=3.2.10,<=4.0.1",
                 "phpoffice/common": "<0.2.9",
-                "phpoffice/phpexcel": "<1.8.1",
+                "phpoffice/phpexcel": "<=1.8.2",
                 "phpoffice/phpspreadsheet": "<1.29.9|>=2,<2.1.8|>=2.2,<2.3.7|>=3,<3.9",
                 "phpseclib/phpseclib": "<2.0.47|>=3,<3.0.36",
                 "phpservermon/phpservermon": "<3.6",
@@ -10519,11 +10520,11 @@
                 "pimcore/demo": "<10.3",
                 "pimcore/ecommerce-framework-bundle": "<1.0.10",
                 "pimcore/perspective-editor": "<1.5.1",
-                "pimcore/pimcore": "<11.2.4|>=11.4.2,<11.5.3",
+                "pimcore/pimcore": "<11.5.4",
                 "pixelfed/pixelfed": "<0.11.11",
                 "plotly/plotly.js": "<2.25.2",
                 "pocketmine/bedrock-protocol": "<8.0.2",
-                "pocketmine/pocketmine-mp": "<5.11.2",
+                "pocketmine/pocketmine-mp": "<5.25.2",
                 "pocketmine/raklib": ">=0.14,<0.14.6|>=0.15,<0.15.1",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
@@ -10558,7 +10559,7 @@
                 "rap2hpoutre/laravel-log-viewer": "<0.13",
                 "react/http": ">=0.7,<1.9",
                 "really-simple-plugins/complianz-gdpr": "<6.4.2",
-                "redaxo/source": "<=5.18.1",
+                "redaxo/source": "<5.18.3",
                 "remdex/livehelperchat": "<4.29",
                 "reportico-web/reportico": "<=8.1",
                 "rhukster/dom-sanitizer": "<1.0.7",
@@ -10604,8 +10605,8 @@
                 "silverstripe/userforms": "<3|>=5,<5.4.2",
                 "silverstripe/versioned-admin": ">=1,<1.11.1",
                 "simple-updates/phpwhois": "<=1",
-                "simplesamlphp/saml2": "<4.6.14|==5.0.0.0-alpha12",
-                "simplesamlphp/saml2-legacy": "<4.6.14",
+                "simplesamlphp/saml2": "<=4.6.15|>=5.0.0.0-alpha1,<=5.0.0.0-alpha19",
+                "simplesamlphp/saml2-legacy": "<=4.6.15",
                 "simplesamlphp/simplesamlphp": "<1.18.6",
                 "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
                 "simplesamlphp/simplesamlphp-module-openid": "<1",
@@ -10884,7 +10885,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-03T20:05:19+00:00"
+            "time": "2025-03-11T22:05:10+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -11058,16 +11059,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "6.3.0",
+            "version": "6.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "d4e47a769525c4dd38cea90e5dcd435ddbbc7115"
+                "reference": "24b8fbc2c8e201bb1308e7b05148d6ab393b6959"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/d4e47a769525c4dd38cea90e5dcd435ddbbc7115",
-                "reference": "d4e47a769525c4dd38cea90e5dcd435ddbbc7115",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/24b8fbc2c8e201bb1308e7b05148d6ab393b6959",
+                "reference": "24b8fbc2c8e201bb1308e7b05148d6ab393b6959",
                 "shasum": ""
             },
             "require": {
@@ -11086,7 +11087,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "6.2-dev"
+                    "dev-main": "6.3-dev"
                 }
             },
             "autoload": {
@@ -11126,7 +11127,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/comparator/issues",
                 "security": "https://github.com/sebastianbergmann/comparator/security/policy",
-                "source": "https://github.com/sebastianbergmann/comparator/tree/6.3.0"
+                "source": "https://github.com/sebastianbergmann/comparator/tree/6.3.1"
             },
             "funding": [
                 {
@@ -11134,7 +11135,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-06T10:28:19+00:00"
+            "time": "2025-03-07T06:57:01+00:00"
         },
         {
             "name": "sebastian/complexity",

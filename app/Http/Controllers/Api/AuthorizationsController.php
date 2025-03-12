@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 class AuthorizationsController extends Controller
 {
     /**
+     * 登录获取令牌
      * @param AuthorizationRequest $request
      * @return JsonResponse
      * @throws InvalidRequestException
