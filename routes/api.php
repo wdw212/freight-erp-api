@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ActivityLogsController;
 use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\RolesController;
@@ -44,4 +45,8 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 角色 - 删除
     Route::delete('roles/{role}', [RolesController::class, 'destroy'])
         ->name('roles.destroy');
+
+    // 操作日志 - 列表
+    Route::get('activity-logs', [ActivityLogsController::class, 'index'])
+        ->name('activity-logs.index');
 });

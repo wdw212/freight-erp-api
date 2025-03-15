@@ -15,7 +15,8 @@ https://kdocs.cn/l/cd5NLMqAMT9B
 
 ### 扩展包
 
--[操作日志][https://spatie.be/docs/laravel-activitylog/v4/introduction](https://spatie.be/docs/laravel-activitylog/v4/introduction)
+- [操作日志] https://spatie.be/docs/laravel-activitylog/v4/introduction
+- [权限] https://spatie.be/docs/laravel-permission/v6/introduction]
 
 ### 文档
 

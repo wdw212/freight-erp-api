@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class InitSystemData extends Command
+class SystemInstall extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:init-system-data';
+    protected $signature = 'system:install';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '初始化系统数据';
+    protected $description = '系统安装';
 
     /**
      * Execute the console command.
