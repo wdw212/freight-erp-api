@@ -14,6 +14,10 @@ class AdminUser extends Authenticatable
 
     protected $guarded = [];
 
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
     protected $hidden = [
         'password',
     ];

@@ -21,3 +21,8 @@ https://kdocs.cn/l/cd5NLMqAMT9B
 
 【金山文档 | WPS云文档】 货运系统开发
 https://kdocs.cn/l/cd5NLMqAMT9B
+
+### 宝塔修改php版本
+
+* rm -f /usr/bin/php
+* ln -sf /www/server/php/72/bin/php /usr/bin/php

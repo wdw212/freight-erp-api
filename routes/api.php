@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\RolesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // 登录
@@ -14,6 +13,21 @@ Route::post('authorizations', [AuthorizationsController::class, 'store'])
 Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 登录信息
     Route::get('me', [AdminUsersController::class, 'me']);
+    // 账号 - 列表
+    Route::get('admin-users', [AdminUsersController::class, 'index'])
+        ->name('admin-users.index');
+    // 账号 - 新增
+    Route::post('admin-users', [AdminUsersController::class, 'store'])
+        ->name('admin-users.store');
+    // 账号 - 详情
+    Route::post('admin-users/{adminUser}', [AdminUsersController::class, 'show'])
+        ->name('admin-users.show');
+    // 账号 - 编辑
+    Route::put('admin-users/{adminUser}', [AdminUsersController::class, 'update'])
+        ->name('admin-users.update');
+    // 账号 - 删除
+    Route::delete('admin-users/{adminUser}', [AdminUsersController::class, 'destroy'])
+        ->name('admin-users.destroy');
 
     // 角色 - 列表
     Route::get('roles', [RolesController::class, 'index'])
