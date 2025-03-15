@@ -14,6 +14,7 @@ Route::post('authorizations', [AuthorizationsController::class, 'store'])
 Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 登录信息
     Route::get('me', [AdminUsersController::class, 'me']);
+
     // 账号 - 列表
     Route::get('admin-users', [AdminUsersController::class, 'index'])
         ->name('admin-users.index');
@@ -21,7 +22,7 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::post('admin-users', [AdminUsersController::class, 'store'])
         ->name('admin-users.store');
     // 账号 - 详情
-    Route::post('admin-users/{adminUser}', [AdminUsersController::class, 'show'])
+    Route::get('admin-users/{adminUser}', [AdminUsersController::class, 'show'])
         ->name('admin-users.show');
     // 账号 - 编辑
     Route::put('admin-users/{adminUser}', [AdminUsersController::class, 'update'])
