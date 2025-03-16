@@ -60,11 +60,11 @@ class AdminUsersController extends Controller
 
     /**
      * 编辑
-     * @param AdminUserRequest $request
+     * @param Request $request
      * @param AdminUser $adminUser
      * @return AdminUserInfoResource
      */
-    public function update(AdminUserRequest $request, AdminUser $adminUser): AdminUserInfoResource
+    public function update(Request $request, AdminUser $adminUser): AdminUserInfoResource
     {
         $adminUser->fill($request->all());
         $adminUser->save();
