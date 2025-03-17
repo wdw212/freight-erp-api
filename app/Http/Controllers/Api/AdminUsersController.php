@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminUserRequest;
 use App\Http\Resources\AdminUser\AdminUserInfoResource;
@@ -40,9 +41,18 @@ class AdminUsersController extends Controller
      * @param AdminUserRequest $request
      * @param AdminUser $adminUser
      * @return AdminUserInfoResource
+     * @throws InvalidRequestException
      */
     public function store(AdminUserRequest $request, AdminUser $adminUser): AdminUserInfoResource
     {
+        $data = $request->all();
+
+        // 校验用户名是否存在
+        $oldAdminUser = AdminUser::query()->where('username', $data['username'])->first();
+        if ($oldAdminUser) {
+            throw new InvalidRequestException('用户名已存在，请重试！');
+        }
+
         $adminUser->fill($request->all());
         $adminUser->save();
         return new AdminUserInfoResource($adminUser);

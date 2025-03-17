@@ -27,6 +27,9 @@ class ActivityLogResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $properties = [];
+
+
         return [
             'id' => $this->id,
             'log_name' => $this->log_name,
@@ -36,7 +39,7 @@ class ActivityLogResource extends JsonResource
             'subject_id' => $this->subject_id,
             'causer_type' => $this->causer_type,
             'causer_id' => $this->causer_id,
-            'properties' => $this->properties,
+            'properties' => $properties,
             'batch_uuid' => $this->batch_uuid,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];

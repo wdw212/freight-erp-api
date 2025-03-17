@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ActivityLogsController;
 use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
+use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\RolesController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,4 +51,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 操作日志 - 列表
     Route::get('activity-logs', [ActivityLogsController::class, 'index'])
         ->name('activity-logs.index');
+
+    // 公司类型 - 列表
+    Route::get('company-types', [CompanyTypesController::class, 'index'])
+        ->name('company-types.index');
+    // 公司类型 - 新增
+    Route::post('company-types', [CompanyTypesController::class, 'store'])
+        ->name('company-types.store');
+    // 公司类型 - 详情
+    Route::get('company-types/{companyType}', [CompanyTypesController::class, 'show'])
+        ->name('company-types.show');
+    // 公司类型 - 编辑
+    Route::put('company-types/{companyType}', [CompanyTypesController::class, 'update'])
+        ->name('company-types.update');
+    // 公司类型 - 删除
+    Route::delete('company-types/{companyType}', [CompanyTypesController::class, 'destroy'])
+        ->name('company-types.destroy');
 });
