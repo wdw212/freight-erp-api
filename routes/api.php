@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ActivityLogsController;
 use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\CompanyTypesController;
+use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\RolesController;
 use Illuminate\Support\Facades\Route;
 
@@ -67,4 +68,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 公司类型 - 删除
     Route::delete('company-types/{companyType}', [CompanyTypesController::class, 'destroy'])
         ->name('company-types.destroy');
+
+    // 公告 - 列表
+    Route::get('notices', [NoticesController::class, 'index'])
+        ->name('notices.index');
+    // 公告 - 新增
+    Route::post('notices', [NoticesController::class, 'store'])
+        ->name('notices.store');
+    // 公告 - 详情
+    Route::get('notices/{notice}', [NoticesController::class, 'show'])
+        ->name('notices.show');
+    // 公告 - 编辑
+    Route::put('notices/{notice}', [NoticesController::class, 'update'])
+        ->name('notices.update');
+    // 公告 - 删除
+    Route::delete('notices/{notice}', [NoticesController::class, 'destroy'])
+        ->name('notices.destroy');
 });
