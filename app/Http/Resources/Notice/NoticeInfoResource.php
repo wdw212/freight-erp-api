@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $adminUser
  * @property mixed $title
  * @property mixed $content
+ * @property mixed $created_at
  */
 class NoticeInfoResource extends JsonResource
 {
@@ -27,6 +28,7 @@ class NoticeInfoResource extends JsonResource
             'adminUser' => new AdminUserInfoResource($this->adminUser),
             'title' => $this->title,
             'content' => $this->content,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }
