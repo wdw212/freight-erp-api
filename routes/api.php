@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\NoticesController;
+use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\RolesController;
 use Illuminate\Support\Facades\Route;
 
@@ -84,4 +85,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 公告 - 删除
     Route::delete('notices/{notice}', [NoticesController::class, 'destroy'])
         ->name('notices.destroy');
+
+    // 公告标签 - 列表
+    Route::get('notice-tags', [NoticeTagsController::class, 'index'])
+        ->name('notice-tags.index');
+    // 公告标签 - 新增
+    Route::post('notice-tags', [NoticeTagsController::class, 'store'])
+        ->name('notice-tags.store');
+    // 公告标签 - 详情
+    Route::get('notice-tags/{noticeTag}', [NoticeTagsController::class, 'show'])
+        ->name('notice-tags.show');
+    // 公告标签 - 编辑
+    Route::put('notice-tags/{noticeTag}', [NoticeTagsController::class, 'update'])
+        ->name('notice-tags.update');
+    // 公告标签 - 删除
+    Route::delete('notice-tags/{noticeTag}', [NoticeTagsController::class, 'destroy'])
+        ->name('notice-tags.destroy');
 });
