@@ -3,17 +3,22 @@
 use App\Http\Controllers\Api\ActivityLogsController;
 use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
+use App\Http\Controllers\Api\CompanyContactsController;
 use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\RolesController;
+use App\Http\Controllers\Api\SelectOptionsController;
 use Illuminate\Support\Facades\Route;
 
 // 登录
 Route::post('authorizations', [AuthorizationsController::class, 'store'])
     ->name('authorizations.store');
+// 选择框options
+Route::get('select-options/{key}', [SelectOptionsController::class, 'index'])
+    ->name('select-options.index');
 
 // 令牌路由
 Route::group(['middleware' => 'auth:sanctum'], static function () {
@@ -136,5 +141,19 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::delete('departments/{department}', [DepartmentsController::class, 'destroy'])
         ->name('departments.destroy');
 
-    
+    // 公司通讯录 - 列表
+    Route::get('company-contacts', [CompanyContactsController::class, 'index'])
+        ->name('company-contacts.index');
+    // 公司通讯录 - 新增
+    Route::get('company-contacts', [CompanyContactsController::class, 'store'])
+        ->name('company-contacts.store');
+    // 公司通讯录 - 详情
+    Route::get('company-contacts/{companyContact}', [CompanyContactsController::class, 'show'])
+        ->name('company-contacts.show');
+    // 公司通讯录 - 编辑
+    Route::put('company-contacts/{companyContact}', [CompanyContactsController::class, 'update'])
+        ->name('company-contacts.update');
+    // 公司通讯录 - 删除
+    Route::delete('company-contacts/{companyContact}', [CompanyContactsController::class, 'destroy'])
+        ->name('company-contacts.destroy');
 });
