@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ActivityLogsController;
 use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
+use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
@@ -101,4 +102,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 公告标签 - 删除
     Route::delete('notice-tags/{noticeTag}', [NoticeTagsController::class, 'destroy'])
         ->name('notice-tags.destroy');
+
+    // 公司抬头 - 列表
+    Route::get('company-headers', [CompanyHeadersController::class, 'index'])
+        ->name('company-headers.index');
+    // 公司抬头 - 新增
+    Route::post('company-headers', [CompanyHeadersController::class, 'store'])
+        ->name('company-headers.store');
+    // 公司抬头 - 详情
+    Route::get('company-headers/{companyHeader}', [CompanyHeadersController::class, 'show'])
+        ->name('company-headers.show');
+    // 公司抬头 - 编辑
+    Route::put('company-headers/{companyHeader}', [CompanyHeadersController::class, 'update'])
+        ->name('company-headers.update');
+    // 公司抬头 - 删除
+    Route::delete('company-headers/{companyHeader}', [CompanyHeadersController::class, 'destroy'])
+        ->name('company-headers.destroy');
 });
