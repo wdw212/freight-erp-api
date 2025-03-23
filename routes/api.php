@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
+use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\RolesController;
@@ -118,4 +119,22 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 公司抬头 - 删除
     Route::delete('company-headers/{companyHeader}', [CompanyHeadersController::class, 'destroy'])
         ->name('company-headers.destroy');
+
+    // 部门 - 列表
+    Route::get('departments', [DepartmentsController::class, 'index'])
+        ->name('departments.index');
+    // 部门 - 新增
+    Route::post('departments', [DepartmentsController::class, 'store'])
+        ->name('departments.store');
+    // 部门 - 详情
+    Route::get('departments/{department}', [DepartmentsController::class, 'show'])
+        ->name('departments.show');
+    // 部门 - 编辑
+    Route::put('departments/{department}', [DepartmentsController::class, 'update'])
+        ->name('departments.update');
+    // 部门 - 删除
+    Route::delete('departments/{department}', [DepartmentsController::class, 'destroy'])
+        ->name('departments.destroy');
+
+    
 });
