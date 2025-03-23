@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class SelectOptionsController extends Controller
 {
     /**
-     * 详情
+     * 列表
      * @param $key
      * @return JsonResponse
      */

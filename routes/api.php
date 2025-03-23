@@ -145,7 +145,7 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::get('company-contacts', [CompanyContactsController::class, 'index'])
         ->name('company-contacts.index');
     // 公司通讯录 - 新增
-    Route::get('company-contacts', [CompanyContactsController::class, 'store'])
+    Route::post('company-contacts', [CompanyContactsController::class, 'store'])
         ->name('company-contacts.store');
     // 公司通讯录 - 详情
     Route::get('company-contacts/{companyContact}', [CompanyContactsController::class, 'show'])

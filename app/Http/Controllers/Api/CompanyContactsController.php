@@ -19,7 +19,10 @@ class CompanyContactsController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $companyContacts = CompanyContact::query()->orderByDesc('id')->get();
+        $companyContacts = CompanyContact::query()
+            ->with('department:id,name')
+            ->orderByDesc('id')
+            ->paginate();
         return CompanyContactResource::collection($companyContacts);
     }
 
