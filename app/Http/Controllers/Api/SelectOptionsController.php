@@ -20,7 +20,7 @@ class SelectOptionsController extends Controller
     {
         $list = match ($key) {
             'ADMIN_USER' => AdminUser::query()->get(['id', 'name'])->toArray(),
-            'DEPARTMENT' => Department::query()->get(['id', 'name'])->toArray(),
+            'DEPARTMENT' => Department::query()->where('parent_id', 0)->get(['id', 'name'])->toArray(),
             'COMPANY_TYPE' => CompanyType::query()->get(['id', 'name'])->toArray(),
             default => [],
         };
