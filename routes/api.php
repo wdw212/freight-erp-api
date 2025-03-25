@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
+use App\Http\Controllers\Api\SellersController;
 use Illuminate\Support\Facades\Route;
 
 // 登录
@@ -156,4 +157,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 公司通讯录 - 删除
     Route::delete('company-contacts/{companyContact}', [CompanyContactsController::class, 'destroy'])
         ->name('company-contacts.destroy');
+
+    // 销货单位 - 列表
+    Route::get('sellers', [SellersController::class, 'index'])
+        ->name('sellers.index');
+    // 销货单位 - 新增
+    Route::post('sellers', [SellersController::class, 'store'])
+        ->name('sellers.store');
+    // 销货单位 - 详情
+    Route::get('sellers/{seller}', [SellersController::class, 'show'])
+        ->name('sellers.show');
+    // 销货单位 - 编辑
+    Route::put('sellers/{seller}', [SellersController::class, 'update'])
+        ->name('sellers.update');
+    // 销货单位 - 删除
+    Route::delete('sellers/{seller}', [SellersController::class, 'destroy'])
+        ->name('sellers.destroy');
 });
