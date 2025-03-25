@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ActivityLogsController;
 use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\CompanyContactsController;
+use App\Http\Controllers\Api\CompanyContractsController;
 use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
@@ -173,4 +174,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 销货单位 - 删除
     Route::delete('sellers/{seller}', [SellersController::class, 'destroy'])
         ->name('sellers.destroy');
+
+    // 公司合同 - 列表
+    Route::get('company-contracts', [CompanyContractsController::class, 'index'])
+        ->name('company-contracts.index');
+    // 公司合同 - 新增
+    Route::post('company-contracts', [CompanyContractsController::class, 'store'])
+        ->name('company-contracts.store');
+    // 公司合同 - 详情
+    Route::get('company-contracts/{companyContract}', [CompanyContractsController::class, 'show'])
+        ->name('company-contracts.show');
+    // 公司合同 - 编辑
+    Route::put('company-contracts/{companyContract}', [CompanyContractsController::class, 'update'])
+        ->name('company-contracts.update');
+    // 公司合同 - 删除
+    Route::delete('company-contracts/{companyContract}', [CompanyContractsController::class, 'destroy'])
+        ->name('company-contracts.destroy');
 });
