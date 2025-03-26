@@ -13,6 +13,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $bank_name
  * @property mixed $bank_account
  * @property mixed $created_at
+ * @property mixed $name
  */
 class SellerInfoResource extends JsonResource
 {
@@ -25,6 +26,7 @@ class SellerInfoResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'tax_number' => $this->tax_number,
             'address' => $this->address,
             'phone' => $this->phone,
