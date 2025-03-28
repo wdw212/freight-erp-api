@@ -35,7 +35,7 @@ class SpecialCostRatesController extends Controller
     {
         $monthCode = $request->input('month_code');
         if (SpecialCostRate::query()->where('month_code', $monthCode)->exists()) {
-            throw new InvalidRequestException('月份已存在，请重试！');
+            throw new InvalidRequestException('汇率月份重复，选择该月份进行修改');
         }
         $specialCostRate->fill($request->all());
         $specialCostRate->save();
