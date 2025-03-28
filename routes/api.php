@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
+use App\Http\Controllers\Api\SpecialCostRatesController;
 use Illuminate\Support\Facades\Route;
 
 // 登录
@@ -21,6 +22,12 @@ Route::post('authorizations', [AuthorizationsController::class, 'store'])
 // 选择框options
 Route::get('select-options/{key}', [SelectOptionsController::class, 'index'])
     ->name('select-options.index');
+// 测试请求
+Route::get('test', function () {
+    return response()->json([
+        'message' => '请求成功'
+    ]);
+});
 
 // 令牌路由
 Route::group(['middleware' => 'auth:sanctum'], static function () {
@@ -190,4 +197,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 公司合同 - 删除
     Route::delete('company-contracts/{companyContract}', [CompanyContractsController::class, 'destroy'])
         ->name('company-contracts.destroy');
+
+    // 特殊费用比例 - 列表
+    Route::get('special-cost-rates', [SpecialCostRatesController::class, 'index'])
+        ->name('special-cost-rates.index');
+    // 特殊费用比例 - 新增
+    Route::post('special-cost-rates', [SpecialCostRatesController::class, 'store'])
+        ->name('special-cost-rates.store');
+    // 特殊费用比例 - 列表
+    Route::put('special-cost-rates/{specialCostRate}', [SpecialCostRatesController::class, 'update'])
+        ->name('special-cost-rates.update');
+    // 特殊费用比例 - 列表
+    Route::get('special-cost-rates/{specialCostRate}', [SpecialCostRatesController::class, 'show'])
+        ->name('special-cost-rates.show');
+    // 特殊费用比例 - 列表
+    Route::delete('special-cost-rates/{specialCostRate}', [SpecialCostRatesController::class, 'destroy'])
+        ->name('special-cost-rates.destroy');
 });
