@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
 use App\Http\Controllers\Api\SpecialCostRatesController;
+use App\Http\Controllers\Api\SpecialTaxRatesController;
 use Illuminate\Support\Facades\Route;
 
 // 登录
@@ -204,13 +205,26 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 特殊费用比例 - 新增
     Route::post('special-cost-rates', [SpecialCostRatesController::class, 'store'])
         ->name('special-cost-rates.store');
-    // 特殊费用比例 - 列表
+    // 特殊费用比例 - 详情
     Route::put('special-cost-rates/{specialCostRate}', [SpecialCostRatesController::class, 'update'])
         ->name('special-cost-rates.update');
-    // 特殊费用比例 - 列表
+    // 特殊费用比例 - 编辑
     Route::get('special-cost-rates/{specialCostRate}', [SpecialCostRatesController::class, 'show'])
         ->name('special-cost-rates.show');
-    // 特殊费用比例 - 列表
+    // 特殊费用比例 - 删除
     Route::delete('special-cost-rates/{specialCostRate}', [SpecialCostRatesController::class, 'destroy'])
         ->name('special-cost-rates.destroy');
+
+    // 特殊费用税点 - 列表
+    Route::get('special-tax-rates', [SpecialTaxRatesController::class, 'index'])
+        ->name('special-tax-rates.index');
+    // 特殊费用税点 - 新增
+    Route::post('special-tax-rates', [SpecialTaxRatesController::class, 'store'])
+        ->name('special-tax-rates.store');
+    // 特殊费用税点 - 详情
+    Route::get('special-tax-rates/{specialTaxRate}', [SpecialTaxRatesController::class, 'show'])
+        ->name('special-tax-rates.show');
+    // 特殊费用税点 - 编辑
+    Route::put('special-tax-rates/{specialTaxRate}', [SpecialTaxRatesController::class, 'update'])
+        ->name('special-tax-rates.update');
 });
