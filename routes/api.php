@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
 use App\Http\Controllers\Api\SpecialCostRatesController;
 use App\Http\Controllers\Api\SpecialTaxRatesController;
+use App\Http\Controllers\Api\UsdExchangeRatesController;
 use Illuminate\Support\Facades\Route;
 
 // 登录
@@ -227,4 +228,17 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 特殊费用税点 - 编辑
     Route::put('special-tax-rates/{specialTaxRate}', [SpecialTaxRatesController::class, 'update'])
         ->name('special-tax-rates.update');
+
+    // 每月美金汇率 - 列表
+    Route::get('usd-exchange-rates', [UsdExchangeRatesController::class, 'index'])
+        ->name('usd-exchange-rates.index');
+    // 每月美金汇率 - 新增
+    Route::post('usd-exchange-rates', [UsdExchangeRatesController::class, 'store'])
+        ->name('usd-exchange-rates.store');
+    // 每月美金汇率 - 详情
+    Route::get('usd-exchange-rates/{usdExchangeRate}', [UsdExchangeRatesController::class, 'show'])
+        ->name('usd-exchange-rates.show');
+    // 每月美金汇率 - 编辑
+    Route::put('usd-exchange-rates/{usdExchangeRate}', [UsdExchangeRatesController::class, 'update'])
+        ->name('usd-exchange-rates.update');
 });
