@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\OrderTypesController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
+use App\Http\Controllers\Api\ShippingCompaniesController;
 use App\Http\Controllers\Api\SpecialCostRatesController;
 use App\Http\Controllers\Api\SpecialTaxRatesController;
 use App\Http\Controllers\Api\UsdExchangeRatesController;
@@ -258,4 +259,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据类型 - 删除
     Route::delete('order-types/{orderType}', [OrderTypesController::class, 'destroy'])
         ->name('order-types.destroy');
+
+    // 船公司 - 列表
+    Route::get('shipping-companies', [ShippingCompaniesController::class, 'index'])
+        ->name('shipping-companies.index');
+    // 船公司 - 新增
+    Route::post('shipping-companies', [ShippingCompaniesController::class, 'store'])
+        ->name('shipping-companies.store');
+    // 船公司 - 详情
+    Route::get('shipping-companies/{shippingCompany}', [ShippingCompaniesController::class, 'show'])
+        ->name('shipping-companies.show');
+    // 船公司 - 编辑
+    Route::put('shipping-companies/{shippingCompany}', [ShippingCompaniesController::class, 'update'])
+        ->name('shipping-companies.update');
+    // 船公司 - 删除
+    Route::delete('shipping-companies/{shippingCompany}', [ShippingCompaniesController::class, 'destroy'])
+        ->name('shipping-companies.destroy');
 });
