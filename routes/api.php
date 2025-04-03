@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
+use App\Http\Controllers\Api\OrderTypesController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
@@ -241,4 +242,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 每月美金汇率 - 编辑
     Route::put('usd-exchange-rates/{usdExchangeRate}', [UsdExchangeRatesController::class, 'update'])
         ->name('usd-exchange-rates.update');
+
+    // 单据类型 - 列表
+    Route::get('order-types', [OrderTypesController::class, 'index'])
+        ->name('order-types.index');
+    // 单据类型 - 新增
+    Route::post('order-types', [OrderTypesController::class, 'store'])
+        ->name('order-types.store');
+    // 单据类型 - 详情
+    Route::get('order-types/{orderType}', [OrderTypesController::class, 'show'])
+        ->name('order-types.show');
+    // 单据类型 - 编辑
+    Route::put('order-types/{orderType}', [OrderTypesController::class, 'update'])
+        ->name('order-types.update');
+    // 单据类型 - 删除
+    Route::delete('order-types/{orderType}', [OrderTypesController::class, 'destroy'])
+        ->name('order-types.destroy');
 });
