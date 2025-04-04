@@ -82,7 +82,7 @@ class RolesController extends Controller
         logger($role);
         logger('--角色删除--');
         $oldRole = Role::query()->where('id', $role->id)->first();
-        logger($oldRole);
+        logger($oldRole->delete());
 //        $role->delete();
 //        $role->delete();
         return response()->noContent();
