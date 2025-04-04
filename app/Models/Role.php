@@ -11,6 +11,7 @@ class Role extends SpatieRole
 {
     use LogsActivity;
 
+
     /**
      * @return LogOptions
      */
