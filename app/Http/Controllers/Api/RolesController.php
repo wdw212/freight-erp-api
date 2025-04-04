@@ -79,7 +79,7 @@ class RolesController extends Controller
     public function destroy(Role $role): Response
     {
         logger('--角色删除--');
-        logger($role->save());
+        logger($role);
         logger('--角色删除--');
         $oldRole = Role::query()->where('id', $role->id)->first();
         logger($oldRole);
