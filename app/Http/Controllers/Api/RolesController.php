@@ -79,9 +79,10 @@ class RolesController extends Controller
     public function destroy(Role $role): Response
     {
         logger('--角色删除--');
-        logger($role);
+        logger($role->save());
         logger('--角色删除--');
-        $role->delete();
+//        $role->delete();
+//        $role->delete();
         return response()->noContent();
     }
 }
