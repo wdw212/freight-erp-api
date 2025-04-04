@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $id
  * @property mixed $name
  * @property mixed $created_at
+ * @property mixed $code
  */
 class RoleInfoResource extends JsonResource
 {
@@ -22,7 +23,8 @@ class RoleInfoResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'created_ar' => $this->created_at->format('Y-m-d H:i:s'),
+            'code' => $this->code,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }
