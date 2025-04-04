@@ -15,12 +15,33 @@ class RoleSeeder extends Seeder
     {
         Role::query()->truncate();
 
-        Role::create(['name' => '超管']);
-        Role::create(['name' => '操作']);
-        Role::create(['name' => '单证']);
-        Role::create(['name' => '商务']);
-        Role::create(['name' => '业务']);
-        Role::create(['name' => '财务']);
-        Role::create(['name' => '调度']);
+        Role::create([
+            'name' => '超管',
+            'code' => 'SUPER_ADMIN',
+        ]);
+        Role::create([
+            'name' => '操作',
+            'code' => 'OPERATE',
+        ]);
+        Role::create([
+            'name' => '单证',
+            'code' => 'DOCUMENT'
+        ]);
+        Role::create([
+            'name' => '商务',
+            'code' => 'COMMERCE',
+        ]);
+        Role::create([
+            'name' => '业务',
+            'code' => 'BUSINESS',
+        ]);
+        Role::create([
+            'name' => '财务',
+            'code' => 'FINANCE',
+        ]);
+        Role::create([
+            'name' => '调度',
+            'code' => 'SCHEDULE',
+        ]);
     }
 }
