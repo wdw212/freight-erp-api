@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
+use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OrderTypesController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
@@ -275,4 +276,11 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 船公司 - 删除
     Route::delete('shipping-companies/{shippingCompany}', [ShippingCompaniesController::class, 'destroy'])
         ->name('shipping-companies.destroy');
+
+    // 单据 - 列表
+    Route::get('orders', [OrdersController::class, 'index'])
+        ->name('orders.index');
+    // 单据 - 创建
+    Route::post('orders', [OrdersController::class, 'store'])
+        ->name('orders.store');
 });
