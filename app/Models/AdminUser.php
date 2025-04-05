@@ -14,7 +14,11 @@ class AdminUser extends Authenticatable
 {
     use HasApiTokens, Notifiable, HasRoles, CausesActivity;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'username',
+        'password',
+    ];
 
     protected $casts = [
         'password' => 'hashed',

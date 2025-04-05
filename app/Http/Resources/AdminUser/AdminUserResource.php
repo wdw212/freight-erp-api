@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\AdminUser;
 
+use App\Http\Resources\Role\RoleResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -10,6 +11,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $name
  * @property mixed $username
  * @property mixed $created_at
+ * @property mixed $roles
  */
 class AdminUserResource extends JsonResource
 {
@@ -24,6 +26,7 @@ class AdminUserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'username' => $this->username,
+            'roles' => RoleResource::collection($this->roles),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }

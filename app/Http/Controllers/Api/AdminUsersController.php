@@ -8,6 +8,7 @@ use App\Http\Requests\AdminUserRequest;
 use App\Http\Resources\AdminUser\AdminUserInfoResource;
 use App\Http\Resources\AdminUser\AdminUserResource;
 use App\Models\AdminUser;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -32,7 +33,24 @@ class AdminUsersController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $adminUsers = AdminUser::query()->paginate();
+        $isPaginate = $request->input('is_paginate', 1);
+        $code = $request->input('code', '');
+        $builder = AdminUser::query()->with('roles');
+
+        if ($code) {
+            $role = Role::query()->where('code', $code)->first();
+            if ($role) {
+                $builder = $builder->withWhereHas('roles', function ($query) use ($role) {
+                    $query->where('id', $role->id);
+                });
+            }
+        }
+
+        if ($isPaginate) {
+            $adminUsers = $builder->paginate();
+        } else {
+            $adminUsers = $builder->get();
+        }
         return AdminUserResource::collection($adminUsers);
     }
 
@@ -46,13 +64,15 @@ class AdminUsersController extends Controller
     public function store(AdminUserRequest $request, AdminUser $adminUser): AdminUserInfoResource
     {
         $data = $request->all();
-
         // 校验用户名是否存在
         $oldAdminUser = AdminUser::query()->where('username', $data['username'])->first();
         if ($oldAdminUser) {
             throw new InvalidRequestException('用户名已存在，请重试！');
         }
-
+        $role = Role::query()->where('id', $data['role_id'])->first();
+        if ($role) {
+            $adminUser->assignRole($role);
+        }
         $adminUser->fill($request->all());
         $adminUser->save();
         return new AdminUserInfoResource($adminUser);
@@ -65,7 +85,7 @@ class AdminUsersController extends Controller
      */
     public function show(AdminUser $adminUser): AdminUserInfoResource
     {
-        return new AdminUserInfoResource($adminUser);
+        return new AdminUserInfoResource($adminUser->load('roles'));
     }
 
     /**
@@ -76,6 +96,11 @@ class AdminUsersController extends Controller
      */
     public function update(Request $request, AdminUser $adminUser): AdminUserInfoResource
     {
+        $data = $request->all();
+        $role = Role::query()->where('id', $data['role_id'])->first();
+        if ($role) {
+            $adminUser->assignRole($role);
+        }
         $adminUser->fill($request->all());
         $adminUser->save();
         return new AdminUserInfoResource($adminUser);

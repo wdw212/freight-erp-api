@@ -24,7 +24,13 @@ class RolesController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $roles = Role::query()->paginate();
+        $isPaginate = $request->input('is_paginate', 1);
+        $builder = Role::query();
+        if ($isPaginate) {
+            $roles = $builder->paginate();
+        } else {
+            $roles = $builder->get();
+        }
         return RoleResource::collection($roles);
     }
 
