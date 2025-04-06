@@ -65,7 +65,7 @@ class OrderResource extends JsonResource
             'bl_status' => $this->bl_status,
             'is_delivery' => $this->is_delivery,
             'sailing_at' => !empty($this->sailing_at) ? Carbon::parse($this->sailing_at)->format('Y-m-d') : '',
-            'arrival_at' => !empty($this->arrival_at) ? $this->arrival_at->format('Y-m-d') : '',
+            'arrival_at' => !empty($this->arrival_at) ? Carbon::parse($this->arrival_at)->format('Y-m-d') : '',
             'finish_at' => $this->finish_at,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
