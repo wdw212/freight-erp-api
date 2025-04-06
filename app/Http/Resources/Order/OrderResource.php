@@ -31,6 +31,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $arrival_at
  * @property mixed $created_at
  * @property mixed $orderType
+ * @property mixed $businessUser
  */
 class OrderResource extends JsonResource
 {
@@ -45,7 +46,7 @@ class OrderResource extends JsonResource
             'id' => $this->id,
             'order_type' => $this->orderType,
             'shipping_company_id' => $this->shipping_company_id,
-            'business_user_id' => $this->business_user_id,
+            'business_user' => $this->businessUser,
             'operation_user_id' => $this->operation_user_id,
             'document_user_id' => $this->document_user_id,
             'commerce_user_id' => $this->commerce_user_id,

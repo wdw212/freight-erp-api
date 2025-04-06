@@ -22,7 +22,10 @@ class OrdersController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $orders = Order::query()->with(['orderType:id,name'])->orderByDesc('created_at')->paginate();
+        $orders = Order::query()->with([
+            'orderType:id,name',
+            'businessUser:id,name',
+        ])->orderByDesc('created_at')->paginate();
         return OrderResource::collection($orders);
     }
 

@@ -31,4 +31,13 @@ class Order extends Model
     {
         return $this->belongsTo(OrderType::class);
     }
+
+    /**
+     * 业务员
+     * @return BelongsTo
+     */
+    public function businessUser(): BelongsTo
+    {
+        return $this->belongsTo(AdminUser::class, 'business_user_id');
+    }
 }
