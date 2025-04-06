@@ -286,4 +286,10 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 详情
     Route::get('orders/{order}', [OrdersController::class, 'show'])
         ->name('orders.show');
+    // 单据 - 编辑
+    Route::put('orders/{order}', [OrdersController::class, 'update'])
+        ->name('orders.update');
+    // 单据 - 删除
+    Route::delete('orders/{order}', [OrdersController::class, 'destroy'])
+        ->name('orders.destroy');
 });
