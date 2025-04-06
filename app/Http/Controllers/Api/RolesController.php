@@ -29,6 +29,7 @@ class RolesController extends Controller
         if ($isPaginate) {
             $roles = $builder->paginate();
         } else {
+            RoleResource::wrap('data');
             $roles = $builder->get();
         }
         return RoleResource::collection($roles);

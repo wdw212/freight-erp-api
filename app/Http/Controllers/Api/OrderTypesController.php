@@ -15,11 +15,19 @@ class OrderTypesController extends Controller
 {
     /**
      * 列表
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $orderTypes = OrderType::query()->paginate();
+        $isPaginate = $request->input('is_paginate');
+        if ($isPaginate) {
+            $orderTypes = OrderType::query()->paginate();
+        } else {
+            $orderTypes = OrderType::query()->get();
+            OrderTypeResource::wrap('data');
+        }
+
         return OrderTypeResource::collection($orderTypes);
     }
 

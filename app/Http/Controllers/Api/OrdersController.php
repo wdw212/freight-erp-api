@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\Order\OrderInfoResource;
 use App\Models\Order;
+use App\Models\OrderPayment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -25,14 +26,27 @@ class OrdersController extends Controller
     }
 
     /**
+     * 新增
      * @param OrderRequest $request
      * @param Order $order
      * @return OrderInfoResource
      */
     public function store(OrderRequest $request, Order $order): OrderInfoResource
     {
+        $data = $request->all();
         $order->fill($request->all());
         $order->save();
+
+        // 处理应付款
+        if (!empty($data['order_payments'])) {
+            $orderPayments = json_decode($data['order_payments'], true);
+            $orderPaymentRelations = [];
+            foreach ($orderPayments as $orderPayment) {
+                $orderPaymentRelations[] = new OrderPayment($orderPayment);
+            }
+            $order->orderPayments()->saveMany($orderPaymentRelations);
+        }
+
         return new OrderInfoResource($order);
     }
 
@@ -43,7 +57,7 @@ class OrdersController extends Controller
      */
     public function show(Order $order): OrderInfoResource
     {
-        return new OrderInfoResource($order);
+        return new OrderInfoResource($order->load(['orderPayments']));
     }
 
     public function update()

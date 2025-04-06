@@ -49,6 +49,7 @@ class AdminUsersController extends Controller
         if ($isPaginate) {
             $adminUsers = $builder->paginate();
         } else {
+            AdminUserResource::wrap('data');
             $adminUsers = $builder->get();
         }
         return AdminUserResource::collection($adminUsers);

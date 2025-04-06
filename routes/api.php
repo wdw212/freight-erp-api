@@ -283,4 +283,7 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 创建
     Route::post('orders', [OrdersController::class, 'store'])
         ->name('orders.store');
+    // 单据 - 详情
+    Route::get('orders/{order}', [OrdersController::class, 'show'])
+        ->name('orders.show');
 });
