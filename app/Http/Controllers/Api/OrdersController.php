@@ -83,7 +83,18 @@ class OrdersController extends Controller
             $orderPaymentRelations = [];
             foreach ($orderPayments as $orderPayment) {
                 if (isset($orderPayment['id'])) {
-                    OrderPayment::query()->where('id', $orderPayment['id'])->update($orderPayment);
+                    OrderPayment::query()->where('id', $orderPayment['id'])->update([
+                        'order_id' => $orderPayment['order_id'],
+                        'company_header_id' => $orderPayment['company_header_id'],
+                        'no_invoice_remark' => $orderPayment['no_invoice_remark'],
+                        'cny_amount' => $orderPayment['cny_amount'],
+                        'cny_invoice_number' => $orderPayment['cny_invoice_number'],
+                        'usd_amount' => $orderPayment['usd_amount'],
+                        'usd_invoice_number' => $orderPayment['usd_invoice_number'],
+                        'contact_person' => $orderPayment['contact_person'],
+                        'contact_phone' => $orderPayment['contact_phone'],
+                        'remark' => $orderPayment['remark'],
+                    ]);
                 } else {
                     $orderPaymentRelations[] = new OrderPayment($orderPayment);
                 }
