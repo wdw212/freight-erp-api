@@ -63,8 +63,8 @@ class OrderResource extends JsonResource
             'sailing_schedule' => $this->sailing_schedule,
             'bl_status' => $this->bl_status,
             'is_delivery' => $this->is_delivery,
-            'sailing_at' => $this->sailing_at->format('Y-m-d'),
-            'arrival_at' => $this->arrival_at->format('Y-m-d'),
+            'sailing_at' => $this->sailing_at?->format('Y-m-d'),
+            'arrival_at' => $this->arrival_at?->format('Y-m-d'),
             'finish_at' => $this->finish_at,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
