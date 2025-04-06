@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\Order\OrderInfoResource;
+use App\Http\Resources\Order\OrderResource;
 use App\Models\Order;
 use App\Models\OrderPayment;
 use Illuminate\Http\Request;
@@ -21,8 +22,8 @@ class OrdersController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $orders = Order::query()->orderByDesc('created_at')->paginate();
-        return OrderInfoResource::collection($orders);
+        $orders = Order::query()->with(['orderType:id,name'])->orderByDesc('created_at')->paginate();
+        return OrderResource::collection($orders);
     }
 
     /**
