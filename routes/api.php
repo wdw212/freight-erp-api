@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OrderTypesController;
+use App\Http\Controllers\Api\RegionsController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
@@ -292,4 +293,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 删除
     Route::delete('orders/{order}', [OrdersController::class, 'destroy'])
         ->name('orders.destroy');
+
+    // 地区 - 列表
+    Route::get('regions', [RegionsController::class, 'index'])
+        ->name('regions.index');
+    // 地区 - 新增
+    Route::post('regions', [RegionsController::class, 'store'])
+        ->name('regions.store');
+    // 地区 - 详情
+    Route::get('regions/{region}', [RegionsController::class, 'show'])
+        ->name('regions.show');
+    // 地区 - 编辑
+    Route::put('regions/{region}', [RegionsController::class, 'update'])
+        ->name('regions.update');
+    // 地区 - 删除
+    Route::delete('regions/{region}', [RegionsController::class, 'destroy'])
+        ->name('regions.destroy');
 });
