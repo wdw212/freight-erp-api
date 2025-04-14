@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Order;
 
+use App\Http\Resources\OrderFile\OrderFileInfoResource;
+use App\Http\Resources\OrderFile\OrderFileResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,6 +32,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $finish_at
  * @property mixed $arrival_at
  * @property mixed $orderPayments
+ * @property mixed $orderFiles
+ * @property mixed $orderDelegationHeader
  */
 class OrderInfoResource extends JsonResource
 {
@@ -40,6 +44,9 @@ class OrderInfoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $orderFiles = collect($this->orderFiles)->map(function ($item) {
+            return new OrderFileInfoResource($item);
+        });
         return [
             'id' => $this->id,
             'order_type_id' => $this->order_type_id,
@@ -65,6 +72,8 @@ class OrderInfoResource extends JsonResource
             'arrival_at' => $this->arrival_at,
             'finish_at' => $this->finish_at,
             'order_payments' => $this->orderPayments,
+            'order_delegation_header' => $this->orderDelegationHeader,
+            'order_files' => $orderFiles,
         ];
     }
 }

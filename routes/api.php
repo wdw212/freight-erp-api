@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
+use App\Http\Controllers\Api\OrderFilesController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OrderTypesController;
 use App\Http\Controllers\Api\RegionsController;
@@ -19,12 +20,18 @@ use App\Http\Controllers\Api\SellersController;
 use App\Http\Controllers\Api\ShippingCompaniesController;
 use App\Http\Controllers\Api\SpecialCostRatesController;
 use App\Http\Controllers\Api\SpecialTaxRatesController;
+use App\Http\Controllers\Api\UploadsController;
 use App\Http\Controllers\Api\UsdExchangeRatesController;
 use Illuminate\Support\Facades\Route;
 
 // 登录
 Route::post('authorizations', [AuthorizationsController::class, 'store'])
     ->name('authorizations.store');
+
+// 上传 - 文件
+Route::post('uploads/file', [UploadsController::class, 'file'])
+    ->name('uploads.file');
+
 // 选择框options
 Route::get('select-options/{key}', [SelectOptionsController::class, 'index'])
     ->name('select-options.index');
@@ -309,4 +316,11 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 地区 - 删除
     Route::delete('regions/{region}', [RegionsController::class, 'destroy'])
         ->name('regions.destroy');
+
+    // 单据文件 - 列表
+    Route::get('order-files', [OrderFilesController::class, 'index'])
+        ->name('order-files.index');
+    // 单据文件 - 删除
+    Route::delete('order-files/{orderFile}', [OrderFilesController::class, 'destroy'])
+        ->name('order-files.destroy');
 });

@@ -10,6 +10,8 @@ use App\Http\Requests\OrderRequest;
 use App\Http\Resources\Order\OrderInfoResource;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Order;
+use App\Models\OrderDelegationHeader;
+use App\Models\OrderFile;
 use App\Models\OrderPayment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -42,7 +44,7 @@ class OrdersController extends Controller
         $order->fill($request->all());
         $order->save();
 
-        // 处理应付款
+        // 单据应付款
         if (!empty($data['order_payments'])) {
             $orderPayments = json_decode($data['order_payments'], true);
             $orderPaymentRelations = [];
@@ -50,6 +52,24 @@ class OrdersController extends Controller
                 $orderPaymentRelations[] = new OrderPayment($orderPayment);
             }
             $order->orderPayments()->saveMany($orderPaymentRelations);
+        }
+
+        // 单据委托抬头
+        if (!empty($data['order_delegation_header'])) {
+            $orderDelegationHeader = json_decode($data['order_delegation_header'], true);
+            $orderDelegationHeader = new OrderDelegationHeader($orderDelegationHeader);
+            $orderDelegationHeader->order()->associate($order);
+            $orderDelegationHeader->save();
+        }
+
+        // 单据文件
+        if (!empty($data['order_files'])) {
+            $orderFiles = json_decode($data['order_files'], true);
+            $orderFileRelations = [];
+            foreach ($orderFiles as $orderFile) {
+                $orderFileRelations[] = new OrderFile($orderFile);
+            }
+            $order->orderFiles()->saveMany($orderFileRelations);
         }
 
         return new OrderInfoResource($order);
@@ -62,7 +82,7 @@ class OrdersController extends Controller
      */
     public function show(Order $order): OrderInfoResource
     {
-        return new OrderInfoResource($order->load(['orderPayments']));
+        return new OrderInfoResource($order->load(['orderPayments', 'orderDelegationHeader', 'orderFiles']));
     }
 
     /**
