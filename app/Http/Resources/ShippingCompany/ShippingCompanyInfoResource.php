@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $remark
  * @property mixed $created_at
  * @property mixed $name
+ * @property mixed $phone
  */
 class ShippingCompanyInfoResource extends JsonResource
 {
@@ -25,6 +26,7 @@ class ShippingCompanyInfoResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'phone' => $this->phone,
             'free_container_days' => $this->free_container_days,
             'tracking_url' => $this->tracking_url,
             'remark' => $this->remark,
