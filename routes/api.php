@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\SpecialCostRatesController;
 use App\Http\Controllers\Api\SpecialTaxRatesController;
 use App\Http\Controllers\Api\UploadsController;
 use App\Http\Controllers\Api\UsdExchangeRatesController;
+use App\Http\Controllers\Api\WharvesController;
 use Illuminate\Support\Facades\Route;
 
 // 登录
@@ -323,4 +324,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据文件 - 删除
     Route::delete('order-files/{orderFile}', [OrderFilesController::class, 'destroy'])
         ->name('order-files.destroy');
+
+    // 码头 - 列表
+    Route::get('wharves', [WharvesController::class, 'index'])
+        ->name('wharves.index');
+    // 码头 - 新增
+    Route::post('wharves', [WharvesController::class, 'store'])
+        ->name('wharves.store');
+    // 码头 - 列表
+    Route::get('wharves/{wharf}', [WharvesController::class, 'show'])
+        ->name('wharves.show');
+    // 码头 - 列表
+    Route::get('wharves', [WharvesController::class, 'index'])
+        ->name('wharves.index');
+    // 码头 - 列表
+    Route::get('wharves', [WharvesController::class, 'index'])
+        ->name('wharves.index');
 });

@@ -50,17 +50,16 @@ Route::get('/test2', static function () {
 //            'file' => '1744564496_FaL4w3ikb7.jpeg'
 //        ]
 //    ];
-    $data = [
-        'seller_id' => 1,
-        'company_header_id' => 1,
-        'contact_person' => '联系人',
-        'contact_phone' => '电话',
-        'remark' => [
-            [
-                'contact_phone' => '联系方式',
-                'fee' => '费用'
-            ]
-        ],
-    ];
-    dd(json_encode($data, JSON_UNESCAPED_UNICODE));
+//    $data = [
+//        'seller_id' => 1,
+//        'company_header_id' => 1,
+//        'contact_person' => '联系人',
+//        'contact_phone' => '电话',
+//        'remark' => [
+//            [
+//                'contact_phone' => '联系方式',
+//                'fee' => '费用'
+//            ]
+//        ],
+//    ];
 });

@@ -32,8 +32,8 @@ class UploadsController extends Controller
         $filename = time() . '_' . Str::random(10) . '.' . $extension;
         Storage::put($filename, $file->getContent());
         return response()->json([
-            'url' => $filename,
-            'full_url' => formatUrl($filename),
+            'path' => $filename,
+            'url' => formatUrl($filename),
         ]);
     }
 }
