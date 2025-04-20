@@ -335,9 +335,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::get('wharves/{wharf}', [WharvesController::class, 'show'])
         ->name('wharves.show');
     // 码头 - 列表
-    Route::get('wharves', [WharvesController::class, 'index'])
-        ->name('wharves.index');
+    Route::put('wharves/{wharf}', [WharvesController::class, 'update'])
+        ->name('wharves.update');
     // 码头 - 列表
-    Route::get('wharves', [WharvesController::class, 'index'])
-        ->name('wharves.index');
+    Route::delete('wharves/{wharf}', [WharvesController::class, 'destroy'])
+        ->name('wharves.destroy');
 });
