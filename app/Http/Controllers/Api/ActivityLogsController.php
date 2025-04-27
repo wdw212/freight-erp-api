@@ -17,7 +17,7 @@ class ActivityLogsController extends Controller
      * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $adminUser = $request->user();
         $activityLogs = $adminUser->actions()->orderByDesc('created_at')->paginate();

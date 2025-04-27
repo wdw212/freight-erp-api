@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CompanyContractsController;
 use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
+use App\Http\Controllers\Api\FleetsController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\OrderFilesController;
@@ -331,13 +332,29 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 码头 - 新增
     Route::post('wharves', [WharvesController::class, 'store'])
         ->name('wharves.store');
-    // 码头 - 列表
+    // 码头 - 详情
     Route::get('wharves/{wharf}', [WharvesController::class, 'show'])
         ->name('wharves.show');
     // 码头 - 列表
     Route::put('wharves/{wharf}', [WharvesController::class, 'update'])
         ->name('wharves.update');
-    // 码头 - 列表
+    // 码头 - 删除
     Route::delete('wharves/{wharf}', [WharvesController::class, 'destroy'])
         ->name('wharves.destroy');
+
+    // 车队 - 列表
+    Route::get('fleets', [FleetsController::class, 'index'])
+        ->name('fleets.index');
+    // 车队 - 新增
+    Route::post('fleets', [FleetsController::class, 'store'])
+        ->name('fleets.store');
+    // 车队 - 详情
+    Route::get('fleets/{fleet}', [FleetsController::class, 'show'])
+        ->name('fleets.show');
+    // 车队 - 编辑
+    Route::put('fleets/{fleet}', [FleetsController::class, 'update'])
+        ->name('fleets.update');
+    // 车队 - 删除
+    Route::delete('fleets/{fleet}', [FleetsController::class, 'destroy'])
+        ->name('fleets.destroy');
 });
