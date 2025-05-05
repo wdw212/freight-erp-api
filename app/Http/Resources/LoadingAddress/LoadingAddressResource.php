@@ -27,9 +27,7 @@ class LoadingAddressResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'province' => $this->province,
-            'city' => $this->city,
-            'district' => $this->district,
+            'region' => $this->region,
             'address' => $this->address,
             'contact_name' => $this->contact_name,
             'phone' => $this->phone,

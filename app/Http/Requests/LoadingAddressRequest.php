@@ -15,9 +15,7 @@ class LoadingAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'province_id' => 'required',
-            'city_id' => 'required',
-            'district_id' => 'required',
+            'region_id' => 'required',
             'address' => 'required',
             'contact_name' => 'required',
             'phone' => 'required',
