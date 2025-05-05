@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|mixed $level
  * @property mixed|string $path
  * @property mixed $parent
+ * @property mixed $name
  */
 #[ObservedBy(RegionObserver::class)]
 class Region extends Model

@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::table('roles', static function (Blueprint $table) {
             $table->string('code')->comment('角色标识')->nullable();
+            $table->string('description')->comment('角色描述')->nullable();
         });
     }
 
@@ -22,6 +23,7 @@ return new class extends Migration {
     {
         Schema::table('roles', static function (Blueprint $table) {
             $table->dropColumn('code');
+            $table->dropColumn('description');
         });
     }
 };

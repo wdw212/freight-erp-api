@@ -13,7 +13,7 @@ class Order extends Model
      * @var string[]
      */
     protected $guarded = [
-        'order_payments'
+        'order_payments',
     ];
 
     /**

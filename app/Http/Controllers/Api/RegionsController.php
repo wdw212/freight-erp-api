@@ -19,7 +19,10 @@ class RegionsController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $regions = Region::query()->where('parent_id', 0)->with('children')->get();
+        $regions = Region::query()
+            ->where('parent_id', 0)
+            ->with('children')
+            ->get();
         RegionResource::wrap('data');
         return RegionResource::collection($regions);
     }

@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('shipping_companies', static function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('名称');
+            $table->string('phone')->comment('电话')->nullable();
             $table->integer('free_container_days')->comment('免用箱天数')->default(0);
             $table->string('tracking_url')->comment('查货网址')->nullable();
             $table->text('remark')->comment('备注')->nullable();

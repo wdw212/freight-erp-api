@@ -9,11 +9,13 @@ use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\FleetsController;
+use App\Http\Controllers\Api\LoadingAddressesController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\OrderFilesController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OrderTypesController;
+use App\Http\Controllers\Api\PermissionsController;
 use App\Http\Controllers\Api\RegionsController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
@@ -357,4 +359,38 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 车队 - 删除
     Route::delete('fleets/{fleet}', [FleetsController::class, 'destroy'])
         ->name('fleets.destroy');
+
+    // 装箱地址 - 列表
+    Route::get('loading-addresses', [LoadingAddressesController::class, 'index'])
+        ->name('loading-addresses.index');
+    // 装箱地址 - 新增
+    Route::post('loading-addresses', [LoadingAddressesController::class, 'store'])
+        ->name('loading-addresses.store');
+    // 装箱地址 - 详情
+    Route::get('loading-addresses/{loadingAddress}', [LoadingAddressesController::class, 'show'])
+        ->name('loading-addresses.show');
+    // 装箱地址 - 编辑
+    Route::put('loading-addresses/{loadingAddress}', [LoadingAddressesController::class, 'update'])
+        ->name('loading-addresses.update');
+    // 装箱地址 - 删除
+    Route::delete('loading-addresses/{loadingAddress}', [LoadingAddressesController::class, 'destroy'])
+        ->name('loading-addresses.destroy');
+
 });
+
+
+// 权限 - 列表
+Route::get('permissions', [PermissionsController::class, 'index'])
+    ->name('permissions.index');
+// 权限 - 新增
+Route::post('permissions', [PermissionsController::class, 'store'])
+    ->name('permissions.store');
+// 权限 - 详情
+Route::get('permissions/{permission}', [PermissionsController::class, 'show'])
+    ->name('permissions.show');
+// 权限 - 编辑
+Route::put('permissions/{permission}', [PermissionsController::class, 'update'])
+    ->name('permissions.update');
+// 权限 - 删除
+Route::delete('permissions/{permission}', [PermissionsController::class, 'destroy'])
+    ->name('permissions.destroy');

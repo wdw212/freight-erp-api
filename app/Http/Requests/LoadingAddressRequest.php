@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PermissionRequest extends FormRequest
+class LoadingAddressRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,7 +15,12 @@ class PermissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'province_id' => 'required',
+            'city_id' => 'required',
+            'district_id' => 'required',
+            'address' => 'required',
+            'contact_name' => 'required',
+            'phone' => 'required',
         ];
     }
 }
