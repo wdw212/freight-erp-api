@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -14,10 +15,8 @@ class AdminUser extends Authenticatable
 {
     use HasApiTokens, Notifiable, HasRoles, CausesActivity;
 
-    protected $fillable = [
-        'name',
-        'username',
-        'password',
+    protected $guarded = [
+        'role_id'
     ];
 
     protected $casts = [
@@ -27,4 +26,12 @@ class AdminUser extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
 }

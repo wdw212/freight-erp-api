@@ -35,7 +35,10 @@ class AdminUsersController extends Controller
     {
         $isPaginate = $request->input('is_paginate', 1);
         $code = $request->input('code', '');
-        $builder = AdminUser::query()->with('roles');
+        $builder = AdminUser::query()->with([
+            'department:id,name',
+            'roles'
+        ]);
 
         if ($code) {
             $role = Role::query()->where('code', $code)->first();
@@ -45,7 +48,6 @@ class AdminUsersController extends Controller
                 });
             }
         }
-
         if ($isPaginate) {
             $adminUsers = $builder->paginate();
         } else {
