@@ -15,6 +15,7 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         AdminUser::query()->truncate();
+        
         AdminUser::query()->create([
             'name' => '超管',
             'username' => 'admin',

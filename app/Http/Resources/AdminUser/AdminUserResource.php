@@ -18,6 +18,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $leave_date
  * @property mixed $department
  * @property mixed $status
+ * @property mixed $remark
  */
 class AdminUserResource extends JsonResource
 {
@@ -38,6 +39,7 @@ class AdminUserResource extends JsonResource
             'hire_date' => $this->hire_date,
             'leave_date' => $this->leave_date,
             'roles' => RoleResource::collection($this->roles),
+            'remark' => $this->remark,
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];

@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->integer('tickets')->comment('提成票数')->default(0);
             $table->decimal('unit_price')->comment('提成单价')->default(0);
             $table->decimal('basic_salary', 10)->comment('底薪工资')->default(0);
+            $table->text('remark')->comment('备注')->nullable();
             $table->tinyInteger('status')->comment('状态 0禁用 1启用')->default(1);
             $table->timestamps();
             $table->comment('管理员表');
