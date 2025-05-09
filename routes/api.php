@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ActivityLogsController;
+use App\Http\Controllers\Api\AdminUserSalariesController;
 use App\Http\Controllers\Api\AdminUsersController;
 use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\CompanyContactsController;
@@ -376,6 +377,18 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::delete('loading-addresses/{loadingAddress}', [LoadingAddressesController::class, 'destroy'])
         ->name('loading-addresses.destroy');
 
+    // 账号工资 - 列表
+    Route::get('admin-user-salaries', [AdminUserSalariesController::class, 'index'])
+        ->name('admin-user-salaries.index');
+    // 账号工资 - 新增
+    Route::post('admin-user-salaries', [AdminUserSalariesController::class, 'store'])
+        ->name('admin-user-salaries.store');
+    // 账号工资 - 详情
+    Route::get('admin-user-salaries/{adminUserSalary}', [AdminUserSalariesController::class, 'show'])
+        ->name('admin-user-salaries.show');
+    // 账号工资 - 编辑
+    Route::put('admin-user-salaries/{adminUserSalary}', [AdminUserSalariesController::class, 'update'])
+        ->name('admin-user-salaries.update');
 });
 
 
