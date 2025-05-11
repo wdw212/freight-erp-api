@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CompanyContactsController;
 use App\Http\Controllers\Api\CompanyContractsController;
 use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
+use App\Http\Controllers\Api\ContainerTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\FleetsController;
 use App\Http\Controllers\Api\LoadingAddressesController;
@@ -389,6 +390,10 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 账号工资 - 编辑
     Route::put('admin-user-salaries/{adminUserSalary}', [AdminUserSalariesController::class, 'update'])
         ->name('admin-user-salaries.update');
+
+    // 箱子类型 - 列表
+    Route::get('container-types', [ContainerTypesController::class, 'index'])
+        ->name('container-types.index');
 });
 
 
