@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
 use App\Http\Resources\Role\RoleInfoResource;
 use App\Http\Resources\Role\RoleResource;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -62,7 +63,7 @@ class RolesController extends Controller
      */
     public function show(Role $role): RoleInfoResource
     {
-        return new RoleInfoResource($role);
+        return new RoleInfoResource($role->load('permissions:id'));
     }
 
     /**
@@ -85,13 +86,25 @@ class RolesController extends Controller
      */
     public function destroy(Role $role): Response
     {
-        logger('--角色删除--');
-        logger($role);
-        logger('--角色删除--');
-        $oldRole = Role::query()->where('id', $role->id)->first();
-        logger($oldRole->delete());
-//        $role->delete();
-//        $role->delete();
+        Role::query()->where('id', $role->id)->delete();
         return response()->noContent();
+    }
+
+    /**
+     * 分配权限
+     * @param Request $request
+     * @param Role $role
+     * @return RoleInfoResource|Response
+     */
+    public function syncPermissions(Request $request, Role $role)
+    {
+        $permissionIds = $request->input('permission_ids');
+        if (empty($permissionIds)) {
+            return response()->noContent();
+        }
+        $permissionIds = json_decode($permissionIds, true);
+        $permissions = Permission::query()->whereIn('id', $permissionIds)->get();
+        $role->syncPermissions($permissions);
+        return new RoleInfoResource($role);
     }
 }

@@ -84,6 +84,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 角色 - 删除
     Route::delete('roles/{role}', [RolesController::class, 'destroy'])
         ->name('roles.destroy');
+    // 角色 - 分配权限
+    Route::put('roles/{role}/sync-permissions', [RolesController::class, 'syncPermissions'])
+        ->name('roles.sync-permissions');
 
     // 操作日志 - 列表
     Route::get('activity-logs', [ActivityLogsController::class, 'index'])

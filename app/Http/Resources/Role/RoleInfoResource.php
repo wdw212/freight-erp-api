@@ -11,6 +11,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $created_at
  * @property mixed $code
  * @property mixed $description
+ * @property mixed $permissions
  */
 class RoleInfoResource extends JsonResource
 {
@@ -27,6 +28,7 @@ class RoleInfoResource extends JsonResource
             'code' => $this->code,
             'description' => $this->description,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'permissions' => collect($this->permissions)->pluck('id')->toArray(),
         ];
     }
 }
