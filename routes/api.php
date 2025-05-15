@@ -434,5 +434,14 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     //操作费 - 新增
     Route::post('operation-fees', [OperationFeesController::class, 'store'])
         ->name('operation-fees.store');
+    //操作费 - 详情
+    Route::get('operation-fees/{operationFee}', [OperationFeesController::class, 'show'])
+        ->name('operation-fees.show');
+    //操作费 - 编辑
+    Route::put('operation-fees/{operationFee}', [OperationFeesController::class, 'update'])
+        ->name('operation-fees.update');
+    //操作费 - 删除
+    Route::delete('operation-fees/{operationFee}', [OperationFeesController::class, 'destroy'])
+        ->name('operation-fees.destroy');
 });
 

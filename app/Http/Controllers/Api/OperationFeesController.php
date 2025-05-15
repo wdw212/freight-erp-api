@@ -52,5 +52,38 @@ class OperationFeesController extends Controller
         });
         return new OperationFeeInfoResource($operationFee);
     }
-    
+
+    /**
+     * 详情
+     * @param OperationFee $operationFee
+     * @return OperationFeeInfoResource
+     */
+    public function show(OperationFee $operationFee): OperationFeeInfoResource
+    {
+        return new OperationFeeInfoResource($operationFee);
+    }
+
+    /**
+     * 编辑
+     * @param OperationFeeRequest $request
+     * @param OperationFee $operationFee
+     * @return OperationFeeInfoResource
+     * @throws Throwable
+     */
+    public function update(OperationFeeRequest $request, OperationFee $operationFee): OperationFeeInfoResource
+    {
+        $operationFee = DB::transaction(static function () use ($request, $operationFee) {
+            $operationFee->fill($request->all());
+            $operationFee->update();
+            $items = json_decode($request->items, true);
+            foreach ($items as $item) {
+                $operationFeeItem = OperationFeeItem::query()->where('id', $item['id'])->first();
+                $operationFeeItem->order_type_id = $item['order_type_id'];
+                $operationFeeItem->price = $item['price'];
+                $operationFeeItem->save();
+            }
+            return $operationFee;
+        });
+        return new OperationFeeInfoResource($operationFee);
+    }
 }
