@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\FleetsController;
 use App\Http\Controllers\Api\LoadingAddressesController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
+use App\Http\Controllers\Api\OperationFeesController;
 use App\Http\Controllers\Api\OrderFilesController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OrderTypesController;
@@ -87,6 +88,23 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 角色 - 分配权限
     Route::put('roles/{role}/sync-permissions', [RolesController::class, 'syncPermissions'])
         ->name('roles.sync-permissions');
+
+
+    // 权限 - 列表
+    Route::get('permissions', [PermissionsController::class, 'index'])
+        ->name('permissions.index');
+    // 权限 - 新增
+    Route::post('permissions', [PermissionsController::class, 'store'])
+        ->name('permissions.store');
+    // 权限 - 详情
+    Route::get('permissions/{permission}', [PermissionsController::class, 'show'])
+        ->name('permissions.show');
+    // 权限 - 编辑
+    Route::put('permissions/{permission}', [PermissionsController::class, 'update'])
+        ->name('permissions.update');
+    // 权限 - 删除
+    Route::delete('permissions/{permission}', [PermissionsController::class, 'destroy'])
+        ->name('permissions.destroy');
 
     // 操作日志 - 列表
     Route::get('activity-logs', [ActivityLogsController::class, 'index'])
@@ -397,21 +415,24 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 箱子类型 - 列表
     Route::get('container-types', [ContainerTypesController::class, 'index'])
         ->name('container-types.index');
+    // 箱子类型 - 新增
+    Route::post('container-types', [ContainerTypesController::class, 'store'])
+        ->name('container-types.store');
+    // 箱子类型 - 详情
+    Route::get('container-types/{containerType}', [ContainerTypesController::class, 'show'])
+        ->name('container-types.show');
+    // 箱子类型 - 编辑
+    Route::put('container-types/{containerType}', [ContainerTypesController::class, 'update'])
+        ->name('container-types.update');
+    // 箱子类型 - 删除
+    Route::delete('container-types/{containerType}', [ContainerTypesController::class, 'destroy'])
+        ->name('container-types.destroy');
+
+    //操作费 - 列表
+    Route::get('operation-fees', [OperationFeesController::class, 'index'])
+        ->name('operation-fees.index');
+    //操作费 - 新增
+    Route::post('operation-fees', [OperationFeesController::class, 'store'])
+        ->name('operation-fees.store');
 });
 
-
-// 权限 - 列表
-Route::get('permissions', [PermissionsController::class, 'index'])
-    ->name('permissions.index');
-// 权限 - 新增
-Route::post('permissions', [PermissionsController::class, 'store'])
-    ->name('permissions.store');
-// 权限 - 详情
-Route::get('permissions/{permission}', [PermissionsController::class, 'show'])
-    ->name('permissions.show');
-// 权限 - 编辑
-Route::put('permissions/{permission}', [PermissionsController::class, 'update'])
-    ->name('permissions.update');
-// 权限 - 删除
-Route::delete('permissions/{permission}', [PermissionsController::class, 'destroy'])
-    ->name('permissions.destroy');

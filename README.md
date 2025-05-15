@@ -5,7 +5,7 @@
 ### 目标管理后台
 
 http://47.98.190.163:86/admin/index
-~~zhangqi~~
+zhangqi
 51985198
 
 ### 文档信息

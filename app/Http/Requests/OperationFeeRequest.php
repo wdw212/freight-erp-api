@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContainerTypeRequest extends FormRequest
+class OperationFeeRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,7 +15,8 @@ class ContainerTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required'
+            'month_code' => 'required',
+            'items' => 'required',
         ];
     }
 }
