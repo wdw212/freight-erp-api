@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\SpecialTaxRatesController;
 use App\Http\Controllers\Api\UploadsController;
 use App\Http\Controllers\Api\UsdExchangeRatesController;
 use App\Http\Controllers\Api\WharvesController;
+use App\Http\Controllers\Api\YardWharvesController;
 use Illuminate\Support\Facades\Route;
 
 // 登录
@@ -443,5 +444,21 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     //操作费 - 删除
     Route::delete('operation-fees/{operationFee}', [OperationFeesController::class, 'destroy'])
         ->name('operation-fees.destroy');
+
+    // 预落堆场码头 - 列表
+    Route::get('yard-wharves', [YardWharvesController::class, 'index'])
+        ->name('yard-wharves.index');
+    // 预落堆场码头 - 新增
+    Route::post('yard-wharves', [YardWharvesController::class, 'store'])
+        ->name('yard-wharves.store');
+    // 预落堆场码头 - 详情
+    Route::get('yard-wharves/{yardWharf}', [YardWharvesController::class, 'show'])
+        ->name('yard-wharves.show');
+    // 预落堆场码头 - 编辑
+    Route::put('yard-wharves/{yardWharf}', [YardWharvesController::class, 'update'])
+        ->name('yard-wharves.update');
+    // 预落堆场码头 - 删除
+    Route::delete('yard-wharves/{yardWharf}', [YardWharvesController::class, 'destroy'])
+        ->name('yard-wharves.destroy');
 });
 
