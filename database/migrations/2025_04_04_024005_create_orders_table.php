@@ -28,12 +28,18 @@ return new class extends Migration {
             $table->string('container_type')->comment('柜型')->nullable();
             $table->tinyInteger('payment_method')->comment('付款方式 1月结 2付款买单')->default(0);
             $table->tinyInteger('cutoff_status')->comment('截单状态 1正常截单 2等通知截单 3开港后截单')->default(0);
+            $table->timestamp('cutoff_at')->comment('截单时间')->nullable();
+            $table->timestamp('port_cutoff_at')->comment('截港时间')->nullable();
             $table->string('sailing_schedule')->comment('船期')->nullable();
             $table->tinyInteger('bl_status')->comment('提单状态 1正常提单 2等通知电放 3已电放 4已seawaybil')->default(0);
             $table->tinyInteger('is_delivery')->comment('提货 0->未提货 1已提货')->default(0);
             $table->timestamp('sailing_at')->comment('开船时间')->nullable();
+            $table->timestamp('actual_sailing_at')->comment('实际开船时间')->nullable();
             $table->timestamp('arrival_at')->comment('到港时间')->nullable();
+            $table->timestamp('actual_arrival_at')->comment('实际到港时间')->nullable();
             $table->timestamp('finish_at')->comment('归属时间')->nullable();
+            $table->tinyInteger('is_cleared')->comment('是否放行 0否 1是')->default(0);
+            $table->string('remark')->comment('备注')->nullable();
             $table->timestamps();
             $table->comment('单据表');
         });

@@ -16,6 +16,7 @@ use App\Models\OrderPayment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class OrdersController extends Controller
 {
@@ -37,40 +38,45 @@ class OrdersController extends Controller
      * @param OrderRequest $request
      * @param Order $order
      * @return OrderInfoResource
+     * @throws \Throwable
      */
     public function store(OrderRequest $request, Order $order): OrderInfoResource
     {
-        $data = $request->all();
-        $order->fill($request->all());
-        $order->save();
 
-        // 单据应付款
-        if (!empty($data['order_payments'])) {
-            $orderPayments = json_decode($data['order_payments'], true);
-            $orderPaymentRelations = [];
-            foreach ($orderPayments as $orderPayment) {
-                $orderPaymentRelations[] = new OrderPayment($orderPayment);
+        $order = DB::transaction(static function () use ($request, $order) {
+            $data = $request->all();
+            $order->fill($request->all());
+            $order->save();
+
+            // 单据应付款
+            if (!empty($data['order_payments'])) {
+                $orderPayments = json_decode($data['order_payments'], true);
+                $orderPaymentRelations = [];
+                foreach ($orderPayments as $orderPayment) {
+                    $orderPaymentRelations[] = new OrderPayment($orderPayment);
+                }
+                $order->orderPayments()->saveMany($orderPaymentRelations);
             }
-            $order->orderPayments()->saveMany($orderPaymentRelations);
-        }
 
-        // 单据委托抬头
-        if (!empty($data['order_delegation_header'])) {
-            $orderDelegationHeader = json_decode($data['order_delegation_header'], true);
-            $orderDelegationHeader = new OrderDelegationHeader($orderDelegationHeader);
-            $orderDelegationHeader->order()->associate($order);
-            $orderDelegationHeader->save();
-        }
-
-        // 单据文件
-        if (!empty($data['order_files'])) {
-            $orderFiles = json_decode($data['order_files'], true);
-            $orderFileRelations = [];
-            foreach ($orderFiles as $orderFile) {
-                $orderFileRelations[] = new OrderFile($orderFile);
+            // 单据委托抬头
+            if (!empty($data['order_delegation_header'])) {
+                $orderDelegationHeader = json_decode($data['order_delegation_header'], true);
+                $orderDelegationHeader = new OrderDelegationHeader($orderDelegationHeader);
+                $orderDelegationHeader->order()->associate($order);
+                $orderDelegationHeader->save();
             }
-            $order->orderFiles()->saveMany($orderFileRelations);
-        }
+
+            // 单据文件
+            if (!empty($data['order_files'])) {
+                $orderFiles = json_decode($data['order_files'], true);
+                $orderFileRelations = [];
+                foreach ($orderFiles as $orderFile) {
+                    $orderFileRelations[] = new OrderFile($orderFile);
+                }
+                $order->orderFiles()->saveMany($orderFileRelations);
+            }
+            return $order;
+        });
 
         return new OrderInfoResource($order);
     }

@@ -43,12 +43,6 @@ Route::post('uploads/file', [UploadsController::class, 'file'])
 // 选择框options
 Route::get('select-options/{key}', [SelectOptionsController::class, 'index'])
     ->name('select-options.index');
-// 测试请求
-Route::get('test', function () {
-    return response()->json([
-        'message' => '请求成功'
-    ]);
-});
 
 // 令牌路由
 Route::group(['middleware' => 'auth:sanctum'], static function () {
