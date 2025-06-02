@@ -23,7 +23,7 @@ class AdminUsersController extends Controller
     public function me(Request $request): AdminUserInfoResource
     {
         $adminUser = $request->user();
-        return new AdminUserInfoResource($adminUser);
+        return new AdminUserInfoResource($adminUser->load('role'));
     }
 
     /**

@@ -45,4 +45,12 @@ class AdminUser extends Authenticatable
     {
         return $this->hasMany(AdminUserSalary::class);
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

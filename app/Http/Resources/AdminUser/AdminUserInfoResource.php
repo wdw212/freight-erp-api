@@ -43,6 +43,7 @@ class AdminUserInfoResource extends JsonResource
             'remark' => $this->remark,
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'role' => $this->role
         ];
     }
 }
