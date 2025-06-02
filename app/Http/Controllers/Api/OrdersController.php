@@ -17,14 +17,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class OrdersController extends Controller
 {
     /**
      * 列表
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
         $orders = Order::query()->with([
             'orderType:id,name',
@@ -38,11 +40,10 @@ class OrdersController extends Controller
      * @param OrderRequest $request
      * @param Order $order
      * @return OrderInfoResource
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function store(OrderRequest $request, Order $order): OrderInfoResource
     {
-
         $order = DB::transaction(static function () use ($request, $order) {
             $data = $request->all();
             $order->fill($request->all());
