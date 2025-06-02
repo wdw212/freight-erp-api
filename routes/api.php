@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\RegionsController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
+use App\Http\Controllers\Api\SftRecordsController;
 use App\Http\Controllers\Api\ShippingCompaniesController;
 use App\Http\Controllers\Api\SpecialCostRatesController;
 use App\Http\Controllers\Api\SpecialTaxRatesController;
@@ -454,5 +455,15 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 预落堆场码头 - 删除
     Route::delete('yard-wharves/{yardWharf}', [YardWharvesController::class, 'destroy'])
         ->name('yard-wharves.destroy');
+
+    // 收发通 - 列表
+    Route::get('sft-records', [SftRecordsController::class, 'index'])
+        ->name('sft-records.index');
+    // 收发通 - 新增
+    Route::post('sft-records', [SftRecordsController::class, 'store'])
+        ->name('sft-records.store');
+    // 收发通 - 详情
+    Route::get('sft-records/{sftRecord}', [SftRecordsController::class, 'show'])
+        ->name('sft-records.show');
 });
 
