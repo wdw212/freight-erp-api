@@ -19,6 +19,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $operation_user_ids
  * @property mixed $document_user_ids
  * @property mixed $commerce_user_ids
+ * @property mixed $code
+ * @property mixed $address
+ * @property mixed $country
+ * @property mixed $aeo_company_code
+ * @property mixed $contact_name
+ * @property mixed $contact_phone
  */
 class SftRecordInfoResource extends JsonResource
 {
@@ -32,6 +38,7 @@ class SftRecordInfoResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
+            'type_content' => $this->type_content,
             'name' => $this->name,
             'url' => $this->url,
             'is_confirm' => $this->is_confirm,
@@ -41,6 +48,12 @@ class SftRecordInfoResource extends JsonResource
             'commerce_user_ids' => $this->commerce_user_ids,
             'generate_information' => $this->generate_information,
             'remark' => $this->remark,
+            'code' => $this->code,
+            'address' => $this->address,
+            'country' => $this->country,
+            'aeo_company_code' => $this->aeo_company_code,
+            'contact_name' => $this->contact_name,
+            'contact_phone' => $this->contact_phone,
         ];
     }
 }
