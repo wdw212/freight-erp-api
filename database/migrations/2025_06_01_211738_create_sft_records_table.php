@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('type')->comment('类型: sender发货人 receiver收货人 notifier通知人');
             $table->string('type_content')->comment('类型内容')->nullable();
             $table->string('name')->comment('名称');
-            $table->string('phone')->comment('手机号');
+            $table->string('phone')->comment('手机号')->nullable();
             $table->string('url')->comment('舱单网址')->nullable();
             $table->tinyInteger('is_confirm')->comment('是否确认 0否 1是')->default(0);
             $table->unsignedBigInteger('confirm_user_id')->comment('确认人')->nullable();
