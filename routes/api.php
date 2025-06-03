@@ -465,5 +465,11 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 收发通 - 详情
     Route::get('sft-records/{sftRecord}', [SftRecordsController::class, 'show'])
         ->name('sft-records.show');
+    // 收发通 - 编辑
+    Route::put('sft-records/{sftRecord}', [SftRecordsController::class, 'update'])
+        ->name('sft-records.update');
+    // 收发通 - 删除
+    Route::delete('sft-records/{sftRecord}', [SftRecordsController::class, 'destroy'])
+        ->name('sft-records.destroy');
 });
 
