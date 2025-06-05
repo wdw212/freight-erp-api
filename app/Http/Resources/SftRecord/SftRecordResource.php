@@ -15,6 +15,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $generate_information
  * @property mixed $remark
  * @property mixed $created_at
+ * @property mixed $type_content
  */
 class SftRecordResource extends JsonResource
 {
@@ -28,6 +29,7 @@ class SftRecordResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
+            'type_content' => $this->type_content,
             'name' => $this->name,
             'url' => $this->url,
             'is_confirm' => $this->is_confirm,
