@@ -26,6 +26,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $contact_name
  * @property mixed $contact_phone
  * @property mixed $type_content
+ * @property mixed $phone
  */
 class SftRecordInfoResource extends JsonResource
 {
@@ -42,6 +43,7 @@ class SftRecordInfoResource extends JsonResource
             'type_content' => $this->type_content,
             'name' => $this->name,
             'url' => $this->url,
+            'phone' => $this->phone,
             'is_confirm' => $this->is_confirm,
             'confirm_user_id' => $this->confirm_user_id,
             'operation_user_ids' => $this->operation_user_ids,
