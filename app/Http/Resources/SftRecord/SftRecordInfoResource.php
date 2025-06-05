@@ -25,6 +25,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $aeo_company_code
  * @property mixed $contact_name
  * @property mixed $contact_phone
+ * @property mixed $type_content
  */
 class SftRecordInfoResource extends JsonResource
 {

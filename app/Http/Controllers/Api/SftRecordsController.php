@@ -74,17 +74,17 @@ class SftRecordsController extends Controller
         }
 
         if (!empty($data['operation_user_ids'])) {
-            $data['operation_user_ids'] = json_encode($data['operation_user_ids'], true);
+            $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
         } else {
             $data['operation_user_ids'] = [];
         }
         if (!empty($data['document_user_ids'])) {
-            $data['document_user_ids'] = json_encode($data['document_user_ids'], true);
+            $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
         } else {
             $data['document_user_ids'] = [];
         }
         if (!empty($data['commerce_user_ids'])) {
-            $data['commerce_user_ids'] = json_encode($data['commerce_user_ids'], true);
+            $data['commerce_user_ids'] = json_decode($data['commerce_user_ids'], true);
         } else {
             $data['commerce_user_ids'] = [];
         }
@@ -119,21 +119,21 @@ class SftRecordsController extends Controller
     {
         $user = $request->user();
         $data = $request->all();
-        if (SftRecord::query()->where('name', $data['name'])->whereNot('id', $sftRecord)->exists()) {
+        if (SftRecord::query()->where('name', $data['name'])->whereNot('id', $sftRecord->id)->exists()) {
             throw new InvalidRequestException('当前名称已存在!');
         }
         if (!empty($data['operation_user_ids'])) {
-            $data['operation_user_ids'] = json_encode($data['operation_user_ids'], true);
+            $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
         } else {
             $data['operation_user_ids'] = [];
         }
         if (!empty($data['document_user_ids'])) {
-            $data['document_user_ids'] = json_encode($data['document_user_ids'], true);
+            $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
         } else {
             $data['document_user_ids'] = [];
         }
         if (!empty($data['commerce_user_ids'])) {
-            $data['commerce_user_ids'] = json_encode($data['commerce_user_ids'], true);
+            $data['commerce_user_ids'] = json_decode($data['commerce_user_ids'], true);
         } else {
             $data['commerce_user_ids'] = [];
         }
