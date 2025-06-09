@@ -8,6 +8,7 @@ use App\Http\Requests\AuthorizationRequest;
 use App\Models\AdminUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AuthorizationsController extends Controller
 {
@@ -33,5 +34,17 @@ class AuthorizationsController extends Controller
         return response()->json([
             'token' => $token,
         ]);
+    }
+
+    /**
+     * 退出登录
+     * @param Request $request
+     * @return Response
+     */
+    public function destroy(Request $request): Response
+    {
+        $adminUser = $request->user();
+        $adminUser->tokens()->delete();
+        return response()->noContent();
     }
 }

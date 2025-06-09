@@ -49,7 +49,9 @@ Route::get('select-options/{key}', [SelectOptionsController::class, 'index'])
 Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 登录信息
     Route::get('me', [AdminUsersController::class, 'me']);
-
+    // 退出登录
+    Route::delete('authorizations', [AuthorizationsController::class, 'destroy'])
+        ->name('authorizations.destroy');
     // 账号 - 列表
     Route::get('admin-users', [AdminUsersController::class, 'index'])
         ->name('admin-users.index');
