@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyHeaderRequest;
 use App\Http\Resources\CompanyHeader\CompanyHeaderInfoResource;
 use App\Http\Resources\CompanyHeader\CompanyHeaderResource;
+use App\Http\Resources\CompanyType\CompanyTypeResource;
 use App\Models\CompanyHeader;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -23,10 +24,30 @@ class CompanyHeadersController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $companyHeaders = CompanyHeader::query()
-            ->with(['adminUser:id,name', 'companyType:id,name'])
-            ->orderByDesc('created_at')
-            ->paginate();
+        $keyword = $request->input('keyword', '');
+        $operationUserId = $request->input('operation_user_id');
+        $documentUserId = $request->input('document_user_id');
+        $isPaginate = $request->input('is_paginate', 1);
+
+        $builder = CompanyHeader::query()->with(['adminUser:id,name'])->latest();
+
+        if (!empty($keyword)) {
+            $builder = $builder->whereLike('name', '%' . $keyword . '%');
+        }
+
+        if (!empty($operationUserId)) {
+            $builder = $builder->where('operation_user_id', $operationUserId);
+        }
+        if (!empty($documentUserId)) {
+            $builder = $builder->where('document_user_id', $documentUserId);
+        }
+
+        if ((int)$isPaginate === 1) {
+            $companyHeaders = $builder->paginate($isPaginate);
+        } else {
+            $companyHeaders = $builder->get();
+            CompanyTypeResource::wrap('data');
+        }
         return CompanyHeaderResource::collection($companyHeaders);
     }
 
