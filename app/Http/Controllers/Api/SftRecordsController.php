@@ -55,12 +55,10 @@ class SftRecordsController extends Controller
             if (!empty($commerceUserId)) {
                 $builder = $builder->whereJsonContains('commerce_user_ids', $commerceUserId);
             }
-        } else {
-            if (!$user->hasRole('超管')) {
-                $builder = $builder->whereJsonContains('operation_user_ids', $user->id)
-                    ->orWhereJsonContains('document_user_ids', $user->id)
-                    ->orWhereJsonContains('commerce_user_ids', $user->id);
-            }
+        } else if (!$user->hasRole('超管')) {
+            $builder = $builder->whereJsonContains('operation_user_ids', $user->id)
+                ->orWhereJsonContains('document_user_ids', $user->id)
+                ->orWhereJsonContains('commerce_user_ids', $user->id);
         }
 
 

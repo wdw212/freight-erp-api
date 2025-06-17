@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('company_headers', static function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_type_id')->comment('公司类型ID');
-            $table->unsignedBigInteger('admin_user_id')->comment('公司业务员ID')->default(0);
+            $table->unsignedBigInteger('admin_user_id')->comment('业务员ID')->default(0);
             $table->string('company_name')->comment('公司名称');
             $table->string('tax_number')->comment('税号')->nullable();
             $table->string('billing_address')->comment('开票地址')->nullable();
