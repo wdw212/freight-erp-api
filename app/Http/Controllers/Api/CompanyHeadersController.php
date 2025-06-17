@@ -42,7 +42,11 @@ class CompanyHeadersController extends Controller
         if (!empty($documentUserId)) {
             $builder = $builder->where('document_user_id', $documentUserId);
         }
-        
+
+        if (!empty($companyType)) {
+            $builder = $builder->whereJsonContains('company_type', $companyType);
+        }
+
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate($isPaginate);
         } else {
