@@ -43,14 +43,14 @@ class CompanyHeadersController extends Controller
             $builder = $builder->where('document_user_id', $documentUserId);
         }
 
-        if (!empty($companyType)) {
-            $builder = $builder->orWhere(function ($query) use ($companyType) {
-                $companyType = json_decode($companyType, true);
-                foreach ($companyType as $type) {
-                    $query->orWhereJsonContains('company_type', $type);
-                }
-            });
-        }
+//        if (!empty($companyType)) {
+//            $builder = $builder->orWhere(function ($query) use ($companyType) {
+//                $companyType = json_decode($companyType, true);
+//                foreach ($companyType as $type) {
+//                    $query->orWhereJsonContains('company_type', $type);
+//                }
+//            });
+//        }
 
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate($isPaginate);
