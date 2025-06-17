@@ -17,4 +17,12 @@ class LoadingAddress extends Model
     {
         return $this->belongsTo(Region::class);
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function adminUser(): BelongsTo
+    {
+        return $this->belongsTo(AdminUser::class);
+    }
 }

@@ -23,9 +23,7 @@ class LoadingAddressesController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $loadingAddresses = LoadingAddress::query()
-            ->with([
-                'region:id,name',
-            ])
+            ->with(['region:id,name', 'adminUser:id,name'])
             ->orderByDesc('created_at')
             ->paginate();
         return LoadingAddressResource::collection($loadingAddresses);
@@ -39,7 +37,9 @@ class LoadingAddressesController extends Controller
      */
     public function store(LoadingAddressRequest $request, LoadingAddress $loadingAddress): LoadingAddressInfoResource
     {
+        $adminUser = $request->user();
         $loadingAddress->fill($request->all());
+        $loadingAddress->adminUser()->associate($adminUser);
         $loadingAddress->save();
         return new LoadingAddressInfoResource($loadingAddress);
     }

@@ -15,6 +15,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $phone
  * @property mixed $remark
  * @property mixed $created_at
+ * @property mixed $region
+ * @property mixed $adminUser
  */
 class LoadingAddressResource extends JsonResource
 {
@@ -27,6 +29,7 @@ class LoadingAddressResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'admin_user' => $this->adminUser,
             'region' => $this->region,
             'address' => $this->address,
             'contact_name' => $this->contact_name,
