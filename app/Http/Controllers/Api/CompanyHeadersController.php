@@ -44,7 +44,12 @@ class CompanyHeadersController extends Controller
         }
 
         if (!empty($companyType)) {
-            $builder = $builder->whereJsonContains('company_type', $companyType);
+            $builder = $builder->where(function ($query) use ($companyType) {
+                $companyType = json_decode($companyType, true);
+                foreach ($companyType as $type) {
+                    $query->orWhereJsonContains('company_type', $type);
+                }
+            });
         }
 
         if ((int)$isPaginate === 1) {
