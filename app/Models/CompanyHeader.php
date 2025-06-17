@@ -9,6 +9,10 @@ class CompanyHeader extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'company_type' => 'json'
+    ];
+
     /**
      * 关联公司类型
      * @return BelongsTo

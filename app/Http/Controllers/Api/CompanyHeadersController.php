@@ -38,7 +38,9 @@ class CompanyHeadersController extends Controller
      */
     public function store(CompanyHeaderRequest $request, CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
-        $companyHeader->fill($request->all());
+        $data = $request->all();
+        $data['company_type'] = json_decode($data['company_type'], true);
+        $companyHeader->fill($data);
         $companyHeader->save();
         return new CompanyHeaderInfoResource($companyHeader);
     }
