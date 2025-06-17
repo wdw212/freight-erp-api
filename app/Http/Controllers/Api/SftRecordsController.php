@@ -35,6 +35,7 @@ class SftRecordsController extends Controller
             $builder = $builder->whereLike('name', '%' . $keyword . '%')
                 ->orWhereLike('remark', '%' . $keyword . '%');
         }
+
         if (!empty($type)) {
             $builder = $builder->where('type', $type);
         }
@@ -43,15 +44,22 @@ class SftRecordsController extends Controller
             $builder = $builder->where('is_confirm', $isConfirm);
         }
 
-        if (!empty($operationUserId)) {
-            $builder = $builder->whereJsonContains('operation_user_id', (string)$operationUserId);
+        if (!empty($operationUserId) || !empty($documentUserId) || !empty($commerceUserId)) {
+            if (!empty($operationUserId)) {
+                $builder = $builder->whereJsonContains('operation_user_id', (string)$operationUserId);
+            }
+            if (!empty($documentUserId)) {
+                $builder = $builder->whereJsonContains('document_user_id', (string)$documentUserId);
+            }
+            if (!empty($commerceUserId)) {
+                $builder = $builder->whereJsonContains('commerce_user_id', (string)$commerceUserId);
+            }
+        } else {
+            $builder = $builder->whereJsonContains('operation_user_id', (string)$operationUserId)
+                ->orWhereJsonContains('document_user_id', (string)$documentUserId)
+                ->orWhereJsonContains('commerce_user_id', (string)$commerceUserId);
         }
-        if (!empty($documentUserId)) {
-            $builder = $builder->whereJsonContains('document_user_id', (string)$documentUserId);
-        }
-        if (!empty($commerceUserId)) {
-            $builder = $builder->whereJsonContains('commerce_user_id', (string)$commerceUserId);
-        }
+
 
         $sftRecords = $builder->paginate();
         return SftRecordResource::collection($sftRecords);
@@ -69,10 +77,11 @@ class SftRecordsController extends Controller
         $user = $request->user();
         $data = $request->all();
 
-        if (SftRecord::query()->where('name', $data['name'])->exists()) {
+        $oldSftRecord = SftRecord::query()->where('name', $data['name'])->first();
+
+        if ($oldSftRecord) {
             throw new InvalidRequestException('当前名称已存在!');
         }
-
         if (!empty($data['operation_user_ids'])) {
             $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
         } else {
