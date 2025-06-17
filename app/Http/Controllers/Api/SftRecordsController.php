@@ -55,9 +55,7 @@ class SftRecordsController extends Controller
                 $builder = $builder->whereJsonContains('commerce_user_ids', (string)$commerceUserId);
             }
         } else {
-            $builder = $builder->whereJsonContains('operation_user_ids', (string)auth()->id())
-                ->orWhereJsonContains('document_user_ids', (string)auth()->id())
-                ->orWhereJsonContains('commerce_user_ids', (string)auth()->id());
+            $builder = $builder->whereJsonContains('operation_user_ids', (string)auth()->id());
         }
 
 
