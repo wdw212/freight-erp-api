@@ -18,14 +18,29 @@ class LoadingAddressesController extends Controller
 {
     /**
      * 列表
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $loadingAddresses = LoadingAddress::query()
-            ->with(['region:id,name', 'adminUser:id,name'])
-            ->orderByDesc('created_at')
-            ->paginate();
+        $isPaginate = $request->input('is_paginate', 1);
+        $keyword = $request->input('keyword', '');
+
+        $builder = LoadingAddress::query()->with(['region:id,name', 'adminUser:id,name'])->latest();
+
+        if (!empty($keyword)) {
+            $builder = $builder->whereLike('keyword', '%' . $keyword . '%')
+                ->orWhereLike('address', '%' . $keyword . '%')
+                ->orWhereLike('contact_name', '%' . $keyword . '%')
+                ->orWhereLike('phone', '%' . $keyword . '%');
+        }
+
+        if ($isPaginate) {
+            $loadingAddresses = $builder->paginate();
+        } else {
+            $loadingAddresses = $builder->get();
+            LoadingAddressResource::wrap('data');
+        }
         return LoadingAddressResource::collection($loadingAddresses);
     }
 
