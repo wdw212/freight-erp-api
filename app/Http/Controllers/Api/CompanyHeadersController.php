@@ -28,6 +28,7 @@ class CompanyHeadersController extends Controller
         $operationUserId = $request->input('operation_user_id');
         $documentUserId = $request->input('document_user_id');
         $isPaginate = $request->input('is_paginate', 1);
+        $companyType = $request->input('company_type', '');
 
         $builder = CompanyHeader::query()->with(['adminUser:id,name'])->latest();
 
@@ -41,7 +42,7 @@ class CompanyHeadersController extends Controller
         if (!empty($documentUserId)) {
             $builder = $builder->where('document_user_id', $documentUserId);
         }
-
+        
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate($isPaginate);
         } else {

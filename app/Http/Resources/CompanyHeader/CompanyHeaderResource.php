@@ -8,7 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @property mixed $id
  * @property mixed $adminUser
- * @property mixed $companyType
  * @property mixed $company_name
  * @property mixed $tax_number
  * @property mixed $billing_address
@@ -24,6 +23,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $delivery_address
  * @property mixed $remark
  * @property mixed $created_at
+ * @property mixed $company_type
  */
 class CompanyHeaderResource extends JsonResource
 {
@@ -37,7 +37,7 @@ class CompanyHeaderResource extends JsonResource
         return [
             'id' => $this->id,
             'admin_user' => $this->adminUser,
-            'company_type' => $this->companyType,
+            'company_type' => $this->company_type,
             'company_name' => $this->company_name,
             'tax_number' => $this->tax_number,
             'billing_address' => $this->billing_address,
