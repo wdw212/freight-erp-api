@@ -18,6 +18,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $region
  * @property mixed $adminUser
  * @property mixed $freight
+ * @property mixed $keyword
  */
 class LoadingAddressResource extends JsonResource
 {
@@ -37,6 +38,7 @@ class LoadingAddressResource extends JsonResource
             'phone' => $this->phone,
             'remark' => $this->remark,
             'freight' => $this->freight,
+            'keyword' => $this->keyword,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }

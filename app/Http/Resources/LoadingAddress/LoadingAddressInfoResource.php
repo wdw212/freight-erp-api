@@ -15,6 +15,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $phone
  * @property mixed $remark
  * @property mixed $freight
+ * @property mixed $keyword
  */
 class LoadingAddressInfoResource extends JsonResource
 {
@@ -34,6 +35,7 @@ class LoadingAddressInfoResource extends JsonResource
             'contact_name' => (int)$this->contact_name,
             'phone' => $this->phone,
             'freight' => $this->freight,
+            'keyword' => $this->keyword,
             'remark' => $this->remark,
         ];
     }
