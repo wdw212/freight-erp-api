@@ -21,6 +21,7 @@ class SftRecordsController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        $user = $request->user();
         $keyword = $request->input('keyword');
         $type = $request->input('type');
         $isConfirm = $request->input('is_confirm');
@@ -55,7 +56,9 @@ class SftRecordsController extends Controller
                 $builder = $builder->whereJsonContains('commerce_user_ids', (string)$commerceUserId);
             }
         } else {
-            $builder = $builder->whereJsonContains('operation_user_ids', (string)auth()->id());
+            if (!$user->hasRole('超管')) {
+                $builder = $builder->whereJsonContains('operation_user_ids', (string)$user->id);
+            }
         }
 
 
