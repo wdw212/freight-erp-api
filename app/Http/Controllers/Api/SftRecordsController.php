@@ -58,6 +58,8 @@ class SftRecordsController extends Controller
         } else {
             if (!$user->hasRole('超管')) {
                 $builder = $builder->whereJsonContains('operation_user_ids', (string)$user->id);
+            } else {
+                dd($user->id);
             }
         }
 
