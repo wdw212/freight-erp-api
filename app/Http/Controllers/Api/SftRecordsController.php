@@ -46,18 +46,18 @@ class SftRecordsController extends Controller
 
         if (!empty($operationUserId) || !empty($documentUserId) || !empty($commerceUserId)) {
             if (!empty($operationUserId)) {
-                $builder = $builder->whereJsonContains('operation_user_id', (string)$operationUserId);
+                $builder = $builder->whereJsonContains('operation_user_ids', (string)$operationUserId);
             }
             if (!empty($documentUserId)) {
-                $builder = $builder->whereJsonContains('document_user_id', (string)$documentUserId);
+                $builder = $builder->whereJsonContains('document_user_ids', (string)$documentUserId);
             }
             if (!empty($commerceUserId)) {
-                $builder = $builder->whereJsonContains('commerce_user_id', (string)$commerceUserId);
+                $builder = $builder->whereJsonContains('commerce_user_ids', (string)$commerceUserId);
             }
         } else {
-            $builder = $builder->whereJsonContains('operation_user_id', (string)$operationUserId)
-                ->orWhereJsonContains('document_user_id', (string)$documentUserId)
-                ->orWhereJsonContains('commerce_user_id', (string)$commerceUserId);
+            $builder = $builder->whereJsonContains('operation_user_ids', (string)auth()->id())
+                ->orWhereJsonContains('document_user_ids', (string)auth()->id())
+                ->orWhereJsonContains('commerce_user_ids', (string)auth()->id());
         }
 
 
