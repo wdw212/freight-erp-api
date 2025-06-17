@@ -47,13 +47,13 @@ class SftRecordsController extends Controller
 
         if (!empty($operationUserId) || !empty($documentUserId) || !empty($commerceUserId)) {
             if (!empty($operationUserId)) {
-                $builder = $builder->whereJsonContains('operation_user_ids', (string)$operationUserId);
+                $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
             }
             if (!empty($documentUserId)) {
-                $builder = $builder->whereJsonContains('document_user_ids', (string)$documentUserId);
+                $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
             }
             if (!empty($commerceUserId)) {
-                $builder = $builder->whereJsonContains('commerce_user_ids', (string)$commerceUserId);
+                $builder = $builder->whereJsonContains('commerce_user_ids', $commerceUserId);
             }
         } else {
             if (!$user->hasRole('超管')) {
