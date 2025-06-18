@@ -34,7 +34,6 @@ class LoadingAddressesController extends Controller
                 ->orWhereLike('contact_name', '%' . $keyword . '%')
                 ->orWhereLike('phone', '%' . $keyword . '%');
         }
-
         if ($isPaginate) {
             $loadingAddresses = $builder->paginate();
         } else {

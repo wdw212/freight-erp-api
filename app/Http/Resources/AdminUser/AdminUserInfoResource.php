@@ -30,6 +30,7 @@ class AdminUserInfoResource extends JsonResource
     public function toArray(Request $request): array
     {
         $roleId = collect($this->roles)->first()->id ?? 0;
+        $role = collect($this->roles)->first();
         return [
             'id' => $this->id,
             'department_id' => $this->department_id,
@@ -43,7 +44,7 @@ class AdminUserInfoResource extends JsonResource
             'remark' => $this->remark,
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'role' => $this->role
+            'role' => $role
         ];
     }
 }
