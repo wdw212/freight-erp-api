@@ -30,7 +30,7 @@ class AdminUserInfoResource extends JsonResource
     public function toArray(Request $request): array
     {
         $roleId = collect($this->roles)->first()->id ?? 0;
-        $role = collect($this->roles)->first();
+        $role = collect($this->roles)->select(['id', 'name', 'code'])->first();
         return [
             'id' => $this->id,
             'department_id' => $this->department_id,
