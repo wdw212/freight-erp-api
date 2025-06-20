@@ -19,6 +19,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $remark
  * @property mixed $status
  * @property mixed $created_at
+ * @property mixed $seller_ids
  */
 class AdminUserInfoResource extends JsonResource
 {
@@ -44,7 +45,8 @@ class AdminUserInfoResource extends JsonResource
             'remark' => $this->remark,
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'role' => $role
+            'role' => $role,
+            'seller_ids' => $this->seller_ids,
         ];
     }
 }
