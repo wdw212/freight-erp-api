@@ -22,6 +22,7 @@ class AdminUser extends Authenticatable
 
     protected $casts = [
         'password' => 'hashed',
+        'seller_ids' => 'json'
     ];
 
     protected $hidden = [
