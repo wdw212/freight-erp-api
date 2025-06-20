@@ -76,7 +76,14 @@ class AdminUsersController extends Controller
         if ($role) {
             $adminUser->assignRole($role);
         }
-        $adminUser->fill($request->all());
+
+        if (!empty($data['seller_ids'])) {
+            $data['seller_ids'] = json_decode($data['seller_ids'], true);
+        } else {
+            $data['seller_ids'] = [];
+        }
+
+        $adminUser->fill($data);
         $adminUser->save();
         return new AdminUserInfoResource($adminUser);
     }
@@ -104,7 +111,14 @@ class AdminUsersController extends Controller
         if ($role) {
             $adminUser->assignRole($role);
         }
-        $adminUser->fill($request->all());
+
+        if (!empty($data['seller_ids'])) {
+            $data['seller_ids'] = json_decode($data['seller_ids'], true);
+        } else {
+            $data['seller_ids'] = [];
+        }
+
+        $adminUser->fill($data);
         $adminUser->save();
         return new AdminUserInfoResource($adminUser);
     }
