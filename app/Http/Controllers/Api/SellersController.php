@@ -23,7 +23,14 @@ class SellersController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $sellers = Seller::query()->orderByDesc('created_at')->paginate();
+        $isPaginate = $request->input('is_paginate', 1);
+        $builder = Seller::query()->latest();
+        if ($isPaginate) {
+            $sellers = $builder->paginate();
+        } else {
+            $sellers = $builder->get();
+            SellerResource::wrap('data');
+        }
         return SellerResource::collection($sellers);
     }
 
