@@ -51,8 +51,28 @@ class LoadingAddressesController extends Controller
      */
     public function store(LoadingAddressRequest $request, LoadingAddress $loadingAddress): LoadingAddressInfoResource
     {
+        $data = $request->all();
         $adminUser = $request->user();
-        $loadingAddress->fill($request->all());
+
+        if (!empty($data['business_user_ids'])) {
+            $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
+        } else {
+            $data['business_user_ids'] = [];
+        }
+
+        if (!empty($data['operation_user_ids'])) {
+            $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
+        } else {
+            $data['operation_user_ids'] = [];
+        }
+
+        if (!empty($data['document_user_ids'])) {
+            $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
+        } else {
+            $data['document_user_ids'] = [];
+        }
+        
+        $loadingAddress->fill($data);
         $loadingAddress->adminUser()->associate($adminUser);
         $loadingAddress->save();
         return new LoadingAddressInfoResource($loadingAddress);

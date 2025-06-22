@@ -13,7 +13,7 @@ use App\Http\Resources\AdminUserSalary\AdminUserSalaryResource;
 use App\Models\AdminUserSalary;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-
+ 
 class AdminUserSalariesController extends Controller
 {
     /**
