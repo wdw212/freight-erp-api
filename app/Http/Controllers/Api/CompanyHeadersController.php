@@ -68,9 +68,29 @@ class CompanyHeadersController extends Controller
      */
     public function store(CompanyHeaderRequest $request, CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
+        $adminUser = $request->user();
         $data = $request->all();
         $data['company_type'] = json_decode($data['company_type'], true);
+        if (!empty($data['business_user_ids'])) {
+            $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
+        } else {
+            $data['business_user_ids'] = [];
+        }
+
+        if (!empty($data['operation_user_ids'])) {
+            $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
+        } else {
+            $data['operation_user_ids'] = [];
+        }
+
+        if (!empty($data['document_user_ids'])) {
+            $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
+        } else {
+            $data['document_user_ids'] = [];
+        }
+        
         $companyHeader->fill($data);
+        $companyHeader->adminUser()->associate($adminUser);
         $companyHeader->save();
         return new CompanyHeaderInfoResource($companyHeader);
     }
@@ -93,7 +113,26 @@ class CompanyHeadersController extends Controller
      */
     public function update(CompanyHeaderRequest $request, CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
-        $companyHeader->fill($request->all());
+        $data = $request->all();
+        $data['company_type'] = json_decode($data['company_type'], true);
+        if (!empty($data['business_user_ids'])) {
+            $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
+        } else {
+            $data['business_user_ids'] = [];
+        }
+
+        if (!empty($data['operation_user_ids'])) {
+            $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
+        } else {
+            $data['operation_user_ids'] = [];
+        }
+
+        if (!empty($data['document_user_ids'])) {
+            $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
+        } else {
+            $data['document_user_ids'] = [];
+        }
+        $companyHeader->fill($data);
         $companyHeader->update();
         return new CompanyHeaderInfoResource($companyHeader);
     }

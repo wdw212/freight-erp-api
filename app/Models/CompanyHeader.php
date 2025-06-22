@@ -10,7 +10,10 @@ class CompanyHeader extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'company_type' => 'json'
+        'company_type' => 'json',
+        'business_user_ids' => 'json',
+        'operation_user_ids' => 'json',
+        'document_user_ids' => 'json',
     ];
 
     /**
