@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PageAnnotationRequest;
 use App\Http\Resources\PageAnnotation\PageAnnotationInfoResource;
 use App\Http\Resources\PageAnnotation\PageAnnotationResource;
+use App\Models\LoadingAddress;
 use App\Models\PageAnnotation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,11 +41,18 @@ class PageAnnotationsController extends Controller
     {
         $modelType = $request->input('model_type');
 
+
+        switch ($modelType) {
+            case 'loading_address':
+                $modelType = LoadingAddress::class;
+                break;
+        }
+
         $oldPageAnnotation = PageAnnotation::query()->where('model_type', $modelType)->first();
 //        if ($oldPageAnnotation) {
 //            throw new InvalidRequestException('页面注明已存在，请去修改！');
 //        }
-        $pageAnnotation->model_type = (new $modelType);
+        $pageAnnotation->model_type = $modelType;
         $pageAnnotation->save();
         return new PageAnnotationInfoResource($pageAnnotation);
     }
