@@ -27,6 +27,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $business_user_ids
  * @property mixed $operation_user_ids
  * @property mixed $document_user_ids
+ * @property mixed $company_type
  */
 class CompanyHeaderInfoResource extends JsonResource
 {
@@ -57,7 +58,7 @@ class CompanyHeaderInfoResource extends JsonResource
             'qq' => $this->qq,
             'distinction' => $this->distinction,
             'delivery_address' => $this->delivery_address,
-
+            'company_type' => $this->company_type,
             'remark' => $this->remark,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
