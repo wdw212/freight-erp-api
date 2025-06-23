@@ -53,9 +53,10 @@ class LoadingAddressesController extends Controller
     {
         $data = $request->all();
         $adminUser = $request->user();
-        dd($data['business_user_ids']);
         if (!empty($data['business_user_ids'])) {
-            $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
+            if (!is_array($data['business_user_ids'])) {
+                $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
+            }
         } else {
             $data['business_user_ids'] = [];
         }
