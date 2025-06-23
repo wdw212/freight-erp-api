@@ -494,7 +494,7 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::get('page-annotations/get-model-types', [PageAnnotationsController::class, 'getModelTypes'])
         ->name('page-annotations.get-model-types');
     // 页面注名 - 根据模型类型获取详情
-    Route::post('page-annotations/get-show-by-model-type', [PageAnnotationsController::class, 'getShowByModelType'])
+    Route::get('page-annotations/get-show-by-model-type', [PageAnnotationsController::class, 'getShowByModelType'])
         ->name('page-annotations.get-show-by-model-type');
 });
 
