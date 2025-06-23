@@ -25,7 +25,6 @@ class PageAnnotationResource extends JsonResource
             'id ' => $this->id,
             'model_type' => PageAnnotation::$modelTypeMap[$this->model_type],
             'content' => $this->content,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }
