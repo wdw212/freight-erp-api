@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PageAnnotationRequest;
 use App\Http\Resources\PageAnnotation\PageAnnotationInfoResource;
 use App\Http\Resources\PageAnnotation\PageAnnotationResource;
+use App\Models\CompanyHeader;
 use App\Models\LoadingAddress;
 use App\Models\PageAnnotation;
 use Illuminate\Http\JsonResponse;
@@ -35,7 +36,6 @@ class PageAnnotationsController extends Controller
      * @param PageAnnotationRequest $request
      * @param PageAnnotation $pageAnnotation
      * @return PageAnnotationInfoResource
-     * @throws InvalidRequestException
      */
     public function store(PageAnnotationRequest $request, PageAnnotation $pageAnnotation): PageAnnotationInfoResource
     {
@@ -107,7 +107,11 @@ class PageAnnotationsController extends Controller
      */
     public function getModelTypes(Request $request): JsonResponse
     {
-        return response()->json(PageAnnotation::$modelTypeMap);
+        $data = [
+            'loading_address' => LoadingAddress::class,
+            'company_header' => CompanyHeader::class,
+        ];
+        return response()->json($data);
     }
 
     /**
