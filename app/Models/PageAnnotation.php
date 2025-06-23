@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property mixed $id
+ * @property mixed|string $model_type
+ * @property mixed $content
  */
 class PageAnnotation extends Model
 {

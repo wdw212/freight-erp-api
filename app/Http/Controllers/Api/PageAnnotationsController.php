@@ -36,22 +36,16 @@ class PageAnnotationsController extends Controller
      * @param PageAnnotationRequest $request
      * @param PageAnnotation $pageAnnotation
      * @return PageAnnotationInfoResource
+     * @throws InvalidRequestException
      */
     public function store(PageAnnotationRequest $request, PageAnnotation $pageAnnotation): PageAnnotationInfoResource
     {
         $modelType = $request->input('model_type');
-
-
-        switch ($modelType) {
-            case 'loading_address':
-                $modelType = LoadingAddress::class;
-                break;
-        }
-
+        $modelType = PageAnnotation::$getModelType[$modelType];
         $oldPageAnnotation = PageAnnotation::query()->where('model_type', $modelType)->first();
-//        if ($oldPageAnnotation) {
-//            throw new InvalidRequestException('页面注明已存在，请去修改！');
-//        }
+        if ($oldPageAnnotation) {
+            throw new InvalidRequestException('页面注明已存在，请去修改！');
+        }
         $pageAnnotation->model_type = $modelType;
         $pageAnnotation->content = $request->input('content');
         $pageAnnotation->save();
@@ -78,6 +72,7 @@ class PageAnnotationsController extends Controller
     public function update(PageAnnotationRequest $request, PageAnnotation $pageAnnotation): PageAnnotationInfoResource
     {
         $modelType = $request->input('model_type');
+
         $oldPageAnnotation = PageAnnotation::query()
             ->where('model_type', $modelType)
             ->whereNot('id', $pageAnnotation->id)
@@ -85,6 +80,7 @@ class PageAnnotationsController extends Controller
         if ($oldPageAnnotation) {
             throw new InvalidRequestException('页面注明已存在，请去修改！');
         }
+        $modelType = PageAnnotation::$getModelType[$modelType];
         $pageAnnotation->update($request->validated());
         return new PageAnnotationInfoResource($pageAnnotation);
     }
