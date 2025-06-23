@@ -2,9 +2,16 @@
 
 namespace App\Http\Resources\PageAnnotation;
 
+use App\Models\PageAnnotation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $id
+ * @property mixed $model_type
+ * @property mixed $content
+ * @property mixed $created_at
+ */
 class PageAnnotationResource extends JsonResource
 {
     /**
@@ -14,6 +21,11 @@ class PageAnnotationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id ' => $this->id,
+            'model_type' => PageAnnotation::$modelTypeMap[$this->model_type],
+            'content' => $this->content,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+        ];
     }
 }
