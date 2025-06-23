@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\OperationFeesController;
 use App\Http\Controllers\Api\OrderFilesController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OrderTypesController;
+use App\Http\Controllers\Api\PageAnnotationsController;
 use App\Http\Controllers\Api\PermissionsController;
 use App\Http\Controllers\Api\RegionsController;
 use App\Http\Controllers\Api\RolesController;
@@ -473,5 +474,27 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 收发通 - 删除
     Route::delete('sft-records/{sftRecord}', [SftRecordsController::class, 'destroy'])
         ->name('sft-records.destroy');
+
+    // 页面注明 - 列表
+    Route::get('page-annotations', [PageAnnotationsController::class, 'index'])
+        ->name('page-annotations.index');
+    // 页面注明 - 新增
+    Route::post('page-annotations', [PageAnnotationsController::class, 'store'])
+        ->name('page-annotations.store');
+    // 页面注明 - 详情
+    Route::get('page-annotations/{pageAnnotation}', [PageAnnotationsController::class, 'show'])
+        ->name('page-annotations.show');
+    // 页面注明 - 编辑
+    Route::put('page-annotations/{pageAnnotation}', [PageAnnotationsController::class, 'update'])
+        ->name('page-annotations.update');
+    // 页面注明 - 删除
+    Route::delete('page-annotations/{pageAnnotation}', [PageAnnotationsController::class, 'destroy'])
+        ->name('page-annotations.destroy');
+    // 页面注明 - 获取模型类型
+    Route::get('page-annotations', [PageAnnotationsController::class, 'getModelTypes'])
+        ->name('page-annotations.get-model-types');
+    // 页面注名 - 根据模型类型获取详情
+    Route::post('page-annotations/get-show-by-model-type', [PageAnnotationsController::class, 'getShowByModelType'])
+        ->name('page-annotations.get-show-by-model-type');
 });
 
