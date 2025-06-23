@@ -18,6 +18,16 @@ class PageAnnotation extends Model
         CompanyHeader::class => '公司抬头',
         SftRecord::class => '收发通'
     ];
+
+    /**
+     * @var array|string[]
+     */
+    public static array $getModelType = [
+        'loading_address' => LoadingAddress::class,
+        'company_header' => CompanyHeader::class,
+        'sft_record' => SftRecord::class,
+    ];
+
     public $timestamps = false;
     protected $guarded = [];
 }

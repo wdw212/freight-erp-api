@@ -108,8 +108,8 @@ class PageAnnotationsController extends Controller
     public function getModelTypes(Request $request): JsonResponse
     {
         $data = [
-            'loading_address' => LoadingAddress::class,
-            'company_header' => CompanyHeader::class,
+            'loading_address' => '装柜地址',
+            'company_header' => '公司抬头',
         ];
         return response()->json($data);
     }
