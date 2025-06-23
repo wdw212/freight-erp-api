@@ -108,7 +108,8 @@ class PageAnnotationsController extends Controller
         $data = [
             'loading_address' => '装柜地址',
             'company_header' => '公司抬头',
-            'sft_record' => '收发通'
+            'sft_record' => '收发通',
+            'region' => '地区',
         ];
         return response()->json([
             'data' => $data,

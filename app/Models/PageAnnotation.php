@@ -18,7 +18,8 @@ class PageAnnotation extends Model
     public static array $modelTypeMap = [
         LoadingAddress::class => '装柜信息',
         CompanyHeader::class => '公司抬头',
-        SftRecord::class => '收发通'
+        SftRecord::class => '收发通',
+        Region::class => '地区',
     ];
 
     /**
@@ -28,6 +29,7 @@ class PageAnnotation extends Model
         'loading_address' => LoadingAddress::class,
         'company_header' => CompanyHeader::class,
         'sft_record' => SftRecord::class,
+        'region' => Region::class,
     ];
 
     public $timestamps = false;
