@@ -14,7 +14,8 @@ class PageAnnotation extends Model
      * @var array|string[]
      */
     public static array $modelTypeMap = [
-        LoadingAddress::class => '装柜信息'
+        LoadingAddress::class => '装柜信息',
+        CompanyHeader::class => '公司抬头',
     ];
     public $timestamps = false;
     protected $guarded = [];
