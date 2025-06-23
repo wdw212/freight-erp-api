@@ -64,6 +64,7 @@ class PageAnnotationsController extends Controller
      * @param PageAnnotationRequest $request
      * @param PageAnnotation $pageAnnotation
      * @return PageAnnotationInfoResource
+     * @throws InvalidRequestException
      */
     public function update(PageAnnotationRequest $request, PageAnnotation $pageAnnotation): PageAnnotationInfoResource
     {

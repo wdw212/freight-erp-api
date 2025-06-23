@@ -483,7 +483,7 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
         ->name('page-annotations.store');
     // 页面注明 - 详情
     Route::get('page-annotations/{pageAnnotation}', [PageAnnotationsController::class, 'show'])
-        ->name('page-annotations.show');
+        ->name('page-annotations.show')->where('pageAnnotation', '[0-9]+');
     // 页面注明 - 编辑
     Route::put('page-annotations/{pageAnnotation}', [PageAnnotationsController::class, 'update'])
         ->name('page-annotations.update');
@@ -491,7 +491,7 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::delete('page-annotations/{pageAnnotation}', [PageAnnotationsController::class, 'destroy'])
         ->name('page-annotations.destroy');
     // 页面注明 - 获取模型类型
-    Route::get('page-annotations', [PageAnnotationsController::class, 'getModelTypes'])
+    Route::get('page-annotations/get-model-types', [PageAnnotationsController::class, 'getModelTypes'])
         ->name('page-annotations.get-model-types');
     // 页面注名 - 根据模型类型获取详情
     Route::post('page-annotations/get-show-by-model-type', [PageAnnotationsController::class, 'getShowByModelType'])
