@@ -122,7 +122,8 @@ class PageAnnotationsController extends Controller
     public function getShowByModelType(Request $request): PageAnnotationInfoResource
     {
         $modelType = $request->input('model_type');
-        $pageAnnotation = PageAnnotation::query()->first();
+        $modelType = PageAnnotation::$getModelType[$modelType];
+        $pageAnnotation = PageAnnotation::query()->where('model_type', $modelType)->first();
         return new PageAnnotationInfoResource($pageAnnotation);
     }
 }
