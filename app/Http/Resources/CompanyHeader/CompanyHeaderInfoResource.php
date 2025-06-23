@@ -24,6 +24,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $delivery_address
  * @property mixed $remark
  * @property mixed $created_at
+ * @property mixed $business_user_ids
+ * @property mixed $operation_user_ids
+ * @property mixed $document_user_ids
  */
 class CompanyHeaderInfoResource extends JsonResource
 {
@@ -38,6 +41,9 @@ class CompanyHeaderInfoResource extends JsonResource
             'id' => $this->id,
             'admin_user_id' => $this->admin_user_id,
             'company_type_id' => $this->company_type_id,
+            'business_user_ids' => $this->business_user_ids,
+            'operation_user_ids' => $this->operation_user_ids,
+            'document_user_ids' => $this->document_user_ids,
             'company_name' => $this->company_name,
             'tax_number' => $this->tax_number,
             'billing_address' => $this->billing_address,
@@ -51,6 +57,7 @@ class CompanyHeaderInfoResource extends JsonResource
             'qq' => $this->qq,
             'distinction' => $this->distinction,
             'delivery_address' => $this->delivery_address,
+
             'remark' => $this->remark,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];

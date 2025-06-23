@@ -53,7 +53,7 @@ class LoadingAddressesController extends Controller
     {
         $data = $request->all();
         $adminUser = $request->user();
-
+        dd($data['business_user_ids']);
         if (!empty($data['business_user_ids'])) {
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
         } else {
@@ -97,7 +97,7 @@ class LoadingAddressesController extends Controller
     public function update(LoadingAddressRequest $request, LoadingAddress $loadingAddress): LoadingAddressInfoResource
     {
         $data = $request->all();
-        
+
         if (!empty($data['business_user_ids'])) {
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
         } else {
