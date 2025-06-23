@@ -41,10 +41,10 @@ class PageAnnotationsController extends Controller
         $modelType = $request->input('model_type');
 
         $oldPageAnnotation = PageAnnotation::query()->where('model_type', $modelType)->first();
-        if ($oldPageAnnotation) {
-            throw new InvalidRequestException('页面注明已存在，请去修改！');
-        }
-        $pageAnnotation->fill($request->validated());
+//        if ($oldPageAnnotation) {
+//            throw new InvalidRequestException('页面注明已存在，请去修改！');
+//        }
+        $pageAnnotation->model_type = (new $modelType);
         $pageAnnotation->save();
         return new PageAnnotationInfoResource($pageAnnotation);
     }
