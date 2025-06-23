@@ -53,6 +53,7 @@ class PageAnnotationsController extends Controller
 //            throw new InvalidRequestException('页面注明已存在，请去修改！');
 //        }
         $pageAnnotation->model_type = $modelType;
+        $pageAnnotation->content = $request->input('content');
         $pageAnnotation->save();
         return new PageAnnotationInfoResource($pageAnnotation);
     }
