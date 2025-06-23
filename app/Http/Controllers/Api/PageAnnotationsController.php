@@ -81,7 +81,9 @@ class PageAnnotationsController extends Controller
             throw new InvalidRequestException('页面注明已存在，请去修改！');
         }
         $modelType = PageAnnotation::$getModelType[$modelType];
-        $pageAnnotation->update($request->validated());
+        $pageAnnotation->model_type = $modelType;
+        $pageAnnotation->content = $request->input('content');
+        $pageAnnotation->save();
         return new PageAnnotationInfoResource($pageAnnotation);
     }
 
@@ -120,7 +122,7 @@ class PageAnnotationsController extends Controller
     public function getShowByModelType(Request $request): PageAnnotationInfoResource
     {
         $modelType = $request->input('model_type');
-        $pageAnnotation = PageAnnotation::query()->where('model_type', $modelType)->first();
+        $pageAnnotation = PageAnnotation::query()->first();
         return new PageAnnotationInfoResource($pageAnnotation);
     }
 }
