@@ -62,13 +62,17 @@ class LoadingAddressesController extends Controller
         }
 
         if (!empty($data['operation_user_ids'])) {
-            $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
+            if (!is_array($data['operation_user_ids'])) {
+                $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
+            }
         } else {
             $data['operation_user_ids'] = [];
         }
 
         if (!empty($data['document_user_ids'])) {
-            $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
+            if (!is_array($data['document_user_ids'])) {
+                $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
+            }
         } else {
             $data['document_user_ids'] = [];
         }
