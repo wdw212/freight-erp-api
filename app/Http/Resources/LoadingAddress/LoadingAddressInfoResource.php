@@ -16,6 +16,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $remark
  * @property mixed $freight
  * @property mixed $keyword
+ * @property mixed $address
  */
 class LoadingAddressInfoResource extends JsonResource
 {
@@ -37,6 +38,7 @@ class LoadingAddressInfoResource extends JsonResource
             'freight' => $this->freight,
             'keyword' => $this->keyword,
             'remark' => $this->remark,
+            'address' => $this->address,
         ];
     }
 }

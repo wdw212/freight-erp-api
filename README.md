@@ -21,8 +21,6 @@ https://kdocs.cn/l/cd5NLMqAMT9B
 ### 文档
 
 【金山文档 | WPS云文档】 货运系统开发
-https://kdocs.cn/l/cd5NLMqAMT9B
-https://kdocs.cn/l/cn4PA2OIblLy
 
 ### 宝塔修改php版本
 
@@ -30,11 +28,4 @@ https://kdocs.cn/l/cn4PA2OIblLy
 * ln -sf /www/server/php/72/bin/php /usr/bin/php
 
 ### TODO
-
-* 1.账户页面补全 ✅
-* 2.箱子信息中生成弹窗（落箱数据--进港数据--装柜数据）
-* 3.装箱单的生成数据关联
-* 4.业务类型做全（涉及操作费的计算）
-* 5.权限做了 ✅
-* 6.预提落箱码头库 ✅
 
