@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\SftRecordsController;
 use App\Http\Controllers\Api\ShippingCompaniesController;
 use App\Http\Controllers\Api\SpecialCostRatesController;
 use App\Http\Controllers\Api\SpecialTaxRatesController;
+use App\Http\Controllers\Api\TodosController;
 use App\Http\Controllers\Api\UploadsController;
 use App\Http\Controllers\Api\UsdExchangeRatesController;
 use App\Http\Controllers\Api\WharvesController;
@@ -496,5 +497,18 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 页面注名 - 根据模型类型获取详情
     Route::get('page-annotations/get-show-by-model-type', [PageAnnotationsController::class, 'getShowByModelType'])
         ->name('page-annotations.get-show-by-model-type');
+
+    // 待办事项 - 列表
+    Route::get('todos', [TodosController::class, 'index'])
+        ->name('todos.index');
+    // 待办事项 - 新增
+    Route::post('todos', [TodosController::class, 'store'])
+        ->name('todos.store');
+    // 待办事项 - 编辑
+    Route::put('todos/{todo}', [TodosController::class, 'update'])
+        ->name('todos.update');
+    // 待办事项 - 删除
+    Route::delete('todos/{todo}', [TodosController::class, 'destroy'])
+        ->name('todos.destroy');
 });
 
