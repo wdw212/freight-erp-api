@@ -83,6 +83,7 @@ class OperationFeesController extends Controller
                     $operationFeeItem->price = $item['price'];
                 } else {
                     $operationFeeItem = new OperationFeeItem($item);
+                    $operationFeeItem->operationFee()->associate($operationFee);
                 }
                 $operationFeeItem->save();
             }
