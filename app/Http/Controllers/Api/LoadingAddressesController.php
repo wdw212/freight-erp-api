@@ -25,6 +25,9 @@ class LoadingAddressesController extends Controller
     {
         $isPaginate = $request->input('is_paginate', 1);
         $keyword = $request->input('keyword', '');
+        $businessUserId = $request->input('business_user_id');
+        $operationUserId = $request->input('operation_user_id');
+        $documentUserId = $request->input('document_user_id');
 
         $builder = LoadingAddress::query()->with(['region:id,name', 'adminUser:id,name'])->latest();
 
@@ -34,6 +37,18 @@ class LoadingAddressesController extends Controller
                 ->orWhereLike('contact_name', '%' . $keyword . '%')
                 ->orWhereLike('phone', '%' . $keyword . '%');
         }
+
+        if (!empty($businessUserId)) {
+            $builder = $builder->where('business_user_id', $businessUserId);
+        }
+
+        if (!empty($operationUserId)) {
+            $builder = $builder->where('operation_user_id', $operationUserId);
+        }
+        if (!empty($documentUserId)) {
+            $builder = $builder->where('document_user_id', $documentUserId);
+        }
+        
         if ($isPaginate) {
             $loadingAddresses = $builder->paginate();
         } else {
