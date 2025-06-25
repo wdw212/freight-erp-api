@@ -77,9 +77,13 @@ class OperationFeesController extends Controller
             $operationFee->update();
             $items = json_decode($request->items, true);
             foreach ($items as $item) {
-                $operationFeeItem = OperationFeeItem::query()->where('id', $item['id'])->first();
-                $operationFeeItem->order_type_id = $item['order_type_id'];
-                $operationFeeItem->price = $item['price'];
+                if (isset($item['id'])) {
+                    $operationFeeItem = OperationFeeItem::query()->where('id', $item['id'])->first();
+                    $operationFeeItem->order_type_id = $item['order_type_id'];
+                    $operationFeeItem->price = $item['price'];
+                } else {
+                    $operationFeeItem = new OperationFeeItem($item);
+                }
                 $operationFeeItem->save();
             }
             return $operationFee;
