@@ -41,7 +41,6 @@ class CompanyHeaderInfoResource extends JsonResource
         return [
             'id' => $this->id,
             'admin_user_id' => $this->admin_user_id,
-            'company_type_id' => $this->company_type_id,
             'business_user_ids' => $this->business_user_ids,
             'operation_user_ids' => $this->operation_user_ids,
             'document_user_ids' => $this->document_user_ids,

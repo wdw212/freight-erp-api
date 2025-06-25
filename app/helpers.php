@@ -15,3 +15,16 @@ function formatUrl(string|null $url): string
     }
     return Storage::url($url);
 }
+
+/**
+ * 格式化日期
+ * @param string|null $date
+ * @return string
+ */
+function formatDate(string|null $date): string
+{
+    if (empty($date)) {
+        return '';
+    }
+    return \Carbon\Carbon::parse($date)->format('Y-m-d');
+}
