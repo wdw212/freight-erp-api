@@ -45,7 +45,7 @@ class LoadingAddressesController extends Controller
 
         if (!empty($businessUserId)) {
             Log::info('----业务员搜索----:' . $businessUserId);
-            $builder = $builder->whereJsonContains('business_user_ids', $businessUserId);
+            $builder = $builder->whereJsonContains('business_user_ids', (int)$businessUserId);
         }
 
         if (!empty($operationUserId)) {
