@@ -31,9 +31,12 @@ class LoadingAddressesController extends Controller
         $operationUserId = $request->input('operation_user_id');
         $documentUserId = $request->input('document_user_id');
 
-        $builder = LoadingAddress::query()->with(['region:id,name', 'adminUser:id,name'])->latest();
+        $builder = LoadingAddress::query()
+            ->with(['region:id,name', 'adminUser:id,name'])
+            ->latest();
 
         if (!empty($keyword)) {
+            Log::info('---关键词搜索---:' . $keyword);
             $builder = $builder->whereLike('keyword', '%' . $keyword . '%')
                 ->orWhereLike('address', '%' . $keyword . '%')
                 ->orWhereLike('contact_name', '%' . $keyword . '%')
