@@ -39,16 +39,16 @@ class LoadingAddressesController extends Controller
         }
 
         if (!empty($businessUserId)) {
-            $builder = $builder->where('business_user_id', $businessUserId);
+            $builder = $builder->whereJsonContains('business_user_ids', $businessUserId);
         }
 
         if (!empty($operationUserId)) {
-            $builder = $builder->where('operation_user_id', $operationUserId);
+            $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
         }
         if (!empty($documentUserId)) {
-            $builder = $builder->where('document_user_id', $documentUserId);
+            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
         }
-        
+
         if ($isPaginate) {
             $loadingAddresses = $builder->paginate();
         } else {
