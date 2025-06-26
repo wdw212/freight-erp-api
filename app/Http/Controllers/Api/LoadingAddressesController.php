@@ -39,7 +39,7 @@ class LoadingAddressesController extends Controller
         }
 
         if (!empty($businessUserId)) {
-            $builder = $builder->whereJsonContains('business_user_ids', $businessUserId);
+            $builder = $builder->whereJsonContains('business_user_ids', (string)$businessUserId);
         }
 
         if (!empty($operationUserId)) {
