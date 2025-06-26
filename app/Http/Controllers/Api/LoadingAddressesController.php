@@ -13,6 +13,8 @@ use App\Models\LoadingAddress;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use function Laravel\Prompts\password;
 
 class LoadingAddressesController extends Controller
 {
@@ -39,6 +41,7 @@ class LoadingAddressesController extends Controller
         }
 
         if (!empty($businessUserId)) {
+            Log::info('----业务员搜索----:' . $businessUserId);
             $builder = $builder->whereJsonContains('business_user_ids', $businessUserId);
         }
 
