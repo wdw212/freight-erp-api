@@ -47,6 +47,7 @@ class OrdersController extends Controller
         $order = DB::transaction(static function () use ($request, $order) {
             $data = $request->all();
             $order->fill($request->all());
+            $order->is_delivery = 0;
             $order->save();
 
             // 单据应付款
