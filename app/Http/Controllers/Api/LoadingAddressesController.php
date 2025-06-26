@@ -36,7 +36,6 @@ class LoadingAddressesController extends Controller
             ->latest();
 
         if (!empty($keyword)) {
-            Log::info('---关键词搜索---:' . $keyword);
             $builder = $builder->whereLike('keyword', '%' . $keyword . '%')
                 ->orWhereLike('address', '%' . $keyword . '%')
                 ->orWhereLike('contact_name', '%' . $keyword . '%')
@@ -44,15 +43,14 @@ class LoadingAddressesController extends Controller
         }
 
         if (!empty($businessUserId)) {
-            Log::info('----业务员搜索----:' . $businessUserId);
             $builder = $builder->whereJsonContains('business_user_ids', (int)$businessUserId);
         }
 
         if (!empty($operationUserId)) {
-            $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
+            $builder = $builder->whereJsonContains('operation_user_ids', (int)$operationUserId);
         }
         if (!empty($documentUserId)) {
-            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
+            $builder = $builder->whereJsonContains('document_user_ids', (int)$documentUserId);
         }
 
         if ($isPaginate) {
