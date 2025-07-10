@@ -16,6 +16,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $contact_person
  * @property mixed $contact_phone
  * @property mixed $remark
+ * @property mixed $cny_is_cashed
+ * @property mixed $usd_is_cashed
  */
 class OrderPaymentResource extends JsonResource
 {
@@ -32,10 +34,12 @@ class OrderPaymentResource extends JsonResource
             'no_invoice_remark' => $this->no_invoice_remark,
             'cny_amount' => $this->cny_amount,
             'cny_invoice_number' => $this->cny_invoice_number,
+            'cny_is_cashed' => $this->cny_is_cashed,
             'usd_amount' => $this->usd_amount,
             'usd_invoice_number' => $this->usd_invoice_number,
-            'contact_person' => $this->contact_person,
-            'contact_phone' => $this->contact_phone,
+            'usd_is_cashed' => $this->usd_is_cashed,
+//            'contact_person' => $this->contact_person,
+//            'contact_phone' => $this->contact_phone,
             'remark' => $this->remark,
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Http\Resources\Order;
 
 use App\Http\Resources\OrderFile\OrderFileInfoResource;
 use App\Http\Resources\OrderFile\OrderFileResource;
+use App\Http\Resources\OrderPayment\OrderPaymentResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -71,7 +72,7 @@ class OrderInfoResource extends JsonResource
             'sailing_at' => $this->sailing_at,
             'arrival_at' => $this->arrival_at,
             'finish_at' => $this->finish_at,
-            'order_payments' => $this->orderPayments,
+            'order_payments' => OrderPaymentResource::collection($this->orderPayments),
             'order_delegation_header' => $this->orderDelegationHeader,
             'order_files' => $orderFiles,
         ];
