@@ -108,19 +108,25 @@ class OrdersController extends Controller
         // 处理应付款
         if (!empty($data['order_payments'])) {
             $orderPayments = json_decode($data['order_payments'], true);
+
+            // 获取需要删除的数据
+
+
             $orderPaymentRelations = [];
             foreach ($orderPayments as $orderPayment) {
                 if (isset($orderPayment['id'])) {
                     OrderPayment::query()->where('id', $orderPayment['id'])->update([
-                        'order_id' => $orderPayment['order_id'],
+                        'order_id' => $order->id,
                         'company_header_id' => $orderPayment['company_header_id'],
                         'no_invoice_remark' => $orderPayment['no_invoice_remark'],
                         'cny_amount' => $orderPayment['cny_amount'],
                         'cny_invoice_number' => $orderPayment['cny_invoice_number'],
+                        'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
                         'usd_amount' => $orderPayment['usd_amount'],
                         'usd_invoice_number' => $orderPayment['usd_invoice_number'],
-                        'contact_person' => $orderPayment['contact_person'],
-                        'contact_phone' => $orderPayment['contact_phone'],
+                        'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
+//                        'contact_person' => $orderPayment['contact_person'],
+//                        'contact_phone' => $orderPayment['contact_phone'],
                         'remark' => $orderPayment['remark'],
                     ]);
                 } else {

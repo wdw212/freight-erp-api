@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int|mixed $is_delivery
+ * @property mixed $id
  */
 class Order extends Model
 {
