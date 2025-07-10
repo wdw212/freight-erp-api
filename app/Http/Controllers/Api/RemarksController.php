@@ -23,7 +23,12 @@ class RemarksController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $remarks = Remark::query()->latest()->get();
+        $keyword = $request->input('keyword', '');
+        $builder = Remark::query()->latest();
+        if (!empty($keyword)) {
+            $builder = $builder->whereLike('content', '%' . $keyword . '%');
+        }
+        $remarks = $builder->get();
         RemarkResource::wrap('data');
         return RemarkResource::collection($remarks);
     }
