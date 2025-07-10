@@ -110,7 +110,10 @@ class OrdersController extends Controller
             $orderPayments = json_decode($data['order_payments'], true);
 
             // 获取需要删除的数据
-
+            $oldOrderPaymentIds = OrderPayment::query()->where('order_id', $order->id)->pluck('id')->toArray();
+            $newOrderPaymentIds = collect($orderPayments)->pluck('id')->toArray();
+            $orderPaymentIds = array_diff($oldOrderPaymentIds, $newOrderPaymentIds);
+            OrderPayment::query()->whereIn('id', $orderPaymentIds)->delete();
 
             $orderPaymentRelations = [];
             foreach ($orderPayments as $orderPayment) {
