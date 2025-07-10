@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\OrderTypesController;
 use App\Http\Controllers\Api\PageAnnotationsController;
 use App\Http\Controllers\Api\PermissionsController;
 use App\Http\Controllers\Api\RegionsController;
+use App\Http\Controllers\Api\RemarksController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
@@ -510,5 +511,18 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 待办事项 - 删除
     Route::delete('todos/{todo}', [TodosController::class, 'destroy'])
         ->name('todos.destroy');
+
+    // 备注 - 列表
+    Route::get('remarks', [RemarksController::class, 'index'])
+        ->name('remarks.index');
+    // 备注 - 新增
+    Route::post('remarks', [RemarksController::class, 'store'])
+        ->name('remarks.store');
+    // 备注 - 编辑
+    Route::put('remarks/{remark}', [RemarksController::class, 'update'])
+        ->name('remarks.update')->where('remark', '[0-9]+');
+    // 备注 - 删除
+    Route::delete('remarks/{remark}', [RemarksController::class, 'destroy'])
+        ->name('remarks.destroy')->where('remark', '[0-9]+');
 });
 
