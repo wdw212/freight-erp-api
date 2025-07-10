@@ -1,4 +1,7 @@
 <?php
+/**
+ * 单据-应付款
+ */
 
 namespace App\Models;
 
