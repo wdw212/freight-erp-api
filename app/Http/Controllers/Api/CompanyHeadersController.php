@@ -24,13 +24,14 @@ class CompanyHeadersController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        $adminUser = $request->user();
         $keyword = $request->input('keyword', '');
         $operationUserId = $request->input('operation_user_id');
         $documentUserId = $request->input('document_user_id');
         $isPaginate = $request->input('is_paginate', 1);
         $companyType = $request->input('company_type', '');
 
-        $builder = CompanyHeader::query()->with(['adminUser:id,name'])->latest();
+        $builder = CompanyHeader::query()->whereBelongsTo($adminUser)->with(['adminUser:id,name'])->latest();
 
         if (!empty($keyword)) {
             $builder = $builder->whereLike('name', '%' . $keyword . '%');
@@ -88,7 +89,7 @@ class CompanyHeadersController extends Controller
         } else {
             $data['document_user_ids'] = [];
         }
-        
+
         $companyHeader->fill($data);
         $companyHeader->adminUser()->associate($adminUser);
         $companyHeader->save();

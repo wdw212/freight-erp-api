@@ -46,7 +46,7 @@ class PermissionResource extends JsonResource
             'is_show' => $this->is_show,
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'children' => $this->children,
+            'children' => self::collection($this->children),
         ];
     }
 }
