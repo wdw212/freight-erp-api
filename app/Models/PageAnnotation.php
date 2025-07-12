@@ -20,6 +20,7 @@ class PageAnnotation extends Model
         CompanyHeader::class => '公司抬头',
         SftRecord::class => '收发通',
         Region::class => '地区',
+        Todo::class => '事项待办'
     ];
 
     /**
@@ -30,6 +31,7 @@ class PageAnnotation extends Model
         'company_header' => CompanyHeader::class,
         'sft_record' => SftRecord::class,
         'region' => Region::class,
+        'todo' => Todo::class,
     ];
 
     public $timestamps = false;
