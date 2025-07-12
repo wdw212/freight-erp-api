@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\OrderDelegationHeader;
 use App\Models\OrderFile;
 use App\Models\OrderPayment;
+use App\Models\OrderReceipt;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -59,6 +60,17 @@ class OrdersController extends Controller
                 }
                 $order->orderPayments()->saveMany($orderPaymentRelations);
             }
+
+            // 单据应收款
+            if (!empty($data['order_receipts'])) {
+                $orderReceipts = json_decode($data['order_receipts'], true);
+                $orderReceiptRelations = [];
+                foreach ($orderReceipts as $orderReceipt) {
+                    $orderReceiptRelations[] = new OrderReceipt($orderReceipt);
+                }
+                $order->orderReceipts()->saveMany($orderReceiptRelations);
+            }
+
 
             // 单据委托抬头
             if (!empty($data['order_delegation_header'])) {

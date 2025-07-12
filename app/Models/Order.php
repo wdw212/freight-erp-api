@@ -67,4 +67,13 @@ class Order extends Model
     {
         return $this->hasMany(OrderFile::class);
     }
+
+    /**
+     * 应收款
+     * @return HasMany
+     */
+    public function orderReceipts(): HasMany
+    {
+        return $this->hasMany(OrderReceipt::class);
+    }
 }
