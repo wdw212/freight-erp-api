@@ -34,7 +34,7 @@ class CompanyHeadersController extends Controller
         $builder = CompanyHeader::query()->whereBelongsTo($adminUser)->with(['adminUser:id,name'])->latest();
 
         if (!empty($keyword)) {
-            $builder = $builder->whereLike('name', '%' . $keyword . '%');
+            $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
         }
 
         if (!empty($operationUserId)) {
