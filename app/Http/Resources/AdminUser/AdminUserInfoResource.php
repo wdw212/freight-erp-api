@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\AdminUser;
 
+use App\Http\Resources\Permission\PermissionResource;
 use App\Http\Resources\Role\RoleResource;
 use App\Models\Permission;
 use Illuminate\Http\Request;
@@ -55,7 +56,7 @@ class AdminUserInfoResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'role' => $role,
             'seller_ids' => $this->seller_ids,
-            'permissions' => $permissions,
+            'permissions' => PermissionResource::collection($permissions),
         ];
     }
 }
