@@ -3,6 +3,7 @@
 namespace App\Http\Resources\AdminUser;
 
 use App\Http\Resources\Role\RoleResource;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -32,6 +33,13 @@ class AdminUserInfoResource extends JsonResource
     {
         $roleId = collect($this->roles)->first()->id ?? 0;
         $role = collect($this->roles)->select(['id', 'name', 'code'])->first();
+
+        $permissionIds = collect($this->roles)->first()->permissions->pluck('id')->toArray();
+        $permissions = Permission::query()->where('parent_id', 0)
+            ->with('children')
+            ->whereIn('id', $permissionIds)
+            ->get();
+
         return [
             'id' => $this->id,
             'department_id' => $this->department_id,
@@ -47,6 +55,7 @@ class AdminUserInfoResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'role' => $role,
             'seller_ids' => $this->seller_ids,
+            'permissions' => $permissions,
         ];
     }
 }
