@@ -37,16 +37,9 @@ class PermissionsController extends Controller
      * @param PermissionRequest $request
      * @param Permission $permission
      * @return PermissionInfoResource
-     * @throws InvalidRequestException
      */
     public function store(PermissionRequest $request, Permission $permission): PermissionInfoResource
     {
-        $data = $request->all();
-
-        if (Permission::query()->where('name', $data['name'])->exists()) {
-            throw new InvalidRequestException('名称已存在,请重试！');
-        }
-
         $permission->fill($request->all());
         $permission->save();
         return new PermissionInfoResource($permission);
@@ -67,14 +60,9 @@ class PermissionsController extends Controller
      * @param PermissionRequest $request
      * @param Permission $permission
      * @return PermissionInfoResource
-     * @throws InvalidRequestException
      */
     public function update(PermissionRequest $request, Permission $permission): PermissionInfoResource
     {
-        $data = $request->all();
-        if (Permission::query()->whereNot('id', $permission->id)->where('name', $data['name'])->exists()) {
-            throw new InvalidRequestException('名称已存在,请重试！');
-        }
         $permission->fill($request->all());
         $permission->update();
         return new PermissionInfoResource($permission);

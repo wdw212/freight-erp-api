@@ -115,6 +115,7 @@ class CompanyHeadersController extends Controller
     public function update(CompanyHeaderRequest $request, CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
         $data = $request->all();
+
         $data['company_type'] = json_decode($data['company_type'], true);
         if (!empty($data['business_user_ids'])) {
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
@@ -133,6 +134,7 @@ class CompanyHeadersController extends Controller
         } else {
             $data['document_user_ids'] = [];
         }
+        
         $companyHeader->fill($data);
         $companyHeader->update();
         return new CompanyHeaderInfoResource($companyHeader);
