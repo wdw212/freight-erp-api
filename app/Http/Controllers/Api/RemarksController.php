@@ -94,6 +94,7 @@ class RemarksController extends Controller
      */
     public function batchStoreOrUpdate(Request $request, Remark $remark): JsonResponse
     {
+        $adminUser = $request->user();
         $items = $request->input('items');
         if (empty($items)) {
             throw new InvalidRequestException('缺少必要参数,请重试！');
@@ -103,7 +104,7 @@ class RemarksController extends Controller
             if (isset($item['id'])) {
                 Remark::query()->where('id', $item['id'])->update(['content' => $item['content']]);
             } else {
-                Remark::query()->create($item);
+                Remark::query()->whereBelongsTo($adminUser)->create($item);
             }
         }
         return response()->json([
