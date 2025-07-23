@@ -3,7 +3,6 @@
 namespace App\Http\Resources\AdminUser;
 
 use App\Http\Resources\Permission\PermissionResource;
-use App\Http\Resources\Role\RoleResource;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

@@ -23,8 +23,9 @@ class RemarksController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        $adminUser = $request->user();
         $keyword = $request->input('keyword', '');
-        $builder = Remark::query()->latest();
+        $builder = Remark::query()->whereBelongsTo($adminUser)->latest();
         if (!empty($keyword)) {
             $builder = $builder->whereLike('content', '%' . $keyword . '%');
         }
