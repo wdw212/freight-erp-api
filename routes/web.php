@@ -16,13 +16,18 @@ Route::get('/test', static function () {
 });
 
 Route::get('/test2', static function () {
-    $orderTypes = OrderType::query()->get();
-    $data = [];
-    foreach ($orderTypes as $orderType) {
-        $data[] = [
-            'order_type_id' => $orderType->id,
-            'price' => 0
-        ];
-    }
-    dd(json_encode($data));
+    $data = [
+        [
+            'content' => '内容1'
+        ],
+        [
+            'content' => '内容2'
+        ],
+        [
+            'id' => 3,
+            'content' => '内容3'
+        ],
+    ];
+
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
 });

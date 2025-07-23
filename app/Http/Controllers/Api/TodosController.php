@@ -23,7 +23,8 @@ class TodosController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $adminUser = $request->user();
-        $todos = Todo::query()->whereBelongsTo($adminUser)
+        $todos = Todo::query()
+            ->whereBelongsTo($adminUser)
             ->orderBy('status')
             ->latest()
             ->get();

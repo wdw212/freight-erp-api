@@ -524,5 +524,8 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 备注 - 删除
     Route::delete('remarks/{remark}', [RemarksController::class, 'destroy'])
         ->name('remarks.destroy')->where('remark', '[0-9]+');
+    // 备注 - 批量新增或创建
+    Route::post('remarks/batch-store-or-update', [RemarksController::class, 'batchStoreOrUpdate'])
+        ->name('remarks.batch-store-or-update');
 });
 

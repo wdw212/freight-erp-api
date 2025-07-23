@@ -5,11 +5,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RemarkRequest;
 use App\Http\Resources\Remark\RemarkInfoResource;
 use App\Http\Resources\Remark\RemarkResource;
 use App\Models\Remark;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -60,6 +62,17 @@ class RemarksController extends Controller
     }
 
     /**
+     * 删除
+     * @param Remark $remark
+     * @return Response
+     */
+    public function destroy(Remark $remark): Response
+    {
+        $remark->delete();
+        return response()->noContent();
+    }
+
+    /**
      * 编辑
      * @param RemarkRequest $request
      * @param Remark $remark
@@ -73,13 +86,28 @@ class RemarksController extends Controller
     }
 
     /**
-     * 删除
+     * 批量新增或创建
+     * @param Request $request
      * @param Remark $remark
-     * @return Response
+     * @return JsonResponse
+     * @throws InvalidRequestException
      */
-    public function destroy(Remark $remark): Response
+    public function batchStoreOrUpdate(Request $request, Remark $remark): JsonResponse
     {
-        $remark->delete();
-        return response()->noContent();
+        $items = $request->input('items');
+        if (empty($items)) {
+            throw new InvalidRequestException('缺少必要参数,请重试！');
+        }
+        $items = json_decode($items, true);
+        foreach ($items as $item) {
+            if (isset($item['id'])) {
+                Remark::query()->where('id', $item['id'])->update(['content' => $item['content']]);
+            } else {
+                Remark::query()->create($item);
+            }
+        }
+        return response()->json([
+            'message' => '操作成功!'
+        ]);
     }
 }
