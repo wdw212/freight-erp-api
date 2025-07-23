@@ -104,7 +104,10 @@ class RemarksController extends Controller
             if (isset($item['id'])) {
                 Remark::query()->where('id', $item['id'])->update(['content' => $item['content']]);
             } else {
-                Remark::query()->whereBelongsTo($adminUser)->create($item);
+                $remark = new Remark();
+                $remark->adminUser()->associate($adminUser);
+                $remark->content = $item['content'];
+                $remark->save();
             }
         }
         return response()->json([
