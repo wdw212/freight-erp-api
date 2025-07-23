@@ -25,6 +25,7 @@ class TodosController extends Controller
         $adminUser = $request->user();
         $todos = Todo::query()->whereBelongsTo($adminUser)
             ->orderBy('status')
+            ->latest()
             ->get();
         TodoResource::wrap('data');
         return TodoResource::collection($todos);
