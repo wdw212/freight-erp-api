@@ -57,10 +57,10 @@ class CompanyHeadersController extends Controller
         if (!empty($documentUserId)) {
             $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
         }
-        Log::info('--搜索条件--111' . $companyTypeId);
+        Log::info('--搜索条件--111---' . $companyTypeId);
         if (!empty($companyTypeId)) {
-            Log::info('--搜索条件--222' . $companyTypeId);
-            $builder = $builder->whereJsonContains('company_type', $companyTypeId);
+            Log::info('--搜索条件--222---' . $companyTypeId);
+            $builder = $builder->whereJsonContains('company_type', (string)$companyTypeId);
         }
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate();
