@@ -29,7 +29,7 @@ class CompanyHeadersController extends Controller
         $operationUserId = $request->input('operation_user_id');
         $documentUserId = $request->input('document_user_id');
         $isPaginate = $request->input('is_paginate', 1);
-        $companyType = $request->input('company_type', '');
+        $companyTypeId = $request->input('company_type_id', '');
 
         $builder = CompanyHeader::query()
             ->whereBelongsTo($adminUser)
@@ -57,13 +57,8 @@ class CompanyHeadersController extends Controller
             $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
         }
 
-        if (!empty($companyType)) {
-            $builder = $builder->orWhere(function ($query) use ($companyType) {
-                $companyType = json_decode($companyType, true);
-                foreach ($companyType as $type) {
-                    $query->orWhereJsonContains('company_type', $type);
-                }
-            });
+        if (!empty($companyTypeId)) {
+            $builder = $builder->orWhereJsonContains('company_type', $companyTypeId);
         }
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate();
