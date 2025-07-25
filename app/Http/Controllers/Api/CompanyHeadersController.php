@@ -31,17 +31,30 @@ class CompanyHeadersController extends Controller
         $isPaginate = $request->input('is_paginate', 1);
         $companyType = $request->input('company_type', '');
 
-        $builder = CompanyHeader::query()->whereBelongsTo($adminUser)->with(['adminUser:id,name'])->latest();
+        $builder = CompanyHeader::query()
+            ->whereBelongsTo($adminUser)
+            ->with(['adminUser:id,name'])
+            ->latest();
+
+        // 如果搜索条件都为空
+        if (empty($keyword) || empty($operationUserId) || empty($documentUserId)) {
+            $builder = $builder->orWhere(function ($query) use ($adminUser) {
+                $query->orWhereJsonContains('operation_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('document_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('business_user_ids', $adminUser->id);
+            });
+        }
 
         if (!empty($keyword)) {
             $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
         }
 
         if (!empty($operationUserId)) {
-            $builder = $builder->where('operation_user_id', $operationUserId);
+            $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
         }
+
         if (!empty($documentUserId)) {
-            $builder = $builder->where('document_user_id', $documentUserId);
+            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
         }
 
         if (!empty($companyType)) {
@@ -134,7 +147,7 @@ class CompanyHeadersController extends Controller
         } else {
             $data['document_user_ids'] = [];
         }
-        
+
         $companyHeader->fill($data);
         $companyHeader->update();
         return new CompanyHeaderInfoResource($companyHeader);

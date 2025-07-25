@@ -71,7 +71,6 @@ class OrdersController extends Controller
                 $order->orderReceipts()->saveMany($orderReceiptRelations);
             }
 
-
             // 单据委托抬头
             if (!empty($data['order_delegation_header'])) {
                 $orderDelegationHeader = json_decode($data['order_delegation_header'], true);
@@ -122,8 +121,13 @@ class OrdersController extends Controller
             $orderPayments = json_decode($data['order_payments'], true);
 
             // 获取需要删除的数据
-            $oldOrderPaymentIds = OrderPayment::query()->where('order_id', $order->id)->pluck('id')->toArray();
-            $newOrderPaymentIds = collect($orderPayments)->pluck('id')->toArray();
+            $oldOrderPaymentIds = OrderPayment::query()
+                ->where('order_id', $order->id)
+                ->pluck('id')
+                ->toArray();
+            $newOrderPaymentIds = collect($orderPayments)
+                ->pluck('id')
+                ->toArray();
             $orderPaymentIds = array_diff($oldOrderPaymentIds, $newOrderPaymentIds);
             OrderPayment::query()->whereIn('id', $orderPaymentIds)->delete();
 
@@ -140,8 +144,6 @@ class OrdersController extends Controller
                         'usd_amount' => $orderPayment['usd_amount'],
                         'usd_invoice_number' => $orderPayment['usd_invoice_number'],
                         'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
-//                        'contact_person' => $orderPayment['contact_person'],
-//                        'contact_phone' => $orderPayment['contact_phone'],
                         'remark' => $orderPayment['remark'],
                     ]);
                 } else {
@@ -150,7 +152,6 @@ class OrdersController extends Controller
             }
             $order->orderPayments()->saveMany($orderPaymentRelations);
         }
-
         return new OrderInfoResource($order);
     }
 
