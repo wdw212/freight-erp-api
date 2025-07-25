@@ -60,7 +60,7 @@ class CompanyHeadersController extends Controller
         Log::info('--搜索条件--111---' . $companyTypeId);
         if (!empty($companyTypeId)) {
             Log::info('--搜索条件--222---' . $companyTypeId);
-            $builder = $builder->whereJsonContains('company_type', (string)$companyTypeId);
+            $builder = $builder->whereJsonContains('company_type', $companyTypeId);
         }
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate();
