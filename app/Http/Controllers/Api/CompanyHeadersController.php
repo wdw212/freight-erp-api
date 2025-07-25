@@ -14,6 +14,7 @@ use App\Models\CompanyHeader;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class CompanyHeadersController extends Controller
 {
@@ -58,7 +59,7 @@ class CompanyHeadersController extends Controller
         }
 
         if (!empty($companyTypeId)) {
-
+            Log::info('--搜索条件--' . $companyTypeId);
             $builder = $builder->whereJsonContains('company_type', $companyTypeId);
         }
         if ((int)$isPaginate === 1) {
