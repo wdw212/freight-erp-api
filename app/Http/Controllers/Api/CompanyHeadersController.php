@@ -58,7 +58,8 @@ class CompanyHeadersController extends Controller
         }
 
         if (!empty($companyTypeId)) {
-            $builder = $builder->whereJsonContains('company_type', (string)$companyTypeId);
+
+            $builder = $builder->whereJsonContains('company_type', $companyTypeId);
         }
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate();
