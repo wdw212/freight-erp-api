@@ -38,13 +38,13 @@ class CompanyHeadersController extends Controller
             ->latest();
 
         // 如果搜索条件都为空
-        if (empty($keyword) || empty($operationUserId) || empty($documentUserId)) {
-            $builder = $builder->orWhere(function ($query) use ($adminUser) {
-                $query->orWhereJsonContains('operation_user_ids', $adminUser->id)
-                    ->orWhereJsonContains('document_user_ids', $adminUser->id)
-                    ->orWhereJsonContains('business_user_ids', $adminUser->id);
-            });
-        }
+//        if (empty($keyword) || empty($operationUserId) || empty($documentUserId)) {
+//            $builder = $builder->orWhere(function ($query) use ($adminUser) {
+//                $query->orWhereJsonContains('operation_user_ids', $adminUser->id)
+//                    ->orWhereJsonContains('document_user_ids', $adminUser->id)
+//                    ->orWhereJsonContains('business_user_ids', $adminUser->id);
+//            });
+//        }
 
         if (!empty($keyword)) {
             $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
