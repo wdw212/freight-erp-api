@@ -80,14 +80,21 @@ class CompanyHeadersController extends Controller
      */
     public function store(CompanyHeaderRequest $request, CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
-
-        throw new InvalidRequestException('存在重复数据,请重试！');
-
+        
         $adminUser = $request->user();
         $data = $request->all();
         $data['company_type'] = json_decode($data['company_type'], true);
         if (!empty($data['business_user_ids'])) {
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
+            // 校验是否存在
+            $oldCompanyHeader = CompanyHeader::query()
+                ->where('company_name', $data['company_name'])
+                ->first();
+
+            if ($oldCompanyHeader) {
+                throw new InvalidRequestException('存在重复数据,请重试！');
+            }
+
         } else {
             $data['business_user_ids'] = [];
         }
