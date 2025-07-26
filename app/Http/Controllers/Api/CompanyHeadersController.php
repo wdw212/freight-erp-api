@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyHeaderRequest;
 use App\Http\Resources\CompanyHeader\CompanyHeaderInfoResource;
@@ -45,7 +46,6 @@ class CompanyHeadersController extends Controller
                     ->orWhereJsonContains('business_user_ids', $adminUser->id);
             });
         }
-
         if (!empty($keyword)) {
             $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
         }
@@ -76,9 +76,13 @@ class CompanyHeadersController extends Controller
      * @param CompanyHeaderRequest $request
      * @param CompanyHeader $companyHeader
      * @return CompanyHeaderInfoResource
+     * @throws InvalidRequestException
      */
     public function store(CompanyHeaderRequest $request, CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
+
+        throw new InvalidRequestException('存在重复数据,请重试！');
+
         $adminUser = $request->user();
         $data = $request->all();
         $data['company_type'] = json_decode($data['company_type'], true);
