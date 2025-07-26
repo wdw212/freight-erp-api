@@ -35,13 +35,5 @@ Route::get('/test2', static function () {
     $data['company_name'] = '宁波凌亚国际物流有限公司宁波分公司111';
     $builder = CompanyHeader::query()
         ->where('company_name', $data['company_name']);
-    $businessUserIds = $builder->clone()->pluck('business_user_ids')->toArray();
-    $businessUserIds = array_unique(Arr::collapse($businessUserIds));
-    $test = [1, 10, 13];
 
-    foreach ($test as $item) {
-        if (in_array($item, $businessUserIds)) {
-            throw new \App\Exceptions\InvalidRequestException('重复数据，请重试！');
-        }
-    }
 });

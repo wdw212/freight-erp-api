@@ -15,6 +15,7 @@ use App\Models\CompanyHeader;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 class CompanyHeadersController extends Controller
@@ -84,18 +85,18 @@ class CompanyHeadersController extends Controller
         $adminUser = $request->user();
         $data = $request->all();
         $data['company_type'] = json_decode($data['company_type'], true);
-
+        $builder = CompanyHeader::query()
+            ->where('company_name', $data['company_name']);
         if (!empty($data['business_user_ids'])) {
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
             // 校验是否存在
-
-
-//            $businessUserIds = $builder->clone()->pluck('business_user_ids')->toArray();
-//
-//            if ($oldCompanyHeader) {
-//                throw new InvalidRequestException('存在重复数据,请重试！');
-//            }
-
+            $oldBusinessUserIds = $builder->clone()->pluck('business_user_ids')->toArray();
+            $oldBusinessUserIds = array_unique(Arr::collapse($oldBusinessUserIds));
+            foreach ($data['business_user_ids'] as $id) {
+                if (in_array($id, $oldBusinessUserIds)) {
+                    throw new InvalidRequestException('重复业务员数据，请重试！');
+                }
+            }
         } else {
             $data['business_user_ids'] = [];
         }
