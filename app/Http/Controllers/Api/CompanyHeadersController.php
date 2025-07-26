@@ -87,6 +87,15 @@ class CompanyHeadersController extends Controller
         $data['company_type'] = json_decode($data['company_type'], true);
         $builder = CompanyHeader::query()
             ->where('company_name', $data['company_name']);
+        $oldCompanyType = $builder->clone()->pluck('company_type')->toArray();
+        $oldCompanyType = array_unique(Arr::collapse($oldCompanyType));
+
+        foreach ($data['company_type'] as $type) {
+            if (in_array($type, $oldCompanyType)) {
+                throw new InvalidRequestException(CompanyHeader::$companyTypeMap[$type] . '重复，请重试！');
+            }
+        }
+
         if (!empty($data['business_user_ids'])) {
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
             // 校验是否存在

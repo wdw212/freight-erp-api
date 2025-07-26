@@ -16,6 +16,12 @@ class CompanyHeader extends Model
         'document_user_ids' => 'json',
     ];
 
+    public static array $companyTypeMap = [
+        0 => '委托抬头',
+        1 => '应付抬头',
+        2 => '应收抬头'
+    ];
+
     /**
      * 关联公司类型
      * @return BelongsTo
