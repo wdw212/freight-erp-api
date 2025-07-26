@@ -37,6 +37,6 @@ Route::get('/test2', static function () {
         ->where('company_name', $data['company_name']);
 
     $businessUserIds = $builder->clone()->pluck('business_user_ids')->toArray();
-    dd($businessUserIds);
+    dd(Arr::wrap($businessUserIds));
 
 });
