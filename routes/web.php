@@ -37,7 +37,7 @@ Route::get('/test2', static function () {
         ->where('company_name', $data['company_name']);
     $businessUserIds = $builder->clone()->pluck('business_user_ids')->toArray();
     $businessUserIds = array_unique(Arr::collapse($businessUserIds));
-    $test = [1, 10, 11];
+    $test = [1, 10, 13];
 
     foreach ($test as $item) {
         if (in_array($item, $businessUserIds)) {
