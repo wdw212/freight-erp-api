@@ -89,8 +89,9 @@ class CompanyHeadersController extends Controller
             ->where('company_name', $data['company_name']);
         $oldCompanyType = $builder->clone()->pluck('company_type')->toArray();
         $oldCompanyType = array_unique(Arr::collapse($oldCompanyType));
-
+        Log::info($oldCompanyType);
         foreach ($data['company_type'] as $type) {
+            Log::info($type);
             if (in_array($type, $oldCompanyType)) {
                 throw new InvalidRequestException(CompanyHeader::$companyTypeMap[$type] . '重复，请重试！');
             }
