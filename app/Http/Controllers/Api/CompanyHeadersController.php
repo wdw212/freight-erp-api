@@ -80,7 +80,7 @@ class CompanyHeadersController extends Controller
      */
     public function store(CompanyHeaderRequest $request, CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
-        
+
         $adminUser = $request->user();
         $data = $request->all();
         $data['company_type'] = json_decode($data['company_type'], true);
@@ -89,6 +89,7 @@ class CompanyHeadersController extends Controller
             // 校验是否存在
             $oldCompanyHeader = CompanyHeader::query()
                 ->where('company_name', $data['company_name'])
+                ->where('company_type', $data['company_type'])
                 ->first();
 
             if ($oldCompanyHeader) {
