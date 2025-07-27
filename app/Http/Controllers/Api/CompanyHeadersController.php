@@ -91,7 +91,7 @@ class CompanyHeadersController extends Controller
         // 检测类型是否重复
         $oldCompanyType = $builder->clone()->pluck('company_type')->toArray();
         $oldCompanyType = array_unique(Arr::collapse($oldCompanyType));
-   
+
         foreach ($data['company_type'] as $type) {
             Log::info($type);
             if (in_array($type, $oldCompanyType)) {
@@ -105,7 +105,6 @@ class CompanyHeadersController extends Controller
             if (!empty($data['business_user_ids'])) {
                 foreach (CompanyHeader::$companyTypeMap as $type) {
                     $oldBusinessUserIds = $builder->clone()->whereJsonContains('company_type', $type)->pluck('business_user_ids')->toArray();
-                    Log::info($oldBusinessUserIds);
                     $oldBusinessUserIds = array_unique(Arr::collapse($oldBusinessUserIds));
                     foreach ($data['business_user_ids'] as $id) {
                         if (in_array($id, $oldBusinessUserIds)) {
@@ -126,6 +125,9 @@ class CompanyHeadersController extends Controller
                     // 校验是否存在
                     $oldOperationUserIds = $builder->clone()->whereJsonContains('company_type', $type)->pluck('operation_user_ids')->toArray();
                     $oldOperationUserIds = array_unique(Arr::collapse($oldOperationUserIds));
+
+                    Log::info('---测试---');
+                    Log::info($oldOperationUserIds);
                     foreach ($data['operation_user_ids'] as $id) {
                         if (in_array($id, $oldOperationUserIds)) {
                             throw new InvalidRequestException('业务员共享重复，请重试！');
