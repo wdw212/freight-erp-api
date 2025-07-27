@@ -91,7 +91,7 @@ class CompanyHeadersController extends Controller
         // 检测类型是否重复
         $oldCompanyType = $builder->clone()->pluck('company_type')->toArray();
         $oldCompanyType = array_unique(Arr::collapse($oldCompanyType));
-        Log::info($oldCompanyType);
+   
         foreach ($data['company_type'] as $type) {
             Log::info($type);
             if (in_array($type, $oldCompanyType)) {
@@ -105,6 +105,7 @@ class CompanyHeadersController extends Controller
             if (!empty($data['business_user_ids'])) {
                 foreach (CompanyHeader::$companyTypeMap as $type) {
                     $oldBusinessUserIds = $builder->clone()->whereJsonContains('company_type', $type)->pluck('business_user_ids')->toArray();
+                    Log::info($oldBusinessUserIds);
                     $oldBusinessUserIds = array_unique(Arr::collapse($oldBusinessUserIds));
                     foreach ($data['business_user_ids'] as $id) {
                         if (in_array($id, $oldBusinessUserIds)) {
@@ -120,8 +121,6 @@ class CompanyHeadersController extends Controller
 
         if (!empty($data['operation_user_ids'])) {
             $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
-
-
             if (!empty($data['operation_user_ids'])) {
                 foreach (CompanyHeader::$companyTypeMap as $type) {
                     // 校验是否存在
@@ -154,7 +153,6 @@ class CompanyHeadersController extends Controller
                     }
                 }
             }
-
         } else {
             $data['document_user_ids'] = [];
         }
