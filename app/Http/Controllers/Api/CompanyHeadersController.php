@@ -102,29 +102,35 @@ class CompanyHeadersController extends Controller
         if (!empty($data['business_user_ids'])) {
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
             // 校验是否存在
-            foreach (CompanyHeader::$companyTypeMap as $type) {
-                $oldBusinessUserIds = $builder->clone()->whereJsonContains('company_type', $type)->pluck('business_user_ids')->toArray();
-                $oldBusinessUserIds = array_unique(Arr::collapse($oldBusinessUserIds));
-                foreach ($data['business_user_ids'] as $id) {
-                    if (in_array($id, $oldBusinessUserIds)) {
-                        throw new InvalidRequestException('业务员共享重复，请重试！');
+            if (!empty($data['business_user_ids'])) {
+                foreach (CompanyHeader::$companyTypeMap as $type) {
+                    $oldBusinessUserIds = $builder->clone()->whereJsonContains('company_type', $type)->pluck('business_user_ids')->toArray();
+                    $oldBusinessUserIds = array_unique(Arr::collapse($oldBusinessUserIds));
+                    foreach ($data['business_user_ids'] as $id) {
+                        if (in_array($id, $oldBusinessUserIds)) {
+                            throw new InvalidRequestException('业务员共享重复，请重试！');
+                        }
                     }
                 }
             }
+
         } else {
             $data['business_user_ids'] = [];
         }
 
         if (!empty($data['operation_user_ids'])) {
             $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
-            // 校验是否存在
-            $oldOperationUserIds = $builder->clone()->pluck('operation_user_ids')->toArray();
-            $oldOperationUserIds = array_unique(Arr::collapse($oldOperationUserIds));
+
 
             if (!empty($data['operation_user_ids'])) {
-                foreach ($data['operation_user_ids'] as $id) {
-                    if (in_array($id, $oldOperationUserIds)) {
-                        throw new InvalidRequestException('业务员共享重复，请重试！');
+                foreach (CompanyHeader::$companyTypeMap as $type) {
+                    // 校验是否存在
+                    $oldOperationUserIds = $builder->clone()->whereJsonContains('company_type', $type)->pluck('operation_user_ids')->toArray();
+                    $oldOperationUserIds = array_unique(Arr::collapse($oldOperationUserIds));
+                    foreach ($data['operation_user_ids'] as $id) {
+                        if (in_array($id, $oldOperationUserIds)) {
+                            throw new InvalidRequestException('业务员共享重复，请重试！');
+                        }
                     }
                 }
             }
@@ -135,13 +141,16 @@ class CompanyHeadersController extends Controller
         if (!empty($data['document_user_ids'])) {
             $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
             // 校验是否存在
-            $oldDocumentUserIds = $builder->clone()->pluck('document_user_ids')->toArray();
-            $oldDocumentUserIds = array_unique(Arr::collapse($oldDocumentUserIds));
+
 
             if (!empty($data['document_user_ids'])) {
-                foreach ($data['operation_user_ids'] as $id) {
-                    if (in_array($id, $oldDocumentUserIds)) {
-                        throw new InvalidRequestException('业务员共享重复，请重试！');
+                foreach (CompanyHeader::$companyTypeMap as $type) {
+                    $oldDocumentUserIds = $builder->clone()->whereJsonContains('company_type', $type)->pluck('document_user_ids')->toArray();
+                    $oldDocumentUserIds = array_unique(Arr::collapse($oldDocumentUserIds));
+                    foreach ($data['operation_user_ids'] as $id) {
+                        if (in_array($id, $oldDocumentUserIds)) {
+                            throw new InvalidRequestException('业务员共享重复，请重试！');
+                        }
                     }
                 }
             }
@@ -149,7 +158,6 @@ class CompanyHeadersController extends Controller
         } else {
             $data['document_user_ids'] = [];
         }
-
         $companyHeader->fill($data);
         $companyHeader->adminUser()->associate($adminUser);
         $companyHeader->save();
