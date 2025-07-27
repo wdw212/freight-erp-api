@@ -1,4 +1,7 @@
 <?php
+/**
+ * 角色
+ */
 
 namespace App\Models;
 

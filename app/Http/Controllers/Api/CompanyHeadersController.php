@@ -47,22 +47,22 @@ class CompanyHeadersController extends Controller
                     ->orWhereJsonContains('business_user_ids', $adminUser->id);
             });
         }
-        if (!empty($keyword)) {
-            $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
-        }
-
-        if (!empty($operationUserId)) {
-            $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
-        }
-
-        if (!empty($documentUserId)) {
-            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
-        }
-        Log::info('--搜索条件--111---' . $companyTypeId);
-        if (!empty($companyTypeId)) {
-            Log::info('--搜索条件--222---' . $companyTypeId);
-            $builder = $builder->whereJsonContains('company_type', (int)$companyTypeId);
-        }
+//        if (!empty($keyword)) {
+//            $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
+//        }
+//
+//        if (!empty($operationUserId)) {
+//            $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
+//        }
+//
+//        if (!empty($documentUserId)) {
+//            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
+//        }
+//
+//        if (!empty($companyTypeId)) {
+//            Log::info('--搜索条件--222---' . $companyTypeId);
+//            $builder = $builder->whereJsonContains('company_type', (int)$companyTypeId);
+//        }
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate();
         } else {
