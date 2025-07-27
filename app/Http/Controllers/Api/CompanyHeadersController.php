@@ -120,9 +120,12 @@ class CompanyHeadersController extends Controller
             // 校验是否存在
             $oldOperationUserIds = $builder->clone()->pluck('operation_user_ids')->toArray();
             $oldOperationUserIds = array_unique(Arr::collapse($oldOperationUserIds));
-            foreach ($data['operation_user_ids'] as $id) {
-                if (in_array($id, $oldOperationUserIds)) {
-                    throw new InvalidRequestException('业务员共享重复，请重试！');
+
+            if (!empty($data['operation_user_ids'])) {
+                foreach ($data['operation_user_ids'] as $id) {
+                    if (in_array($id, $oldOperationUserIds)) {
+                        throw new InvalidRequestException('业务员共享重复，请重试！');
+                    }
                 }
             }
         } else {
@@ -134,11 +137,15 @@ class CompanyHeadersController extends Controller
             // 校验是否存在
             $oldDocumentUserIds = $builder->clone()->pluck('document_user_ids')->toArray();
             $oldDocumentUserIds = array_unique(Arr::collapse($oldDocumentUserIds));
-            foreach ($data['operation_user_ids'] as $id) {
-                if (in_array($id, $oldDocumentUserIds)) {
-                    throw new InvalidRequestException('业务员共享重复，请重试！');
+
+            if (!empty($data['document_user_ids'])) {
+                foreach ($data['operation_user_ids'] as $id) {
+                    if (in_array($id, $oldDocumentUserIds)) {
+                        throw new InvalidRequestException('业务员共享重复，请重试！');
+                    }
                 }
             }
+
         } else {
             $data['document_user_ids'] = [];
         }
