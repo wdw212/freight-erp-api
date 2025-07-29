@@ -97,26 +97,26 @@ class OrdersController extends Controller
                 $containers = json_decode($data['containers'], true);
                 $containerRelations = [];
                 foreach ($containers as $container) {
-                    $container = new Container($container);
-                    $container->order()->associate($order);
-                    $container->save();
+                    $containerModel = new Container($container);
+                    $containerModel->order()->associate($order);
+                    $containerModel->save();
 
-                    $containerItems = $container['container_items'];
+
+                    $containerItems = $containerModel['container_items'];
                     foreach ($containerItems as $containerItem) {
                         $containerItem = new ContainerItem($containerItem);
-                        $containerItem->container()->associate($container);
+                        $containerItem->container()->associate($containerModel);
                         $containerItem->save();
                     }
 
-                    $containerLoadingAddresses = $container['container_loading_addresses'];
+                    $containerLoadingAddresses = $containerModel['container_loading_addresses'];
 
                     foreach ($containerLoadingAddresses as $containerLoadingAddress) {
                         $containerLoadingAddress = new ContainerLoadingAddress($containerLoadingAddress);
-                        $containerLoadingAddress->container()->associate($container);
+                        $containerLoadingAddress->container()->associate($containerModel);
                         $containerLoadingAddress->save();
                     }
                 }
-                $order->containers()->saveMany($containerRelations);
             }
 
             return $order;
