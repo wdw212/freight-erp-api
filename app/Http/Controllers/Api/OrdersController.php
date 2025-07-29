@@ -9,6 +9,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\Order\OrderInfoResource;
 use App\Http\Resources\Order\OrderResource;
+use App\Models\Container;
+use App\Models\ContainerItem;
+use App\Models\ContainerLoadingAddress;
 use App\Models\Order;
 use App\Models\OrderDelegationHeader;
 use App\Models\OrderFile;
@@ -90,6 +93,31 @@ class OrdersController extends Controller
             }
 
             // 处理箱子
+            if (!empty($data['containers'])) {
+                $containers = json_decode($data['containers'], true);
+                $containerRelations = [];
+                foreach ($containers as $container) {
+                    $container = new Container($container);
+                    $container->order()->associate($order);
+                    $container->save();
+
+                    $containerItems = $container['container_items'];
+                    foreach ($containerItems as $containerItem) {
+                        $containerItem = new ContainerItem($containerItem);
+                        $containerItem->container()->associate($container);
+                        $containerItem->save();
+                    }
+
+                    $containerLoadingAddresses = $container['container_loading_addresses'];
+
+                    foreach ($containerLoadingAddresses as $containerLoadingAddress) {
+                        $containerLoadingAddress = new ContainerLoadingAddress($containerLoadingAddress);
+                        $containerLoadingAddress->container()->associate($container);
+                        $containerLoadingAddress->save();
+                    }
+                }
+                $order->containers()->saveMany($containerRelations);
+            }
 
             return $order;
         });

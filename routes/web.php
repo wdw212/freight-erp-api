@@ -40,7 +40,7 @@ Route::get('/test2', static function () {
                     'remark' => '备注'
                 ],
             ],
-            'container_loading_address' => [
+            'container_loading_addresses' => [
                 [
                     'loading_address_id' => 1,
                     'loading_address' => '装柜地址',

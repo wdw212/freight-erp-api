@@ -76,4 +76,12 @@ class Order extends Model
     {
         return $this->hasMany(OrderReceipt::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function containers(): HasMany
+    {
+        return $this->hasMany(Container::class);
+    }
 }
