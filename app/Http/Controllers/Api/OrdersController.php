@@ -102,14 +102,14 @@ class OrdersController extends Controller
                     $containerModel->save();
 
 
-                    $containerItems = $containerModel['container_items'];
+                    $containerItems = $container['container_items'];
                     foreach ($containerItems as $containerItem) {
                         $containerItem = new ContainerItem($containerItem);
                         $containerItem->container()->associate($containerModel);
                         $containerItem->save();
                     }
 
-                    $containerLoadingAddresses = $containerModel['container_loading_addresses'];
+                    $containerLoadingAddresses = $container['container_loading_addresses'];
 
                     foreach ($containerLoadingAddresses as $containerLoadingAddress) {
                         $containerLoadingAddress = new ContainerLoadingAddress($containerLoadingAddress);
