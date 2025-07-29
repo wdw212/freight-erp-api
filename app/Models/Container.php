@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Container extends Model
 {
-    protected $guarded = [];
+    protected $guarded = ['container_items', 'container_loading_address'];
 
     /**
      * @return BelongsTo
