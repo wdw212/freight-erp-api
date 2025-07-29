@@ -69,7 +69,6 @@ class CompanyHeadersController extends Controller
             $companyHeaders = $builder->get();
             CompanyTypeResource::wrap('data');
         }
-        
         return CompanyHeaderResource::collection($companyHeaders);
     }
 

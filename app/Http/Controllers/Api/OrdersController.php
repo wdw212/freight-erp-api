@@ -88,6 +88,9 @@ class OrdersController extends Controller
                 }
                 $order->orderFiles()->saveMany($orderFileRelations);
             }
+
+            // 处理箱子
+
             return $order;
         });
 
@@ -119,8 +122,7 @@ class OrdersController extends Controller
         // 处理应付款
         if (!empty($data['order_payments'])) {
             $orderPayments = json_decode($data['order_payments'], true);
-
-            // 获取需要删除的数据
+            // 处理需要删除的数据
             $oldOrderPaymentIds = OrderPayment::query()
                 ->where('order_id', $order->id)
                 ->pluck('id')
@@ -130,7 +132,6 @@ class OrdersController extends Controller
                 ->toArray();
             $orderPaymentIds = array_diff($oldOrderPaymentIds, $newOrderPaymentIds);
             OrderPayment::query()->whereIn('id', $orderPaymentIds)->delete();
-
             $orderPaymentRelations = [];
             foreach ($orderPayments as $orderPayment) {
                 if (isset($orderPayment['id'])) {
@@ -152,6 +153,18 @@ class OrdersController extends Controller
             }
             $order->orderPayments()->saveMany($orderPaymentRelations);
         }
+
+        // 处理应收款
+        if (!empty($data['order_receipts'])) {
+            $orderReceipts = json_decode($data['order_receipts'], true);
+            $orderReceiptRelations = [];
+            foreach ($orderReceipts as $orderReceipt) {
+                $orderReceiptRelations[] = new OrderReceipt($orderReceipt);
+            }
+            $order->orderReceipts()->saveMany($orderReceiptRelations);
+        }
+
+
         return new OrderInfoResource($order);
     }
 

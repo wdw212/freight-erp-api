@@ -17,23 +17,27 @@ Route::get('/test', static function () {
 });
 
 Route::get('/test2', static function () {
-//    $data = [
-//        [
-//            'content' => '内容1'
-//        ],
-//        [
-//            'content' => '内容2'
-//        ],
-//        [
-//            'id' => 3,
-//            'content' => '内容3'
-//        ],
-//    ];
-//
-//    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    $data = [
+        [
+            'no' => '内容1',
+            'seal_number' => '封号',
+            'container_type_id' => 1,
+            'serial_number' => '序列号',
+            'pre_pull_wharf_id' => 1,
+            'wharf_id' => 1,
+            'drop_off_wharf_id' => 1,
+            'is_entered_port' => 1,
+            'driver' => '司机信息',
+            'fleet_id' => 1,
+            'cargo_weight' => 100,
+            'loading_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+        ],
+    ];
 
-    $data['company_name'] = '宁波凌亚国际物流有限公司宁波分公司111';
-    $builder = CompanyHeader::query()
-        ->where('company_name', $data['company_name']);
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+
+//    $data['company_name'] = '宁波凌亚国际物流有限公司宁波分公司111';
+//    $builder = CompanyHeader::query()
+//        ->where('company_name', $data['company_name']);
 
 });
