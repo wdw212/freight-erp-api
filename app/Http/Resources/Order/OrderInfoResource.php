@@ -35,6 +35,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderPayments
  * @property mixed $orderFiles
  * @property mixed $orderDelegationHeader
+ * @property mixed $containers
  */
 class OrderInfoResource extends JsonResource
 {
@@ -75,6 +76,7 @@ class OrderInfoResource extends JsonResource
             'order_payments' => OrderPaymentResource::collection($this->orderPayments),
             'order_delegation_header' => $this->orderDelegationHeader,
             'order_files' => $orderFiles,
+            'containers' => $this->containers,
         ];
     }
 }

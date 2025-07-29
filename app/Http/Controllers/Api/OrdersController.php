@@ -122,7 +122,11 @@ class OrdersController extends Controller
             return $order;
         });
 
-        return new OrderInfoResource($order);
+        return new OrderInfoResource($order->load([
+            'containers',
+            'containers.containerItems',
+            'containers.containerLoadingAddresses',
+        ]));
     }
 
     /**
