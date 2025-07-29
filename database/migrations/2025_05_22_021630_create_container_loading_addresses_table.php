@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('container_id')->comment('集装箱ID');
             $table->unsignedBigInteger('loading_address_id')->comment('装柜地址ID')->default(0);
-            $table->string('loading_address')->comment('地址')->nullable();
-            $table->string('address')->comment('装柜地址');
+            $table->string('loading_address')->comment('装柜地址')->nullable();
+            $table->string('address')->comment('地址');
             $table->string('contact_name')->comment('联系人')->nullable();
             $table->string('phone')->comment('联系方式')->nullable();
             $table->text('remark')->comment('备注')->nullable();

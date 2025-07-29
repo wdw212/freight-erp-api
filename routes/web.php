@@ -31,6 +31,25 @@ Route::get('/test2', static function () {
             'fleet_id' => 1,
             'cargo_weight' => 100,
             'loading_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+            'container_items' => [
+                [
+                    'bl_no' => '213123',
+                    'quantity' => 1,
+                    'gross_weight' => '100',
+                    'volume' => 10,
+                    'remark' => '备注'
+                ],
+            ],
+            'container_loading_address' => [
+                [
+                    'loading_address_id' => 1,
+                    'loading_address' => '装柜地址',
+                    'address' => '地址',
+                    'contact_name' => '联系人',
+                    'phone' => '联系方式',
+                    'remark' => '备注'
+                ]
+            ]
         ],
     ];
 
