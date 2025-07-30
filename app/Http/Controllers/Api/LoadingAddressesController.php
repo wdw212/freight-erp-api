@@ -25,6 +25,7 @@ class LoadingAddressesController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        $adminUser = $request->user();
         $isPaginate = $request->input('is_paginate', 1);
         $keyword = $request->input('keyword', '');
         $businessUserId = $request->input('business_user_id');
@@ -34,6 +35,16 @@ class LoadingAddressesController extends Controller
         $builder = LoadingAddress::query()
             ->with(['region:id,name', 'adminUser:id,name'])
             ->latest();
+
+        if (!$adminUser->hasRole('超管')) {
+            // 如果不是超管，隔离数据
+            $builder = $builder->where(function ($query) use ($adminUser) {
+                $query->whereJsonContains('business_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('operation_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('document_user_ids', $adminUser->id);
+            });
+        }
+
 
         if (!empty($keyword)) {
             $builder = $builder->whereLike('keyword', '%' . $keyword . '%')
@@ -45,7 +56,6 @@ class LoadingAddressesController extends Controller
         if (!empty($businessUserId)) {
             $builder = $builder->whereJsonContains('business_user_ids', (int)$businessUserId);
         }
-
         if (!empty($operationUserId)) {
             $builder = $builder->whereJsonContains('operation_user_ids', (int)$operationUserId);
         }
