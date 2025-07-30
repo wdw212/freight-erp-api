@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoadingAddressRequest;
 use App\Http\Resources\LoadingAddress\LoadingAddressInfoResource;
@@ -77,11 +78,17 @@ class LoadingAddressesController extends Controller
      * @param LoadingAddressRequest $request
      * @param LoadingAddress $loadingAddress
      * @return LoadingAddressInfoResource
+     * @throws InvalidRequestException
      */
     public function store(LoadingAddressRequest $request, LoadingAddress $loadingAddress): LoadingAddressInfoResource
     {
         $data = $request->all();
         $adminUser = $request->user();
+
+        if (LoadingAddress::query()->where('address', $data['address'])->exists()) {
+            throw new InvalidRequestException('地址已存在!');
+        }
+
         if (!empty($data['business_user_ids'])) {
             if (!is_array($data['business_user_ids'])) {
                 $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
@@ -89,7 +96,6 @@ class LoadingAddressesController extends Controller
         } else {
             $data['business_user_ids'] = [];
         }
-
         if (!empty($data['operation_user_ids'])) {
             if (!is_array($data['operation_user_ids'])) {
                 $data['operation_user_ids'] = json_decode($data['operation_user_ids'], true);
