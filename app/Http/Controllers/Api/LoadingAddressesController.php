@@ -37,7 +37,7 @@ class LoadingAddressesController extends Controller
             ->with(['region:id,name', 'adminUser:id,name'])
             ->latest();
 
-        if (!$adminUser->hasRole('超管') || !$adminUser->hasRole('财务')) {
+        if (!$adminUser->hasRole('超管')) {
             // 如果不是超管，隔离数据
             $builder = $builder->where(function ($query) use ($adminUser) {
                 $query->whereJsonContains('business_user_ids', $adminUser->id)
