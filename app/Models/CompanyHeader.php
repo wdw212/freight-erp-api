@@ -9,6 +9,9 @@ class CompanyHeader extends Model
 {
     protected $guarded = [];
 
+    /**
+     * @var string[]
+     */
     protected $casts = [
         'company_type' => 'json',
         'business_user_ids' => 'json',
@@ -16,6 +19,9 @@ class CompanyHeader extends Model
         'document_user_ids' => 'json',
     ];
 
+    /**
+     * @var array|string[]
+     */
     public static array $companyTypeMap = [
         0 => '委托抬头',
         1 => '应付抬头',

@@ -33,7 +33,7 @@ class YardWharvesController extends Controller
             $builder = $builder->where('type', $type);
         }
         if ($isPaginate) {
-            $yardWharves = $builder->paginate($isPaginate);
+            $yardWharves = $builder->paginate();
         } else {
             $yardWharves = $builder->get();
             YardWharfResource::wrap('data');
