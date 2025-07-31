@@ -217,7 +217,7 @@ class LoadingAddressesController extends Controller
                             })
                             ->first();
                         if ($oldLoadingAddress) {
-                            throw new InvalidRequestException('业务员:' . $adminUser->name . '已拥有,请重试!');
+                            throw new InvalidRequestException('业务员:' . $currentAdminUser->name . '已拥有,请重试!');
                         }
                     }
                 }
@@ -241,7 +241,7 @@ class LoadingAddressesController extends Controller
                         })
                         ->first();
                     if ($oldLoadingAddress) {
-                        throw new InvalidRequestException('操作员:' . $adminUser->name . '已拥有,请重试!');
+                        throw new InvalidRequestException('操作员:' . $currentAdminUser->name . '已拥有,请重试!');
                     }
                 }
             }
@@ -264,7 +264,7 @@ class LoadingAddressesController extends Controller
                         })
                         ->first();
                     if ($oldLoadingAddress) {
-                        throw new InvalidRequestException('单证员:' . $adminUser->name . '已拥有,请重试!');
+                        throw new InvalidRequestException('单证员:' . $currentAdminUser->name . '已拥有,请重试!');
                     }
                 }
             }
