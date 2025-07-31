@@ -206,7 +206,7 @@ class LoadingAddressesController extends Controller
 
             if ($adminUser->id !== $loadingAddress->admin_user_id) {
                 foreach ($data['business_user_ids'] as $businessUserId) {
-                    if ($businessUserId !== $adminUser->id) {
+                    if ((int)$businessUserId !== (int)$adminUser->id) {
                         $currentAdminUser = AdminUser::query()->where('id', $businessUserId)->first();
                         $oldLoadingAddress = LoadingAddress::query()
                             ->where('address', $data['address'])
