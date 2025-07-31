@@ -15,11 +15,29 @@ class YardWharvesController extends Controller
 {
     /**
      * 列表
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $yardWharves = YardWharf::query()->orderByDesc('id')->paginate();
+        $keyword = $request->input('keyword', '');
+        $type = $request->input('type', '');
+        $isPaginate = $request->input('is_paginate', 1);
+
+        $builder = YardWharf::query()->orderByDesc('id');
+
+        if (!empty($keyword)) {
+            $builder = $builder->where('name', 'like', "%{$keyword}%");
+        }
+        if (!empty($type)) {
+            $builder = $builder->where('type', $type);
+        }
+        if ($isPaginate) {
+            $yardWharves = $builder->paginate($isPaginate);
+        } else {
+            $yardWharves = $builder->get();
+            YardWharfResource::wrap('data');
+        }
         return YardWharfResource::collection($yardWharves);
     }
 
