@@ -43,7 +43,7 @@ class LoadingAddressesController extends Controller
             $builder = $builder->where(function ($query) use ($adminUser) {
                 $query
                     ->where('admin_user_id', $adminUser->id)
-                    ->WhereJsonContains('business_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('business_user_ids', $adminUser->id)
                     ->orWhereJsonContains('operation_user_ids', $adminUser->id)
                     ->orWhereJsonContains('document_user_ids', $adminUser->id);
             });
