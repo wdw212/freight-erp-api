@@ -21,7 +21,7 @@ class YardWharvesController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $keyword = $request->input('keyword', '');
-        $type = $request->input('type', '');
+        $type = $request->input('type');
         $isPaginate = $request->input('is_paginate', 1);
 
         $builder = YardWharf::query()->orderByDesc('id');
@@ -29,7 +29,7 @@ class YardWharvesController extends Controller
         if (!empty($keyword)) {
             $builder = $builder->where('name', 'like', "%{$keyword}%");
         }
-        if (!empty($type)) {
+        if (isset($type)) {
             $builder = $builder->where('type', $type);
         }
         if ($isPaginate) {
