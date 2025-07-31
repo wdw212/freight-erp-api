@@ -96,7 +96,6 @@ class LoadingAddressesController extends Controller
         if ($oldLoadingAddress) {
             throw new InvalidRequestException('地址已存在!');
         }
-
         if (!empty($data['business_user_ids'])) {
             if (!is_array($data['business_user_ids'])) {
                 $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
@@ -170,11 +169,19 @@ class LoadingAddressesController extends Controller
 
     /**
      * 删除
+     * @param Request $request
      * @param LoadingAddress $loadingAddress
      * @return Response
+     * @throws InvalidRequestException
      */
-    public function destroy(LoadingAddress $loadingAddress): Response
+    public function destroy(Request $request, LoadingAddress $loadingAddress): Response
     {
+        $adminUser = $request->user();
+
+        if ((int)$adminUser->id !== (int)$loadingAddress->admin_user_id) {
+            throw new InvalidRequestException('只能创建人删除');
+        }
+
         $loadingAddress->delete();
         return response()->noContent();
     }

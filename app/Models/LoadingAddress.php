@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property mixed $admin_user_id
+ */
 class LoadingAddress extends Model
 {
     protected $guarded = [];
