@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoadingAddressRequest;
 use App\Http\Resources\LoadingAddress\LoadingAddressInfoResource;
 use App\Http\Resources\LoadingAddress\LoadingAddressResource;
+use App\Models\AdminUser;
 use App\Models\LoadingAddress;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -147,6 +148,22 @@ class LoadingAddressesController extends Controller
 
         if (!empty($data['business_user_ids'])) {
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
+
+            foreach ($data['business_user_ids'] as $businessUserId) {
+                $adminUser = AdminUser::query()->where('id', $businessUserId)->first();
+                $oldLoadingAddress = LoadingAddress::query()
+                    ->where('address', $data['address'])
+                    ->where(function ($query) use ($adminUser) {
+                        $query->whereJsonContains('business_user_ids', $adminUser->id)
+                            ->orWhereJsonContains('operation_user_ids', $adminUser->id)
+                            ->orWhereJsonContains('document_user_ids', $adminUser->id);
+                    })
+                    ->first();
+                if ($oldLoadingAddress) {
+                    throw new InvalidRequestException('业务员:' . $adminUser->name . '已拥有,请重试!');
+                }
+            }
+
         } else {
             $data['business_user_ids'] = [];
         }
