@@ -36,13 +36,13 @@ class LoadingAddressesController extends Controller
 
         $builder = LoadingAddress::query()
             ->with(['region:id,name', 'adminUser:id,name'])
-            ->where('admin_user_id', $adminUser->id)
             ->latest();
 
         if (!$adminUser->hasRole('超管')) {
             // 如果不是超管，隔离数据
             $builder = $builder->where(function ($query) use ($adminUser) {
                 $query
+                    ->where('admin_user_id', $adminUser->id)
                     ->WhereJsonContains('business_user_ids', $adminUser->id)
                     ->orWhereJsonContains('operation_user_ids', $adminUser->id)
                     ->orWhereJsonContains('document_user_ids', $adminUser->id);
