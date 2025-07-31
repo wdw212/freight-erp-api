@@ -206,17 +206,19 @@ class LoadingAddressesController extends Controller
 
             if ($adminUser->id !== $loadingAddress->admin_user_id) {
                 foreach ($data['business_user_ids'] as $businessUserId) {
-                    $currentAdminUser = AdminUser::query()->where('id', $businessUserId)->first();
-                    $oldLoadingAddress = LoadingAddress::query()
-                        ->where('address', $data['address'])
-                        ->where(function ($query) use ($currentAdminUser) {
-                            $query->whereJsonContains('business_user_ids', $currentAdminUser->id)
-                                ->orWhereJsonContains('operation_user_ids', $currentAdminUser->id)
-                                ->orWhereJsonContains('document_user_ids', $currentAdminUser->id);
-                        })
-                        ->first();
-                    if ($oldLoadingAddress) {
-                        throw new InvalidRequestException('业务员:' . $adminUser->name . '已拥有,请重试!');
+                    if ($businessUserId !== $adminUser->id) {
+                        $currentAdminUser = AdminUser::query()->where('id', $businessUserId)->first();
+                        $oldLoadingAddress = LoadingAddress::query()
+                            ->where('address', $data['address'])
+                            ->where(function ($query) use ($currentAdminUser) {
+                                $query->whereJsonContains('business_user_ids', $currentAdminUser->id)
+                                    ->orWhereJsonContains('operation_user_ids', $currentAdminUser->id)
+                                    ->orWhereJsonContains('document_user_ids', $currentAdminUser->id);
+                            })
+                            ->first();
+                        if ($oldLoadingAddress) {
+                            throw new InvalidRequestException('业务员:' . $adminUser->name . '已拥有,请重试!');
+                        }
                     }
                 }
             }
