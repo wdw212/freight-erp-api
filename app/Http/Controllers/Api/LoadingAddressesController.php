@@ -46,7 +46,6 @@ class LoadingAddressesController extends Controller
             });
         }
 
-
         if (!empty($keyword)) {
             $builder = $builder->whereLike('keyword', '%' . $keyword . '%')
                 ->orWhereLike('address', '%' . $keyword . '%')
@@ -85,7 +84,16 @@ class LoadingAddressesController extends Controller
         $data = $request->all();
         $adminUser = $request->user();
 
-        if (LoadingAddress::query()->where('address', $data['address'])->exists()) {
+        $oldLoadingAddress = LoadingAddress::query()
+            ->where('address', $data['address'])
+            ->where(function ($query) use ($adminUser) {
+                $query->whereJsonContains('business_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('operation_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('document_user_ids', $adminUser->id);
+            })
+            ->first();
+
+        if ($oldLoadingAddress) {
             throw new InvalidRequestException('地址已存在!');
         }
 
