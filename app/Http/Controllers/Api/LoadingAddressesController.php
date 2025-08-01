@@ -242,10 +242,9 @@ class LoadingAddressesController extends Controller
                         $currentAdminUser = AdminUser::query()->where('id', $operationUserId)->first();
                         $oldLoadingAddress = LoadingAddress::query()
                             ->where('address', $data['address'])
+                            ->whereNot('id', $loadingAddress->id)
                             ->where(function ($query) use ($currentAdminUser) {
-                                $query->whereJsonContains('business_user_ids', $currentAdminUser->id)
-                                    ->orWhereJsonContains('operation_user_ids', $currentAdminUser->id)
-                                    ->orWhereJsonContains('document_user_ids', $currentAdminUser->id);
+                                $query->WhereJsonContains('operation_user_ids', $currentAdminUser->id);
                             })
                             ->first();
                         if ($oldLoadingAddress) {
@@ -265,11 +264,10 @@ class LoadingAddressesController extends Controller
                     if ((int)$documentUserId !== (int)$loadingAddress->admin_user_id) {
                         $currentAdminUser = AdminUser::query()->where('id', $documentUserId)->first();
                         $oldLoadingAddress = LoadingAddress::query()
+                            ->whereNot('id', $loadingAddress->id)
                             ->where('address', $data['address'])
                             ->where(function ($query) use ($currentAdminUser) {
-                                $query->whereJsonContains('business_user_ids', $currentAdminUser->id)
-                                    ->orWhereJsonContains('operation_user_ids', $currentAdminUser->id)
-                                    ->orWhereJsonContains('document_user_ids', $currentAdminUser->id);
+                                $query->whereJsonContains('document_user_ids', $currentAdminUser->id);
                             })
                             ->first();
                         if ($oldLoadingAddress) {
