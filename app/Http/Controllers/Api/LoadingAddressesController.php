@@ -209,7 +209,7 @@ class LoadingAddressesController extends Controller
 
             if ($adminUser->id !== $loadingAddress->admin_user_id) {
                 foreach ($data['business_user_ids'] as $businessUserId) {
-                    if ((int)$businessUserId !== (int)$adminUser->id) {
+                    if ((int)$businessUserId !== (int)$loadingAddress->admin_user_id) {
                         $currentAdminUser = AdminUser::query()->where('id', $businessUserId)->first();
                         $oldLoadingAddress = LoadingAddress::query()
                             ->where('address', $data['address'])
@@ -234,7 +234,7 @@ class LoadingAddressesController extends Controller
 
             if (is_array($data['operation_user_ids']) && $adminUser->id !== $loadingAddress->admin_user_id) {
                 foreach ($data['operation_user_ids'] as $operationUserId) {
-                    if ((int)$operationUserId !== (int)$adminUser->id) {
+                    if ((int)$operationUserId !== (int)$loadingAddress->admin_user_id) {
                         $currentAdminUser = AdminUser::query()->where('id', $operationUserId)->first();
                         $oldLoadingAddress = LoadingAddress::query()
                             ->where('address', $data['address'])
