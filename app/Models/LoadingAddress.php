@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property mixed $admin_user_id
+ * @property mixed $id
  */
 class LoadingAddress extends Model
 {

@@ -205,18 +205,22 @@ class LoadingAddressesController extends Controller
         $data = $request->all();
 
         if (!empty($data['business_user_ids'])) {
+            // 解析业务员ids
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
-
-            if ($adminUser->id !== $loadingAddress->admin_user_id) {
+            // 如果数据不为空 - 进行重复校验
+            if (!empty($data['business_user_ids'])) {
+                // 循环校验数据
                 foreach ($data['business_user_ids'] as $businessUserId) {
+                    //如果不是创建人就进行校验
                     if ((int)$businessUserId !== (int)$loadingAddress->admin_user_id) {
+                        // 校验的当前账号
                         $currentAdminUser = AdminUser::query()->where('id', $businessUserId)->first();
+                        // 查询是否存在重复数据 （排除当前数据）
                         $oldLoadingAddress = LoadingAddress::query()
                             ->where('address', $data['address'])
+                            ->whereNot('id', $loadingAddress->id)
                             ->where(function ($query) use ($currentAdminUser) {
-                                $query->whereJsonContains('business_user_ids', $currentAdminUser->id)
-                                    ->orWhereJsonContains('operation_user_ids', $currentAdminUser->id)
-                                    ->orWhereJsonContains('document_user_ids', $currentAdminUser->id);
+                                $query->whereJsonContains('business_user_ids', $currentAdminUser->id);
                             })
                             ->first();
                         if ($oldLoadingAddress) {
