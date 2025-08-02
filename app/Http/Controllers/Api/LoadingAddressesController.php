@@ -203,9 +203,7 @@ class LoadingAddressesController extends Controller
     {
         $adminUser = $request->user();
         $data = $request->all();
-
-        throw new InvalidRequestException("第一行信息<br>第二行信息<br>第三行信息");
-
+        
         if (!empty($data['business_user_ids'])) {
             // 解析业务员ids
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
