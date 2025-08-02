@@ -123,6 +123,7 @@ class OrdersController extends Controller
         });
 
         return new OrderInfoResource($order->load([
+            'orderReceipts',
             'containers',
             'containers.containerItems',
             'containers.containerLoadingAddresses',
