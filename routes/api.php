@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\FleetsController;
 use App\Http\Controllers\Api\LoadingAddressesController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
+use App\Http\Controllers\Api\NotificationsController;
 use App\Http\Controllers\Api\OperationFeesController;
 use App\Http\Controllers\Api\OrderFilesController;
 use App\Http\Controllers\Api\OrdersController;
@@ -533,5 +534,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 备注 - 批量新增或创建
     Route::post('remarks/batch-store-or-update', [RemarksController::class, 'batchStoreOrUpdate'])
         ->name('remarks.batch-store-or-update');
+
+    // 消息通知 - 列表
+    Route::get('notifications', [NotificationsController::class, 'index'])
+        ->name('notifications.index');
 });
 

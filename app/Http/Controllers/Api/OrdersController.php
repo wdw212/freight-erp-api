@@ -101,7 +101,6 @@ class OrdersController extends Controller
                     $containerModel->order()->associate($order);
                     $containerModel->save();
 
-
                     $containerItems = $container['container_items'];
                     foreach ($containerItems as $containerItem) {
                         $containerItem = new ContainerItem($containerItem);
@@ -123,6 +122,7 @@ class OrdersController extends Controller
         });
 
         return new OrderInfoResource($order->load([
+            'orderPayments',
             'orderReceipts',
             'containers',
             'containers.containerItems',
@@ -137,7 +137,15 @@ class OrdersController extends Controller
      */
     public function show(Order $order): OrderInfoResource
     {
-        return new OrderInfoResource($order->load(['orderPayments', 'orderDelegationHeader', 'orderFiles']));
+        return new OrderInfoResource($order->load([
+            'orderPayments',
+            'orderReceipts',
+            'orderDelegationHeader',
+            'orderFiles',
+            'containers',
+            'containers.containerItems',
+            'containers.containerLoadingAddresses',
+        ]));
     }
 
     /**
