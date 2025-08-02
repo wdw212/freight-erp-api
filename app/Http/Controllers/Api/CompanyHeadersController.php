@@ -40,6 +40,10 @@ class CompanyHeadersController extends Controller
             ->with(['adminUser:id,name'])
             ->latest();
 
+        if (!$adminUser->hasRole('超管') || !$adminUser->hasRole('财务')) {
+            $builder = $builder->whereBelongsTo($adminUser);
+        }
+
         // 如果搜索条件都为空
 //        if (empty($keyword) || empty($operationUserId) || empty($documentUserId)) {
 //            $builder = $builder->orWhere(function ($query) use ($adminUser) {
@@ -48,22 +52,22 @@ class CompanyHeadersController extends Controller
 //                    ->orWhereJsonContains('business_user_ids', $adminUser->id);
 //            });
 //        }
-//        if (!empty($keyword)) {
-//            $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
-//        }
-//
-//        if (!empty($operationUserId)) {
-//            $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
-//        }
-//
-//        if (!empty($documentUserId)) {
-//            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
-//        }
-//
-//        if (!empty($companyTypeId)) {
-//            Log::info('--搜索条件--222---' . $companyTypeId);
-//            $builder = $builder->whereJsonContains('company_type', (int)$companyTypeId);
-//        }
+        if (!empty($keyword)) {
+            $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
+        }
+
+        if (!empty($operationUserId)) {
+            $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
+        }
+
+        if (!empty($documentUserId)) {
+            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
+        }
+
+        if (!empty($companyTypeId)) {
+            Log::info('--搜索条件--222---' . $companyTypeId);
+            $builder = $builder->whereJsonContains('company_type', (int)$companyTypeId);
+        }
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate();
         } else {
