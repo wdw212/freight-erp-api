@@ -167,13 +167,19 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
         ->name('company-headers.store');
     // 公司抬头 - 详情
     Route::get('company-headers/{companyHeader}', [CompanyHeadersController::class, 'show'])
-        ->name('company-headers.show');
+        ->name('company-headers.show')->where('companyHeader', '[0-9]+');
     // 公司抬头 - 编辑
     Route::put('company-headers/{companyHeader}', [CompanyHeadersController::class, 'update'])
-        ->name('company-headers.update');
+        ->name('company-headers.update')->where('companyHeader', '[0-9]+');
     // 公司抬头 - 删除
     Route::delete('company-headers/{companyHeader}', [CompanyHeadersController::class, 'destroy'])
-        ->name('company-headers.destroy');
+        ->name('company-headers.destroy')->where('companyHeader', '[0-9]+');
+    // 公司抬头 - 分享
+    Route::post('company-headers/{companyHeader}/share', [CompanyHeadersController::class, 'share'])
+        ->name('company-headers.share');
+    // 公司抬头 - 批量分享
+    Route::post('company-headers/batch-share', [CompanyHeadersController::class, 'batchShare'])
+        ->name('company-headers.batch-share');
 
     // 部门 - 列表
     Route::get('departments', [DepartmentsController::class, 'index'])

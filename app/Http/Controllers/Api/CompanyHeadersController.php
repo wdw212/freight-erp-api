@@ -12,6 +12,7 @@ use App\Http\Resources\CompanyHeader\CompanyHeaderInfoResource;
 use App\Http\Resources\CompanyHeader\CompanyHeaderResource;
 use App\Http\Resources\CompanyType\CompanyTypeResource;
 use App\Models\CompanyHeader;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -217,5 +218,59 @@ class CompanyHeadersController extends Controller
     {
         $companyHeader->delete();
         return response()->noContent();
+    }
+
+    /**
+     * 分享
+     * @param Request $request
+     * @param CompanyHeader $companyHeader
+     * @return JsonResponse
+     */
+    public function share(Request $request, CompanyHeader $companyHeader): JsonResponse
+    {
+        $adminUser = $request->user();
+        $adminUserIds = $request->input('admin_user_ids');
+        $adminUserIds = explode(',', $adminUserIds);
+        foreach ($adminUserIds as $adminUserId) {
+            // 判断账号是否存在当前公司抬头
+            $oldCompanyHeader = CompanyHeader::query()->where('company_name', $companyHeader->company_name)->first();
+            if (!$oldCompanyHeader) {
+                $replicateCompanyHeader = $companyHeader->replicate();
+                $replicateCompanyHeader->adminUser()->associate($adminUserId);
+                $replicateCompanyHeader->save();
+            }
+        }
+        return response()->json([
+            'message' => '分享成功!'
+        ]);
+    }
+
+    /**
+     * 批量分享
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function batchShare(Request $request): JsonResponse
+    {
+        $adminUser = $request->user();
+        $companyHeaderIds = $request->input('company_header_ids');
+        $adminUserIds = $request->input('admin_user_ids');
+        $adminUserIds = explode(',', $adminUserIds);
+        $companyHeaderIds = explode(',', $companyHeaderIds);
+        $companyHeaders = CompanyHeader::query()->whereIn('id', $companyHeaderIds)->get();
+        foreach ($companyHeaders as $companyHeader) {
+            foreach ($adminUserIds as $adminUserId) {
+                // 判断账号是否存在当前公司抬头
+                $oldCompanyHeader = CompanyHeader::query()->where('company_name', $companyHeader->company_name)->first();
+                if (!$oldCompanyHeader) {
+                    $replicateCompanyHeader = $companyHeader->replicate();
+                    $replicateCompanyHeader->adminUser()->associate($adminUserId);
+                    $replicateCompanyHeader->save();
+                }
+            }
+        }
+        return response()->json([
+            'message' => '批量分享成功!'
+        ]);
     }
 }
