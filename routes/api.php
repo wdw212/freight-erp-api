@@ -538,5 +538,20 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 消息通知 - 列表
     Route::get('notifications', [NotificationsController::class, 'index'])
         ->name('notifications.index');
+    // 消息通知 - 未读列表
+    Route::get('notifications/unread-index', [NotificationsController::class, 'unreadIndex'])
+        ->name('notifications.unread-index');
+    // 消息通知 - 全部设为已读
+    Route::put('notifications/mark-as-read', [NotificationsController::class, 'markAsRead'])
+        ->name('notifications.mark-as-read');
+    // 消息通知 - 单条设为已读
+    Route::put('notifications/read/{id}', [NotificationsController::class, 'read'])
+        ->name('notifications.read');
+    // 消息通知 - 删除消息
+    Route::delete('notifications/destroy/{id}', [NotificationsController::class, 'destroy'])
+        ->name('notifications.destroy');
+    // 消息通知 - 清空消息
+    Route::delete('notifications/clear', [NotificationsController::class, 'clear'])
+        ->name('notifications.clear');
 });
 
