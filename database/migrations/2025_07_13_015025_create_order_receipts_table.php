@@ -21,8 +21,6 @@ return new class extends Migration {
             $table->decimal('usd_amount', 10)->comment('美金费用')->default(0);
             $table->string('usd_invoice_number')->comment('美金发票号')->nullable();
             $table->tinyInteger('usd_is_cashed')->comment('美金是否兑付 0未兑付 1已兑付')->default(0);
-            $table->string('contact_person')->comment('联系人')->nullable();
-            $table->string('contact_phone')->comment('联系方式')->nullable();
             $table->longText('remark')->comment('备注')->nullable();
             $table->timestamps();
             $table->comment('单据-应付款表');

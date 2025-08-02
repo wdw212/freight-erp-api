@@ -3,6 +3,8 @@
  * 助手函数
  */
 
+use Illuminate\Support\Carbon;
+
 /**
  * 格式化URl
  * @param string|null $url
@@ -26,5 +28,18 @@ function formatDate(string|null $date): string
     if (empty($date)) {
         return '';
     }
-    return \Carbon\Carbon::parse($date)->format('Y-m-d');
+    return Carbon::parse($date)->format('Y-m-d');
+}
+
+/**
+ * 格式化时间
+ * @param $at
+ * @return string
+ */
+function formatAt($at): string
+{
+    if (empty($at)) {
+        return '';
+    }
+    return Carbon::parse($at)->format('Y-m-d H:i:s');
 }
