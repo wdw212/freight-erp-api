@@ -5,6 +5,7 @@ namespace App\Http\Resources\Order;
 use App\Http\Resources\OrderFile\OrderFileInfoResource;
 use App\Http\Resources\OrderFile\OrderFileResource;
 use App\Http\Resources\OrderPayment\OrderPaymentResource;
+use App\Http\Resources\OrderReceipt\OrderReceiptResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -36,6 +37,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderFiles
  * @property mixed $orderDelegationHeader
  * @property mixed $containers
+ * @property mixed $orderReceipts
  */
 class OrderInfoResource extends JsonResource
 {
@@ -74,6 +76,7 @@ class OrderInfoResource extends JsonResource
             'arrival_at' => $this->arrival_at,
             'finish_at' => $this->finish_at,
             'order_payments' => OrderPaymentResource::collection($this->orderPayments),
+            'order_receipts' => OrderReceiptResource::collection($this->orderReceipts),
             'order_delegation_header' => $this->orderDelegationHeader,
             'order_files' => $orderFiles,
             'containers' => $this->containers,

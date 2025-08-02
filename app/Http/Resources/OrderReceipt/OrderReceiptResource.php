@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\OrderPayment;
+namespace App\Http\Resources\OrderReceipt;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -11,15 +11,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $no_invoice_remark
  * @property mixed $cny_amount
  * @property mixed $cny_invoice_number
+ * @property mixed $cny_is_cashed
  * @property mixed $usd_amount
  * @property mixed $usd_invoice_number
- * @property mixed $contact_person
- * @property mixed $contact_phone
- * @property mixed $remark
- * @property mixed $cny_is_cashed
  * @property mixed $usd_is_cashed
+ * @property mixed $remark
  */
-class OrderPaymentResource extends JsonResource
+class OrderReceiptResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
