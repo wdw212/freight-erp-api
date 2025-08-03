@@ -105,7 +105,7 @@ class CompanyHeadersController extends Controller
         if ($builder->clone()->exists()) {
             throw new InvalidRequestException('当前抬头已存在,请重试！');
         }
-        
+
 //        if (!empty($data['business_user_ids'])) {
 //            $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
 //            // 校验是否存在
@@ -233,8 +233,16 @@ class CompanyHeadersController extends Controller
     public function share(Request $request, CompanyHeader $companyHeader): JsonResponse
     {
         $adminUser = $request->user();
-        $adminUserIds = $request->input('admin_user_ids');
-        $adminUserIds = explode(',', $adminUserIds);
+        $businessUserIds = $request->input('business_user_ids');
+        $operationUserIds = $request->input('operation_user_ids');
+        $documentUserIds = $request->input('document_user_ids');
+
+        $businessUserIds = explode(',', $businessUserIds);
+        $operationUserIds = explode(',', $operationUserIds);
+        $documentUserIds = explode(',', $documentUserIds);
+
+        $adminUserIds = Arr::collapse([$businessUserIds, $operationUserIds, $documentUserIds]);
+
         foreach ($adminUserIds as $adminUserId) {
             // 判断账号是否存在当前公司抬头
             $oldCompanyHeader = CompanyHeader::query()->where('company_name', $companyHeader->company_name)->first();
@@ -246,35 +254,6 @@ class CompanyHeadersController extends Controller
         }
         return response()->json([
             'message' => '分享成功!'
-        ]);
-    }
-
-    /**
-     * 批量分享
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function batchShare(Request $request): JsonResponse
-    {
-        $adminUser = $request->user();
-        $companyHeaderIds = $request->input('company_header_ids');
-        $adminUserIds = $request->input('admin_user_ids');
-        $adminUserIds = explode(',', $adminUserIds);
-        $companyHeaderIds = explode(',', $companyHeaderIds);
-        $companyHeaders = CompanyHeader::query()->whereIn('id', $companyHeaderIds)->get();
-        foreach ($companyHeaders as $companyHeader) {
-            foreach ($adminUserIds as $adminUserId) {
-                // 判断账号是否存在当前公司抬头
-                $oldCompanyHeader = CompanyHeader::query()->where('company_name', $companyHeader->company_name)->first();
-                if (!$oldCompanyHeader) {
-                    $replicateCompanyHeader = $companyHeader->replicate();
-                    $replicateCompanyHeader->adminUser()->associate($adminUserId);
-                    $replicateCompanyHeader->save();
-                }
-            }
-        }
-        return response()->json([
-            'message' => '批量分享成功!'
         ]);
     }
 }
