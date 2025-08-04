@@ -178,9 +178,6 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 公司抬头 - 分享
     Route::post('company-headers/{companyHeader}/share', [CompanyHeadersController::class, 'share'])
         ->name('company-headers.share');
-    // 公司抬头 - 批量分享
-    Route::post('company-headers/batch-share', [CompanyHeadersController::class, 'batchShare'])
-        ->name('company-headers.batch-share');
 
     // 部门 - 列表
     Route::get('departments', [DepartmentsController::class, 'index'])
@@ -323,6 +320,11 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 列表
     Route::get('orders', [OrdersController::class, 'index'])
         ->name('orders.index');
+
+    // 单据 - 财务单据
+    Route::get('orders/finance-index', [OrdersController::class, 'financeIndex'])
+        ->name('orders.finance-index');
+
     // 单据 - 创建
     Route::post('orders', [OrdersController::class, 'store'])
         ->name('orders.store');

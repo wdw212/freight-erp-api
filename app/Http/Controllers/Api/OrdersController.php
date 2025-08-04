@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
+use App\Http\Resources\Order\FinanceOrderResource;
 use App\Http\Resources\Order\OrderInfoResource;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Container;
@@ -218,5 +219,22 @@ class OrdersController extends Controller
     {
         $order->delete();
         return response()->noContent();
+    }
+
+    public function commerceIndex(Request $request)
+    {
+        // 商务列表
+    }
+
+    /**
+     * 财务单据 - 列表
+     * @param Request $request
+     * @return AnonymousResourceCollection
+     */
+    public function financeIndex(Request $request): AnonymousResourceCollection
+    {
+        // 财务单据
+        $order = Order::query()->latest()->paginate();
+        return FinanceOrderResource::collection($order);
     }
 }

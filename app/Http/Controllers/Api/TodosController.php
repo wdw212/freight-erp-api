@@ -12,6 +12,7 @@ use App\Http\Resources\Todo\TodoResource;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class TodosController extends Controller
 {
@@ -63,9 +64,9 @@ class TodosController extends Controller
     /**
      * 删除
      * @param Todo $todo
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function destroy(Todo $todo)
+    public function destroy(Todo $todo): Response
     {
         $todo->delete();
         return response()->noContent();

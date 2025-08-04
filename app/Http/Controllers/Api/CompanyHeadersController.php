@@ -237,9 +237,9 @@ class CompanyHeadersController extends Controller
         $operationUserIds = $request->input('operation_user_ids');
         $documentUserIds = $request->input('document_user_ids');
 
-        $businessUserIds = explode(',', $businessUserIds);
-        $operationUserIds = explode(',', $operationUserIds);
-        $documentUserIds = explode(',', $documentUserIds);
+        $businessUserIds = json_decode($businessUserIds, true);
+        $operationUserIds = json_decode($operationUserIds, true);
+        $documentUserIds = json_decode($documentUserIds, true);
 
         $adminUserIds = Arr::collapse([$businessUserIds, $operationUserIds, $documentUserIds]);
 
