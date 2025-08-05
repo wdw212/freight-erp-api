@@ -203,7 +203,7 @@ class LoadingAddressesController extends Controller
     {
         $adminUser = $request->user();
         $data = $request->all();
-        
+
         if (!empty($data['business_user_ids'])) {
             // 解析业务员ids
             $data['business_user_ids'] = json_decode($data['business_user_ids'], true);
@@ -260,18 +260,20 @@ class LoadingAddressesController extends Controller
         if (!empty($data['document_user_ids'])) {
             $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
             if ($adminUser->id !== $loadingAddress->admin_user_id) {
-                foreach ($data['document_user_ids'] as $documentUserId) {
-                    if ((int)$documentUserId !== (int)$loadingAddress->admin_user_id) {
-                        $currentAdminUser = AdminUser::query()->where('id', $documentUserId)->first();
-                        $oldLoadingAddress = LoadingAddress::query()
-                            ->whereNot('id', $loadingAddress->id)
-                            ->where('address', $data['address'])
-                            ->where(function ($query) use ($currentAdminUser) {
-                                $query->whereJsonContains('document_user_ids', $currentAdminUser->id);
-                            })
-                            ->first();
-                        if ($oldLoadingAddress) {
-                            throw new InvalidRequestException('单证员:' . $currentAdminUser->name . '已拥有,请重试!');
+                if (count($data['document_user_ids']) > 0) {
+                    foreach ($data['document_user_ids'] as $documentUserId) {
+                        if ((int)$documentUserId !== (int)$loadingAddress->admin_user_id) {
+                            $currentAdminUser = AdminUser::query()->where('id', $documentUserId)->first();
+                            $oldLoadingAddress = LoadingAddress::query()
+                                ->whereNot('id', $loadingAddress->id)
+                                ->where('address', $data['address'])
+                                ->where(function ($query) use ($currentAdminUser) {
+                                    $query->whereJsonContains('document_user_ids', $currentAdminUser->id);
+                                })
+                                ->first();
+                            if ($oldLoadingAddress) {
+                                throw new InvalidRequestException('单证员:' . $currentAdminUser->name . '已拥有,请重试!');
+                            }
                         }
                     }
                 }
