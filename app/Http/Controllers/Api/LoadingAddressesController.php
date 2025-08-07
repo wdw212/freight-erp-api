@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use function Laravel\Prompts\password;
 
 class LoadingAddressesController extends Controller
 {
