@@ -245,7 +245,10 @@ class CompanyHeadersController extends Controller
 
         foreach ($adminUserIds as $adminUserId) {
             // 判断账号是否存在当前公司抬头
-            $oldCompanyHeader = CompanyHeader::query()->where('company_name', $companyHeader->company_name)->first();
+            $oldCompanyHeader = CompanyHeader::query()
+                ->where('company_name', $companyHeader->company_name)
+                ->where('admin_user_id', $adminUserId)
+                ->first();
             if (!$oldCompanyHeader) {
                 $replicateCompanyHeader = $companyHeader->replicate();
                 $replicateCompanyHeader->adminUser()->associate($adminUserId);
