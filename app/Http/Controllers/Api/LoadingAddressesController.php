@@ -39,7 +39,12 @@ class LoadingAddressesController extends Controller
 
         if (!$adminUser->hasRole('超管')) {
             // 如果不是超管，隔离数据
-            $builder = $builder->where('admin_user_id', $adminUser->id);
+            $builder = $builder->where(function ($query) use ($adminUser) {
+                $query->where('admin_user_id', $adminUser->id)
+                    ->orWhereJsonContains('business_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('operation_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('document_user_ids', $adminUser->id);
+            });
         }
 
         if (!empty($keyword)) {

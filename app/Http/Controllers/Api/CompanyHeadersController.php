@@ -41,7 +41,7 @@ class CompanyHeadersController extends Controller
             ->latest();
 
         if (!$adminUser->hasRole('超管') || !$adminUser->hasRole('财务')) {
-            $builder = $builder->whereBelongsTo($adminUser);
+            $builder = $builder->withWhereHas($adminUser);
         }
 
         // 如果搜索条件都为空
