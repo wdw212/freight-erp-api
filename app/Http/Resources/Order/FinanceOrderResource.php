@@ -14,6 +14,14 @@ class FinanceOrderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'job_no' => $this->job_no,
+            'order_type' => $this->orderType,
+            'bl_no' => $this->bl_no,
+            'operation_user' => $this->operationUser,
+            'business_user' => $this->businessUser,
+            'container_type' => $this->container_type,
+        ];
     }
 }

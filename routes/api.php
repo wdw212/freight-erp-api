@@ -320,11 +320,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 列表
     Route::get('orders', [OrdersController::class, 'index'])
         ->name('orders.index');
-
     // 单据 - 财务单据
     Route::get('orders/finance-index', [OrdersController::class, 'financeIndex'])
         ->name('orders.finance-index');
-
     // 单据 - 创建
     Route::post('orders', [OrdersController::class, 'store'])
         ->name('orders.store');
