@@ -109,13 +109,13 @@ class OrdersController extends Controller
                         $containerItem->save();
                     }
 
-                    $containerLoadingAddresses = $container['container_loading_addresses'];
-
-                    foreach ($containerLoadingAddresses as $containerLoadingAddress) {
-                        $containerLoadingAddress = new ContainerLoadingAddress($containerLoadingAddress);
-                        $containerLoadingAddress->container()->associate($containerModel);
-                        $containerLoadingAddress->save();
-                    }
+//                    $containerLoadingAddresses = $container['container_loading_addresses'];
+//
+//                    foreach ($containerLoadingAddresses as $containerLoadingAddress) {
+//                        $containerLoadingAddress = new ContainerLoadingAddress($containerLoadingAddress);
+//                        $containerLoadingAddress->container()->associate($containerModel);
+//                        $containerLoadingAddress->save();
+//                    }
                 }
             }
 
