@@ -15,6 +15,26 @@ class ContainerObserver
         Log::info('--集装箱保存完成--');
 
         // 更新订单 柜子类型
+        $containerTypeStats = Container::query()
+            ->where('order_id', $container->order->id)
+            ->with('containerType')
+            ->groupBy('container_type_id')
+            ->selectRaw('container_type_id, count(*) as count')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'type_id' => $item->container_type_id,
+                    'type_name' => $item->containerType->name,
+                    'count' => $item->count,
+                ];
+            });
+
+        $containerType = '';
+        foreach ($containerTypeStats as $containerTypeStat) {
+            $containerType = $containerTypeStat['count'] . '*' . $containerTypeStat['type_name'] . ';';
+        }
+        $container->order->container_type = $containerType;
+        $container->save();
     }
 
     /**
