@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[ObservedBy(ContainerObserver::class)]
 class Container extends Model
 {
-    protected $guarded = ['container_items', 'container_loading_address'];
+    protected $guarded = ['container_items', 'container_loading_addresses'];
 
     /**
      * @return BelongsTo
