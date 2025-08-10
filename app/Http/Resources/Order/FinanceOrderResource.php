@@ -20,6 +20,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $receipt_total_cny_amount
  * @property mixed $receipt_total_usd_amount
  * @property mixed $finish_at
+ * @property mixed $payment_cny_cashed_status
+ * @property mixed $payment_usd_cashed_status
+ * @property mixed $receipt_cny_cashed_status
+ * @property mixed $receipt_usd_cashed_status
+ * @property mixed $cashed_status
+ * @property mixed $invoice_status
  */
 class FinanceOrderResource extends JsonResource
 {
@@ -41,10 +47,16 @@ class FinanceOrderResource extends JsonResource
             'sailing_at' => $this->sailing_at,
             'is_delivery' => $this->is_delivery,
             'payment_total_cny_amount' => $this->payment_total_cny_amount,
+            'payment_cny_cashed_status' => $this->payment_cny_cashed_status,
             'payment_total_usd_amount' => $this->payment_total_usd_amount,
+            'payment_usd_cashed_status' => $this->payment_usd_cashed_status,
             'receipt_total_cny_amount' => $this->receipt_total_cny_amount,
+            'receipt_cny_cashed_status' => $this->receipt_cny_cashed_status,
             'receipt_total_usd_amount' => $this->receipt_total_usd_amount,
+            'receipt_usd_cashed_status' => $this->receipt_usd_cashed_status,
             'finish_at' => formatDate($this->finish_at),
+            'cashed_status' => $this->cashed_status,
+            'invoice_status' => $this->invoice_status,
         ];
     }
 }
