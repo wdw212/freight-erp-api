@@ -22,6 +22,8 @@ class FinanceOrderResource extends JsonResource
             'operation_user' => $this->operationUser,
             'business_user' => $this->businessUser,
             'container_type' => $this->container_type,
+            'sailing_at' => $this->sailing_at,
+            'is_delivery' => $this->is_delivery,
         ];
     }
 }
