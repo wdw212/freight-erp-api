@@ -101,20 +101,20 @@ class OrdersController extends Controller
                     $containerModel->order()->associate($order);
                     $containerModel->save();
 
-//                    $containerItems = $container['container_items'];
-//                    foreach ($containerItems as $containerItem) {
-//                        $containerItem = new ContainerItem($containerItem);
-//                        $containerItem->container()->associate($containerModel);
-//                        $containerItem->save();
-//                    }
+                    $containerItems = $container['container_items'];
+                    foreach ($containerItems as $containerItem) {
+                        $containerItem = new ContainerItem($containerItem);
+                        $containerItem->container()->associate($containerModel);
+                        $containerItem->save();
+                    }
 
-//                    $containerLoadingAddresses = $container['container_loading_addresses'];
-//
-//                    foreach ($containerLoadingAddresses as $containerLoadingAddress) {
-//                        $containerLoadingAddress = new ContainerLoadingAddress($containerLoadingAddress);
-//                        $containerLoadingAddress->container()->associate($containerModel);
-//                        $containerLoadingAddress->save();
-//                    }
+                    $containerLoadingAddresses = $container['container_loading_addresses'];
+
+                    foreach ($containerLoadingAddresses as $containerLoadingAddress) {
+                        $containerLoadingAddress = new ContainerLoadingAddress($containerLoadingAddress);
+                        $containerLoadingAddress->container()->associate($containerModel);
+                        $containerLoadingAddress->save();
+                    }
                 }
             }
 
