@@ -14,7 +14,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[ObservedBy(ContainerObserver::class)]
 class Container extends Model
 {
-    protected $guarded = ['container_items', 'container_loading_addresses'];
+    /**
+     * @var string[]
+     */
+    protected $fillable = [
+        'no',
+        'seal_number',
+        'container_type_id',
+        'serial_number',
+        'pre_pull_wharf_id',
+        'wharf_id',
+        'drop_off_wharf_id',
+        'is_entered_port',
+        'driver',
+        'fleet_id',
+        'cargo_weight',
+        'loading_at'
+    ];
 
     /**
      * @return BelongsTo
