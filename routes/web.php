@@ -77,7 +77,7 @@ Route::get('/test3', static function () {
         ->first();
 
     $containerTypeStats = Container::query()
-        ->where('order_id', 41)
+        ->where('order_id', 42)
         ->with('containerType')
         ->groupBy('container_type_id')
         ->selectRaw('container_type_id, count(*) as count')
