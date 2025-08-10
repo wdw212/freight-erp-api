@@ -96,7 +96,7 @@ class OrdersController extends Controller
             // 处理箱子
             if (!empty($data['containers'])) {
                 $containers = json_decode($data['containers'], true);
-
+                dd($containers);
                 foreach ($containers as $container) {
                     $containerModel = new Container($container);
                     $containerModel->order()->associate($order);
