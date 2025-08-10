@@ -96,18 +96,17 @@ class OrdersController extends Controller
             // 处理箱子
             if (!empty($data['containers'])) {
                 $containers = json_decode($data['containers'], true);
-                dd($containers);
                 foreach ($containers as $container) {
                     $containerModel = new Container($container);
                     $containerModel->order()->associate($order);
                     $containerModel->save();
 
-                    $containerItems = $container['container_items'];
-                    foreach ($containerItems as $containerItem) {
-                        $containerItem = new ContainerItem($containerItem);
-                        $containerItem->container()->associate($containerModel);
-                        $containerItem->save();
-                    }
+//                    $containerItems = $container['container_items'];
+//                    foreach ($containerItems as $containerItem) {
+//                        $containerItem = new ContainerItem($containerItem);
+//                        $containerItem->container()->associate($containerModel);
+//                        $containerItem->save();
+//                    }
 
 //                    $containerLoadingAddresses = $container['container_loading_addresses'];
 //
