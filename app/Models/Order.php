@@ -84,4 +84,12 @@ class Order extends Model
     {
         return $this->hasMany(Container::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function containerLoadingAddresses(): HasMany
+    {
+        return $this->hasMany(ContainerLoadingAddress::class);
+    }
 }
