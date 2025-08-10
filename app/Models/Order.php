@@ -86,4 +86,22 @@ class Order extends Model
     {
         return $this->hasMany(Container::class);
     }
+
+    /**
+     * 操作员
+     * @return BelongsTo
+     */
+    public function operateUser(): BelongsTo
+    {
+        return $this->belongsTo(AdminUser::class, 'operate_user_id');
+    }
+
+    /**
+     * 商务员
+     * @return BelongsTo
+     */
+    public function commerceUser(): BelongsTo
+    {
+        return $this->belongsTo(AdminUser::class, 'commerce_user_id');
+    }
 }

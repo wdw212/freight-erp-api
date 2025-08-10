@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('order_type_id')->comment('业务类型ID')->default(0);
             $table->unsignedBigInteger('shipping_company_id')->comment('船公司')->default(0);
             $table->unsignedBigInteger('business_user_id')->comment('业务员ID')->default(0);
-            $table->unsignedBigInteger('operation_user_id')->comment('操作员ID')->default(0);
+            $table->unsignedBigInteger('operate_user_id')->comment('操作员ID')->default(0);
             $table->unsignedBigInteger('document_user_id')->comment('单证员ID')->default(0);
             $table->unsignedBigInteger('commerce_user_id')->comment('商务ID')->default(0);
             $table->string('job_no')->comment('工作编号')->nullable();
