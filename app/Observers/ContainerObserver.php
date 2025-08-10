@@ -34,7 +34,7 @@ class ContainerObserver
             $containerType = $containerTypeStat['count'] . '*' . $containerTypeStat['type_name'] . ';';
         }
         $container->order->container_type = $containerType;
-        $container->save();
+        $container->order->save();
     }
 
     /**
