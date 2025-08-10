@@ -64,18 +64,6 @@ Route::get('/test2', static function () {
 });
 
 Route::get('/test3', static function () {
-    $order = Order::query()
-        ->with([
-            'orderPayments',
-            'orderReceipts',
-            'containers',
-            'containers.containerType',
-            'containers.containerItems',
-            'containers.containerLoadingAddresses',
-        ])
-        ->where('id', 41)
-        ->first();
-
     $containerTypeStats = Container::query()
         ->where('order_id', 42)
         ->with('containerType')
@@ -90,5 +78,9 @@ Route::get('/test3', static function () {
             ];
         });
 
-    dd($containerTypeStats);
+    $containerType = '';
+    foreach ($containerTypeStats as $containerTypeStat) {
+        $containerType = $containerTypeStat->count . '*' . $containerTypeStat->type_name;
+    }
+    dd($containerType);
 });
