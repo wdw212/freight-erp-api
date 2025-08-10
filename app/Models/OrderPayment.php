@@ -5,9 +5,12 @@
 
 namespace App\Models;
 
+use App\Observers\OrderPaymentObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ObservedBy(OrderPaymentObserver::class)]
 class OrderPayment extends Model
 {
     protected $guarded = [];

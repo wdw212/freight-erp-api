@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * @property int|mixed $is_delivery
  * @property mixed $id
+ * @property mixed $payment_total_cny_amount
+ * @property mixed $payment_total_usd_amount
  */
 #[ObservedBy(OrderObserver::class)]
 class Order extends Model
