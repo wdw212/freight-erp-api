@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\CompanyHeader;
+use App\Models\Order;
 use App\Models\OrderType;
 use Illuminate\Support\Facades\Route;
 
@@ -59,4 +60,19 @@ Route::get('/test2', static function () {
 //    $builder = CompanyHeader::query()
 //        ->where('company_name', $data['company_name']);
 
+});
+
+Route::get('/test3', static function () {
+    $order = Order::query()
+        ->with([
+            'orderPayments',
+            'orderReceipts',
+            'containers',
+            'containers.containerItems',
+            'containers.containerLoadingAddresses',
+        ])
+        ->where('id', 41)
+        ->first();
+    
+    dd($order->containers);
 });

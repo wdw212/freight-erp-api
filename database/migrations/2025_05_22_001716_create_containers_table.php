@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('order_id')->comment('订单ID');
             $table->unsignedBigInteger('container_type_id')->comment('柜型ID');
-            $table->string('no')->comment('箱号')->unique();
-            $table->string('seal_number')->comment('封号')->unique();
+            $table->string('no')->comment('箱号');
+            $table->string('seal_number')->comment('封号');
             $table->unsignedBigInteger('pre_pull_wharf_id')->comment('预提');
             $table->unsignedBigInteger('wharf_id')->comment('提箱码头');
             $table->unsignedBigInteger('drop_off_wharf_id')->comment('落箱');
