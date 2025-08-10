@@ -38,6 +38,8 @@ class OrdersController extends Controller
             'businessUser:id,name',
             'operateUser:id,name',
             'documentUser:id,name',
+            'commerceUser:id,name',
+            'orderDelegationHeader'
         ])->orderByDesc('created_at')->paginate();
         return OrderResource::collection($orders);
     }
