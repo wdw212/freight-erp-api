@@ -5,6 +5,22 @@ namespace App\Http\Resources\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $id
+ * @property mixed $job_no
+ * @property mixed $orderType
+ * @property mixed $bl_no
+ * @property mixed $operationUser
+ * @property mixed $businessUser
+ * @property mixed $container_type
+ * @property mixed $sailing_at
+ * @property mixed $is_delivery
+ * @property mixed $payment_total_cny_amount
+ * @property mixed $payment_total_usd_amount
+ * @property mixed $receipt_total_cny_amount
+ * @property mixed $receipt_total_usd_amount
+ * @property mixed $finish_at
+ */
 class FinanceOrderResource extends JsonResource
 {
     /**
@@ -24,6 +40,11 @@ class FinanceOrderResource extends JsonResource
             'container_type' => $this->container_type,
             'sailing_at' => $this->sailing_at,
             'is_delivery' => $this->is_delivery,
+            'payment_total_cny_amount' => $this->payment_total_cny_amount,
+            'payment_total_usd_amount' => $this->payment_total_usd_amount,
+            'receipt_total_cny_amount' => $this->receipt_total_cny_amount,
+            'receipt_total_usd_amount' => $this->receipt_total_usd_amount,
+            'finish_at' => formatDate($this->finish_at),
         ];
     }
 }
