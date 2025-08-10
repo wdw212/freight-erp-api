@@ -68,11 +68,12 @@ Route::get('/test3', static function () {
             'orderPayments',
             'orderReceipts',
             'containers',
+            'containers.containerType',
             'containers.containerItems',
             'containers.containerLoadingAddresses',
         ])
         ->where('id', 41)
         ->first();
-    
+
     dd($order->containers);
 });
