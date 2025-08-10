@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\CompanyHeader;
+use App\Models\Container;
 use App\Models\Order;
 use App\Models\OrderType;
 use Illuminate\Support\Facades\Route;
@@ -75,5 +76,19 @@ Route::get('/test3', static function () {
         ->where('id', 41)
         ->first();
 
-    dd($order->containers->pluck('containerType')->groupBy('containerType')->toArray());
+    $containerTypeStats = Container::query()
+        ->where('order_id', 41)
+        ->with('containerType')
+        ->groupBy('container_type_id')
+        ->selectRaw('container_type_id, count(*) as count')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'type_id' => $item->container_type_id,
+                'type_name' => $item->containerType->name,
+                'count' => $item->count,
+            ];
+        });
+
+    dd($containerTypeStats);
 });
