@@ -75,5 +75,5 @@ Route::get('/test3', static function () {
         ->where('id', 41)
         ->first();
 
-    dd($order->containers->pluck('containerType')->toArray()->groupBy('containerType')->toArray());
+    dd($order->containers->pluck('containerType')->groupBy('containerType')->toArray());
 });
