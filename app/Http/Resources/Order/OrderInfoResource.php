@@ -38,6 +38,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderDelegationHeader
  * @property mixed $containers
  * @property mixed $orderReceipts
+ * @property mixed $operate_user_id
  */
 class OrderInfoResource extends JsonResource
 {
@@ -56,7 +57,7 @@ class OrderInfoResource extends JsonResource
             'order_type_id' => $this->order_type_id,
             'shipping_company_id' => $this->shipping_company_id,
             'business_user_id' => $this->business_user_id,
-            'operation_user_id' => $this->operation_user_id,
+            'operate_user_id' => $this->operate_user_id,
             'document_user_id' => $this->document_user_id,
             'commerce_user_id' => $this->commerce_user_id,
             'job_no' => $this->job_no,

@@ -36,6 +36,8 @@ class OrdersController extends Controller
         $orders = Order::query()->with([
             'orderType:id,name',
             'businessUser:id,name',
+            'operateUser:id,name',
+            'documentUser:id,name',
         ])->orderByDesc('created_at')->paginate();
         return OrderResource::collection($orders);
     }

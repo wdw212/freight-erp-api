@@ -104,4 +104,13 @@ class Order extends Model
     {
         return $this->belongsTo(AdminUser::class, 'commerce_user_id');
     }
+
+    /**
+     * 单证员
+     * @return BelongsTo
+     */
+    public function documentUser(): BelongsTo
+    {
+        return $this->belongsTo(AdminUser::class, 'document_user_id');
+    }
 }
