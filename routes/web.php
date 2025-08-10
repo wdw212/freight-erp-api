@@ -80,7 +80,7 @@ Route::get('/test3', static function () {
 
     $containerType = '';
     foreach ($containerTypeStats as $containerTypeStat) {
-        $containerType = $containerTypeStat->count . '*' . $containerTypeStat->type_name;
+        $containerType = $containerTypeStat['count'] . '*' . $containerTypeStat['type_name'];
     }
     dd($containerType);
 });
