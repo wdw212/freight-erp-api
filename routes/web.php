@@ -84,3 +84,8 @@ Route::get('/test3', static function () {
     }
     dd($containerType);
 });
+
+Route::get('/test4', static function () {
+    $adminUser = \App\Models\AdminUser::query()->first();
+    $adminUser->notify(new \App\Notifications\AdminUserNotification());
+});
