@@ -14,12 +14,17 @@ class AdminUserNotification extends Notification
 {
     use Queueable;
 
+    public $title;
+
+    public $content;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->title = $data['title'];
+        $this->content = $data['content'];
     }
 
     /**
@@ -39,8 +44,8 @@ class AdminUserNotification extends Notification
     public function toDatabase(object $notifiable): array
     {
         return [
-            'title' => '测试消息标题',
-            'content' => '测试消息内容'
+            'title' => $this->title,
+            'content' => $this->content,
         ];
     }
 

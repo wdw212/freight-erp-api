@@ -11,7 +11,9 @@ use App\Http\Requests\CompanyHeaderRequest;
 use App\Http\Resources\CompanyHeader\CompanyHeaderInfoResource;
 use App\Http\Resources\CompanyHeader\CompanyHeaderResource;
 use App\Http\Resources\CompanyType\CompanyTypeResource;
+use App\Models\AdminUser;
 use App\Models\CompanyHeader;
+use App\Notifications\AdminUserNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -253,7 +255,16 @@ class CompanyHeadersController extends Controller
                 $replicateCompanyHeader = $companyHeader->replicate();
                 $replicateCompanyHeader->adminUser()->associate($adminUserId);
                 $replicateCompanyHeader->save();
+
+                // 发送消息通知
+                $currentAdminUser = AdminUser::query()->where('id', $adminUserId)->first();
+                $currentAdminUser->notify(new AdminUserNotification([
+                    'title' => '分享通知',
+                    'content' => $adminUser->name . '给你分享了公司抬头:' . $companyHeader->company_name
+                ]));
             }
+
+
         }
         return response()->json([
             'message' => '分享成功!'
