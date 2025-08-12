@@ -38,7 +38,10 @@ class AdminUserNotification extends Notification
      */
     public function toDatabase(object $notifiable): array
     {
-        return [];
+        return [
+            'title' => '测试消息标题',
+            'content' => '测试消息内容'
+        ];
     }
 
     /**
