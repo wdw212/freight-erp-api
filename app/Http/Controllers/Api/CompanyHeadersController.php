@@ -259,7 +259,7 @@ class CompanyHeadersController extends Controller
                 // 发送消息通知
                 $currentAdminUser = AdminUser::query()->where('id', $adminUserId)->first();
                 $currentAdminUser->notify(new AdminUserNotification([
-                    'title' => '分享通知',
+                    'title' => '分享抬头通知',
                     'content' => $adminUser->name . '给你分享了公司抬头:' . $companyHeader->company_name
                 ]));
             }
