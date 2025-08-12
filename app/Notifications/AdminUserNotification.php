@@ -33,11 +33,12 @@ class AdminUserNotification extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
+     * @param object $notifiable
+     * @return array
      */
-    public function toDatabase(object $notifiable)
+    public function toDatabase(object $notifiable): array
     {
-
+        return [];
     }
 
     /**
