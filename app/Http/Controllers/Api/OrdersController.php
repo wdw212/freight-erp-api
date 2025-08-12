@@ -33,6 +33,7 @@ class OrdersController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        $adminUser = $request->user();
         $orders = Order::query()->with([
             'orderType:id,name',
             'businessUser:id,name',
@@ -40,7 +41,9 @@ class OrdersController extends Controller
             'documentUser:id,name',
             'commerceUser:id,name',
             'orderDelegationHeader'
-        ])->orderByDesc('created_at')->paginate();
+        ])->with('orderRemark', function ($query) use ($adminUser) {
+            return $query->where('admin_user_id', $adminUser->id);
+        })->orderByDesc('created_at')->paginate();
         return OrderResource::collection($orders);
     }
 

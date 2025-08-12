@@ -12,6 +12,9 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property mixed $id
+ */
 class AdminUser extends Authenticatable
 {
     use HasApiTokens, Notifiable, HasRoles, CausesActivity;

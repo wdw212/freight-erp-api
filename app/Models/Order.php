@@ -113,4 +113,13 @@ class Order extends Model
     {
         return $this->belongsTo(AdminUser::class, 'document_user_id');
     }
+
+    /**
+     * 订单备注
+     * @return HasOne
+     */
+    public function orderRemark(): HasOne
+    {
+        return $this->hasOne(OrderRemark::class);
+    }
 }

@@ -152,7 +152,6 @@ class LoadingAddressesController extends Controller
         if (!empty($data['document_user_ids'])) {
             if (!is_array($data['document_user_ids'])) {
                 $data['document_user_ids'] = json_decode($data['document_user_ids'], true);
-
                 if (is_array($data['document_user_ids'])) {
                     foreach ($data['document_user_ids'] as $documentUserId) {
                         $adminUser = AdminUser::query()->where('id', $documentUserId)->first();

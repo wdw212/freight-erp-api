@@ -37,6 +37,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderDelegationHeader
  * @property mixed $documentUser
  * @property mixed $commerceUser
+ * @property mixed $orderRemark
  */
 class OrderResource extends JsonResource
 {
@@ -72,6 +73,7 @@ class OrderResource extends JsonResource
             'sailing_at' => !empty($this->sailing_at) ? Carbon::parse($this->sailing_at)->format('Y-m-d') : '',
             'arrival_at' => !empty($this->arrival_at) ? Carbon::parse($this->arrival_at)->format('Y-m-d') : '',
             'finish_at' => $this->finish_at,
+            'order_remark' => $this->orderRemark,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
