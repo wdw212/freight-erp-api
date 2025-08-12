@@ -21,7 +21,7 @@ class NotificationsController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $adminUser = $request->user();
-        $notifications = $adminUser->notifications()->orderByDesc('created_at')->get();
+        $notifications = $adminUser->notifications()->latest()->paginate();
         return NotificationResource::collection($notifications);
     }
 
