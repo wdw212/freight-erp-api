@@ -55,6 +55,8 @@ class FinanceOrderResource extends JsonResource
             'receipt_total_usd_amount' => $this->receipt_total_usd_amount,
             'receipt_usd_cashed_status' => $this->receipt_usd_cashed_status,
             'finish_at' => formatDate($this->finish_at),
+            'total_profit' => 0,
+            'after_tax_discount' => 0,
             'cashed_status' => $this->cashed_status,
             'invoice_status' => $this->invoice_status,
         ];
