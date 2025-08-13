@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceTypeRequest;
 use App\Http\Resources\InvoiceType\InvoiceTypeInfoResource;
 use App\Http\Resources\InvoiceType\InvoiceTypeResource;
-use App\Models\FeeType;
 use App\Models\InvoiceType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -24,7 +23,7 @@ class InvoiceTypesController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $FeeTypes = FeeType::query()->orderByDesc('sort')->get();
+        $FeeTypes = InvoiceType::query()->orderByDesc('sort')->get();
         InvoiceTypeResource::wrap('data');
         return InvoiceTypeResource::collection($FeeTypes);
     }
