@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FeeTypeRequest;
 use App\Http\Resources\FeeType\FeeTypeInfoResource;
@@ -13,7 +14,6 @@ use App\Models\FeeType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use ParagonIE\Sodium\Core\Curve25519\Fe;
 
 class FeeTypesController extends Controller
 {
@@ -33,9 +33,16 @@ class FeeTypesController extends Controller
      * @param FeeTypeRequest $request
      * @param FeeType $feeType
      * @return FeeTypeInfoResource
+     * @throws InvalidRequestException
      */
     public function store(FeeTypeRequest $request, FeeType $feeType): FeeTypeInfoResource
     {
+        $name = $request->input('name');
+
+        if (FeeType::query()->where('name', $name)->exists()) {
+            throw new InvalidRequestException('已存在，请重试！');
+        }
+
         $feeType->fill($request->all());
         $feeType->save();
         return new FeeTypeInfoResource($feeType);
@@ -46,9 +53,16 @@ class FeeTypesController extends Controller
      * @param FeeTypeRequest $request
      * @param FeeType $feeType
      * @return FeeTypeInfoResource
+     * @throws InvalidRequestException
      */
     public function update(FeeTypeRequest $request, FeeType $feeType): FeeTypeInfoResource
     {
+        $name = $request->input('name');
+
+        if (FeeType::query()->whereNot('id', $feeType->id)->where('name', $name)->exists()) {
+            throw new InvalidRequestException('已存在，请重试');
+        }
+
         $feeType->fill($request->all());
         $feeType->update();
         return new FeeTypeInfoResource($feeType);

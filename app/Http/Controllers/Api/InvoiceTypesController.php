@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceTypeRequest;
 use App\Http\Resources\InvoiceType\InvoiceTypeInfoResource;
@@ -33,9 +34,16 @@ class InvoiceTypesController extends Controller
      * @param InvoiceTypeRequest $request
      * @param InvoiceType $invoiceType
      * @return InvoiceTypeInfoResource
+     * @throws InvalidRequestException
      */
     public function store(InvoiceTypeRequest $request, InvoiceType $invoiceType): InvoiceTypeInfoResource
     {
+        $name = $request->input('name');
+
+        if (InvoiceType::query()->where('name', $name)->exists()) {
+            throw new InvalidRequestException('已存在，请重试!');
+        }
+
         $invoiceType->fill($request->all());
         $invoiceType->save();
         return new InvoiceTypeInfoResource($invoiceType);
@@ -46,9 +54,16 @@ class InvoiceTypesController extends Controller
      * @param InvoiceTypeRequest $request
      * @param InvoiceType $invoiceType
      * @return InvoiceTypeInfoResource
+     * @throws InvalidRequestException
      */
     public function update(InvoiceTypeRequest $request, InvoiceType $invoiceType): InvoiceTypeInfoResource
     {
+        $name = $request->input('name');
+
+        if (InvoiceType::query()->whereNot('id', $invoiceType->id)->where('name', $name)->exists()) {
+            throw new InvalidRequestException('已存在，请重试!');
+        }
+        
         $invoiceType->fill($request->all());
         $invoiceType->update();
         return new InvoiceTypeInfoResource($invoiceType);
