@@ -1,4 +1,7 @@
 <?php
+/**
+ * 单据类型 Controller
+ */
 
 namespace App\Http\Controllers\Api;
 

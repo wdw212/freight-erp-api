@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\ContainerTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\FleetsController;
+use App\Http\Controllers\Api\InvoiceTypesController;
 use App\Http\Controllers\Api\LoadingAddressesController;
 use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
@@ -556,5 +557,18 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 消息通知 - 清空消息
     Route::delete('notifications/clear', [NotificationsController::class, 'clear'])
         ->name('notifications.clear');
+
+    // 发票类型 - 列表
+    Route::get('invoice-types', [InvoiceTypesController::class, 'index'])
+        ->name('invoice-types.index');
+    // 发票类型 - 新增
+    Route::post('invoice-types', [InvoiceTypesController::class, 'store'])
+        ->name('invoice-types.store');
+    // 发票类型 - 编辑
+    Route::put('invoice-types/{invoiceType}', [InvoiceTypesController::class, 'update'])
+        ->name('invoice-types.update');
+    // 发票类型 - 删除
+    Route::delete('invoice-types/{invoiceType}', [InvoiceTypesController::class, 'destroy'])
+        ->name('invoice-types.destroy');
 });
 

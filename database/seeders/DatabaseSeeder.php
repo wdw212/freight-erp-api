@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             RegionSeeder::class,
             PermissionSeeder::class,
             OrderTypeSeeder::class,
-            ContainerTypeSeeder::class
+            ContainerTypeSeeder::class,
+            InvoiceTypeSeeder::class,
         ]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
