@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\ContainerTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
+use App\Http\Controllers\Api\FeeTypesController;
 use App\Http\Controllers\Api\FleetsController;
 use App\Http\Controllers\Api\InvoiceTypesController;
 use App\Http\Controllers\Api\LoadingAddressesController;
@@ -570,5 +571,18 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 发票类型 - 删除
     Route::delete('invoice-types/{invoiceType}', [InvoiceTypesController::class, 'destroy'])
         ->name('invoice-types.destroy');
+
+    // 费用类型 - 列表
+    Route::get('fee-types', [FeeTypesController::class, 'index'])
+        ->name('fee-types.index');
+    // 费用类型 - 新增
+    Route::post('fee-types', [FeeTypesController::class, 'store'])
+        ->name('fee-types.store');
+    // 费用类型 - 编辑
+    Route::put('fee-types/{feeType}', [FeeTypesController::class, 'update'])
+        ->name('fee-types.update');
+    // 费用类型 - 删除
+    Route::delete('fee-types/{feeType}', [FeeTypesController::class, 'destroy'])
+        ->name('fee-types.destroy');
 });
 
