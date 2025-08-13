@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
+use App\Http\Resources\Order\CommerceOrderResource;
 use App\Http\Resources\Order\FinanceOrderResource;
 use App\Http\Resources\Order\OrderInfoResource;
 use App\Http\Resources\Order\OrderResource;
@@ -234,9 +235,25 @@ class OrdersController extends Controller
         return response()->noContent();
     }
 
-    public function commerceIndex(Request $request)
+    /**
+     * 商务单据 - 列表
+     * @param Request $request
+     * @return AnonymousResourceCollection
+     */
+    public function commerceIndex(Request $request): AnonymousResourceCollection
     {
-        // 商务列表
+        // 财务单据
+        $order = Order::query()
+            ->with([
+                'orderType:id,name',
+                'businessUser:id,name',
+                'operateUser:id,name',
+                'documentUser:id,name',
+                'commerceUser:id,name',
+                'orderDelegationHeader'
+            ])
+            ->latest()->paginate();
+        return CommerceOrderResource::collection($order);
     }
 
     /**
@@ -247,7 +264,16 @@ class OrdersController extends Controller
     public function financeIndex(Request $request): AnonymousResourceCollection
     {
         // 财务单据
-        $order = Order::query()->latest()->paginate();
+        $order = Order::query()
+            ->with([
+                'orderType:id,name',
+                'businessUser:id,name',
+                'operateUser:id,name',
+                'documentUser:id,name',
+                'commerceUser:id,name',
+                'orderDelegationHeader'
+            ])
+            ->latest()->paginate();
         return FinanceOrderResource::collection($order);
     }
 }
