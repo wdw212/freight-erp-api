@@ -24,6 +24,10 @@ class Order extends Model
     protected $guarded = [
         'order_payments',
     ];
+    
+    protected $casts = [
+        'booking_info' => 'json'
+    ];
 
     /**
      * 单据-应付款

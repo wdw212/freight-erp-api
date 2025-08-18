@@ -86,6 +86,14 @@ Route::get('/test3', static function () {
 });
 
 Route::get('/test4', static function () {
-    $adminUser = \App\Models\AdminUser::query()->first();
-    $adminUser->notify(new \App\Notifications\AdminUserNotification());
+//    $adminUser = \App\Models\AdminUser::query()->first();
+//    $adminUser->notify(new \App\Notifications\AdminUserNotification());
+
+    $data = [
+        '订舱信息1',
+        '订舱信息2',
+        '订舱信息3',
+    ];
+
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
 });

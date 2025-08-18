@@ -219,8 +219,7 @@ class OrdersController extends Controller
             }
             $order->orderReceipts()->saveMany($orderReceiptRelations);
         }
-
-
+        
         return new OrderInfoResource($order);
     }
 
