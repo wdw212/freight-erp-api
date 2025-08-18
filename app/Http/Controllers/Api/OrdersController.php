@@ -61,7 +61,6 @@ class OrdersController extends Controller
             $data = $request->all();
 
             if (!empty($data['booking_info'])) {
-                dd("ok");
                 $data['booking_info'] = json_decode($data['booking_info'], true);
             } else {
                 $data['booking_info'] = [];
