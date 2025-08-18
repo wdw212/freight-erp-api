@@ -19,6 +19,7 @@ use App\Models\OrderDelegationHeader;
 use App\Models\OrderFile;
 use App\Models\OrderPayment;
 use App\Models\OrderReceipt;
+use App\Models\OrderRemark;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -289,5 +290,30 @@ class OrdersController extends Controller
             ])
             ->latest()->paginate();
         return FinanceOrderResource::collection($order);
+    }
+
+    /**
+     * 更新单据备注
+     * @param Request $request
+     * @param Order $order
+     * @return Response
+     */
+    public function updateRemark(Request $request, Order $order): Response
+    {
+        $adminUser = $request->user();
+        $remark = $request->input('remark');
+
+        $orderRemark = OrderRemark::query()
+            ->where('order_id', $order->id)
+            ->where('admin_user_id', $adminUser->id)
+            ->first();
+        if (!$orderRemark) {
+            $orderRemark = new OrderRemark();
+            $orderRemark->order()->associate($order);
+            $orderRemark->adminUser()->associate($adminUser);
+        }
+        $orderRemark->remark = $remark;
+        $orderRemark->save();
+        return response()->noContent();
     }
 }

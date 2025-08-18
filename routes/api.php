@@ -340,6 +340,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 删除
     Route::delete('orders/{order}', [OrdersController::class, 'destroy'])
         ->name('orders.destroy');
+    // 单据 - 更新备注
+    Route::put('orders/{order}/update-remark', [OrdersController::class, 'updateRemark'])
+        ->name('orders.update-remark')->where('order', '[0-9]+');
 
     // 地区 - 列表
     Route::get('regions', [RegionsController::class, 'index'])
