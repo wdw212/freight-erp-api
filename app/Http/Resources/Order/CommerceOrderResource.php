@@ -48,7 +48,7 @@ class CommerceOrderResource extends JsonResource
             'business_user' => $this->businessUser,
             'is_delivery' => $this->is_delivery,
             'booking_info' => $this->booking_info,
-            'order_remark' => $this->orderRemark,
+            'order_remark' => $this->orderRemark->remark ?? null,
         ];
     }
 }
