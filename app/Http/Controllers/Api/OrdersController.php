@@ -59,7 +59,14 @@ class OrdersController extends Controller
     {
         $order = DB::transaction(static function () use ($request, $order) {
             $data = $request->all();
-            $order->fill($request->all());
+
+            if (!empty($data['booking_info'])) {
+                $data['booking_info'] = json_decode($data['booking_info'], true);
+            } else {
+                $data['booking_info'] = [];
+            }
+
+            $order->fill($data);
             $order->is_delivery = 0;
             $order->save();
 
@@ -171,8 +178,12 @@ class OrdersController extends Controller
      */
     public function update(OrderRequest $request, Order $order): OrderInfoResource
     {
-        $data = $request->all();
-        $order->fill($request->all());
+        if (!empty($data['booking_info'])) {
+            $data['booking_info'] = json_decode($data['booking_info'], true);
+        } else {
+            $data['booking_info'] = [];
+        }
+        $order->fill($data);
         $order->update();
 
         // 处理应付款
@@ -219,7 +230,7 @@ class OrdersController extends Controller
             }
             $order->orderReceipts()->saveMany($orderReceiptRelations);
         }
-        
+
         return new OrderInfoResource($order);
     }
 
@@ -241,6 +252,7 @@ class OrdersController extends Controller
      */
     public function commerceIndex(Request $request): AnonymousResourceCollection
     {
+        $adminUser = $request->user();
         // 财务单据
         $order = Order::query()
             ->with([
@@ -251,6 +263,9 @@ class OrdersController extends Controller
                 'commerceUser:id,name',
                 'orderDelegationHeader'
             ])
+            ->with('orderRemark', function ($query) use ($adminUser) {
+                return $query->where('admin_user_id', $adminUser->id);
+            })
             ->latest()->paginate();
         return CommerceOrderResource::collection($order);
     }

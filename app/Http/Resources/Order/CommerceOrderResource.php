@@ -20,6 +20,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $operationUser
  * @property mixed $businessUser
  * @property mixed $is_delivery
+ * @property mixed $booking_info
+ * @property mixed $orderRemark
  */
 class CommerceOrderResource extends JsonResource
 {
@@ -45,6 +47,8 @@ class CommerceOrderResource extends JsonResource
             'operation_user' => $this->operationUser,
             'business_user' => $this->businessUser,
             'is_delivery' => $this->is_delivery,
+            'booking_info' => $this->booking_info,
+            'order_remark' => $this->orderRemark,
         ];
     }
 }

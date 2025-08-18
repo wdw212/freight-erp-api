@@ -39,6 +39,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $containers
  * @property mixed $orderReceipts
  * @property mixed $operate_user_id
+ * @property mixed $booking_info
  */
 class OrderInfoResource extends JsonResource
 {
@@ -67,6 +68,7 @@ class OrderInfoResource extends JsonResource
             'destination_port' => $this->destination_port,
             'ship_name' => $this->ship_name,
             'ship_no' => $this->ship_no,
+            'booking_info' => $this->booking_info,
             'container_type' => $this->container_type,
             'payment_method' => $this->payment_method,
             'cutoff_status' => $this->cutoff_status,
