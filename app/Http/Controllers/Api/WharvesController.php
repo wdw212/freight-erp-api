@@ -23,12 +23,18 @@ class WharvesController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        $keyword = $request->input('keyword');
         $isPaginate = $request->input('is_paginate');
-        $wharves = Wharf::query()->orderByDesc('sort');
+        $builder = Wharf::query()->orderByDesc('sort');
+
+        if (!empty($keyword)) {
+            $builder = $builder->where('name', 'like', '%' . $keyword . '%');
+        }
+
         if ($isPaginate) {
-            $wharves = $wharves->paginate();
+            $wharves = $builder->paginate();
         } else {
-            $wharves = $wharves->get();
+            $wharves = $builder->get();
             WharfResource::wrap('data');
         }
         return WharfResource::collection($wharves);
