@@ -24,7 +24,22 @@ class FleetsController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $fleets = Fleet::query()->paginate();
+        $keyword = $request->input('keyword');
+        $isPaginate = $request->input('is_paginate');
+
+        $builder = Fleet::query();
+
+        if (!empty($keyword)) {
+            $builder = $builder->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        if ($isPaginate) {
+            $fleets = $builder->paginate();
+        } else {
+            $fleets = $builder->get();
+            FleetResource::wrap('data');
+        }
+
         return FleetResource::collection($fleets);
     }
 
