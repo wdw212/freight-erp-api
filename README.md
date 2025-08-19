@@ -11,7 +11,6 @@ zhangqi
 ### 文档信息
 
 【金山文档 | WPS云文档】 货运系统开发
-https://kdocs.cn/l/cd5NLMqAMT9B
 
 ### 扩展包
 
