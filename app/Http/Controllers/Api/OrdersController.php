@@ -20,6 +20,7 @@ use App\Models\OrderFile;
 use App\Models\OrderPayment;
 use App\Models\OrderReceipt;
 use App\Models\OrderRemark;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -259,8 +260,7 @@ class OrdersController extends Controller
         $endSailingDate = $request->input('end_sailing_date');
         $startArrivalDate = $request->input('start_arrival_date');
         $endArrivalDate = $request->input('end_arrival_date');
-        $startFinishingDate = $request->input('start_finishing_date');
-        $endFinishingDate = $request->input('end_finishing_date');
+        $finishingDate = $request->input('finishing_date');
         $businessUserId = $request->input('business_user_id');
         $operationUserId = $request->input('operation_user_id');
         $isDelivery = $request->input('is_delivery');
@@ -296,7 +296,9 @@ class OrdersController extends Controller
         if (!empty($startArrivalDate) && !empty($endArrivalDate)) {
             $builder = $builder->whereBetween('arrival_at', [$startArrivalDate, $endArrivalDate]);
         }
-        if (!empty($startFinishingDate) && !empty($endFinishingDate)) {
+        if (!empty($finishingDate)) {
+            $startFinishingDate = Carbon::parse($finishingDate)->startOfMonth();
+            $endFinishingDate = Carbon::parse($finishingDate)->endOfMonth();
             $builder = $builder->whereBetween('finished_at', [$startFinishingDate, $endFinishingDate]);
         }
         if (!empty($businessUserId)) {
