@@ -253,20 +253,24 @@ class OrdersController extends Controller
      */
     public function commerceIndex(Request $request): AnonymousResourceCollection
     {
-        $keyword = $request->input('keyword', '');
-        $sailingAt = $request->input('sailing_at', '');
-        $arrivalAt = $request->input('arrival_at', '');
-        $finishAt = $request->input('finish_at', '');
-        $businessUserId = $request->input('business_user_id', '');
-        $operationUserId = $request->input('operation_user_id', '');
+        // 关键词
+        $keyword = $request->input('keyword');
+        $startSailingDate = $request->input('start_sailing_date');
+        $endSailingDate = $request->input('end_sailing_date');
+        $startArrivalDate = $request->input('start_arrival_date');
+        $endArrivalDate = $request->input('end_arrival_date');
+        $startFinishingDate = $request->input('start_finishing_date');
+        $endFinishingDate = $request->input('end_finishing_date');
+        $businessUserId = $request->input('business_user_id');
+        $operationUserId = $request->input('operation_user_id');
         $isDelivery = $request->input('is_delivery');
         $paymentMethod = $request->input('payment_method');
         $sellerId = $request->input('seller_id');
-
+        $isClaimed = $request->input('is_claimed');
 
         $adminUser = $request->user();
-        // 财务单据
-        $order = Order::query()
+
+        $builder = Order::query()
             ->with([
                 'orderType:id,name',
                 'businessUser:id,name',
@@ -277,8 +281,18 @@ class OrdersController extends Controller
             ])
             ->with('orderRemark', function ($query) use ($adminUser) {
                 return $query->where('admin_user_id', $adminUser->id);
-            })
-            ->latest()->paginate();
+            })->latest();
+
+        if (!empty($keyword)) {
+            $builder = $builder->where(function ($query) use ($keyword) {
+                $query->where('job_no', 'like', '%' . $keyword . '%')
+                    ->orWhere('origin_port', 'like', '%' . $keyword . '%')
+                    ->orWhere('bl_no', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        // 财务单据
+        $order = $builder->paginate();
         return CommerceOrderResource::collection($order);
     }
 
