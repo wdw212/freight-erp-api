@@ -253,6 +253,17 @@ class OrdersController extends Controller
      */
     public function commerceIndex(Request $request): AnonymousResourceCollection
     {
+        $keyword = $request->input('keyword', '');
+        $sailingAt = $request->input('sailing_at', '');
+        $arrivalAt = $request->input('arrival_at', '');
+        $finishAt = $request->input('finish_at', '');
+        $businessUserId = $request->input('business_user_id', '');
+        $operationUserId = $request->input('operation_user_id', '');
+        $isDelivery = $request->input('is_delivery');
+        $paymentMethod = $request->input('payment_method');
+        $sellerId = $request->input('seller_id');
+
+
         $adminUser = $request->user();
         // 财务单据
         $order = Order::query()
