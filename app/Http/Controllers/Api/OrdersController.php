@@ -290,8 +290,24 @@ class OrdersController extends Controller
                     ->orWhere('bl_no', 'like', '%' . $keyword . '%');
             });
         }
-
-        // 财务单据
+        if (!empty($startSailingDate) && !empty($endSailingDate)) {
+            $builder = $builder->whereBetween('sailing_at', [$startSailingDate, $endSailingDate]);
+        }
+        if (!empty($startArrivalDate) && !empty($endArrivalDate)) {
+            $builder = $builder->whereBetween('arrival_at', [$startArrivalDate, $endArrivalDate]);
+        }
+        if (!empty($startFinishingDate) && !empty($endFinishingDate)) {
+            $builder = $builder->whereBetween('finished_at', [$startFinishingDate, $endFinishingDate]);
+        }
+        if (!empty($businessUserId)) {
+            $builder = $builder->where('business_user_id', $businessUserId);
+        }
+        if (!empty($operationUserId)) {
+            $builder = $builder->where('operation_user_id', $operationUserId);
+        }
+        if (!empty($isClaimed)) {
+            $builder = $builder->where('is_claimed', 1);
+        }
         $order = $builder->paginate();
         return CommerceOrderResource::collection($order);
     }
