@@ -75,11 +75,17 @@ class OperationFeesController extends Controller
         $operationFee = DB::transaction(static function () use ($request, $operationFee) {
             $operationFee->fill($request->all());
             $operationFee->update();
-            OperationFeeItem::query()->whereBelongsTo($operationFee)->delete();
             $items = json_decode($request->items, true);
             foreach ($items as $item) {
-                $operationFeeItem = new OperationFeeItem($item);
-                $operationFeeItem->operationFee()->associate($operationFee);
+                $operationFeeItem = OperationFeeItem::query()
+                    ->whereBelongsTo($operationFee)
+                    ->where('order_type_id', $item['order_type_id'])
+                    ->first();
+                if (!$operationFeeItem) {
+                    $operationFeeItem = new OperationFeeItem();
+                }
+                $operationFeeItem->order_type_id = $item['order_type_id'];
+                $operationFeeItem->price = $item['price'];
                 $operationFeeItem->save();
             }
             return $operationFee;
