@@ -226,12 +226,91 @@ class OrdersController extends Controller
         // 处理应收款
         if (!empty($data['order_receipts'])) {
             $orderReceipts = json_decode($data['order_receipts'], true);
+            // 处理需要应删除的数据
+            $oldOrderReceiptIds = OrderReceipt::query()
+                ->where('order_id', $order->id)
+                ->pluck('id')
+                ->toArray();
+            $newOrderReceiptIds = collect($orderReceipts)
+                ->pluck('id')
+                ->toArray();
+            $orderReceiptIds = array_diff($oldOrderReceiptIds, $newOrderReceiptIds);
+            OrderReceipt::query()->whereIn('id', $orderReceiptIds)->delete();
             $orderReceiptRelations = [];
             foreach ($orderReceipts as $orderReceipt) {
-                $orderReceiptRelations[] = new OrderReceipt($orderReceipt);
+                if (isset($orderReceipt['id'])) {
+                    OrderReceipt::query()->where('id', $orderReceipt['id'])->update([
+                        'order_id' => $order->id,
+                        'company_header_id' => $orderReceipt['company_header_id'],
+                        'no_invoice_remark' => $orderReceipt['no_invoice_remark'],
+                        'cny_amount' => $orderReceipt['cny_amount'],
+                        'cny_invoice_number' => $orderReceipt['cny_invoice_number'],
+                        'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
+                        'usd_amount' => $orderReceipt['usd_amount'],
+                        'usd_invoice_number' => $orderReceipt['usd_invoice_number'],
+                        'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
+                        'remark' => $orderReceipt['remark'] ?? '',
+                    ]);
+                } else {
+                    $orderReceiptRelations[] = new OrderReceipt($orderReceipt);
+                }
             }
             $order->orderReceipts()->saveMany($orderReceiptRelations);
         }
+
+        // 单据委托抬头
+        if (!empty($data['order_delegation_header'])) {
+            $orderDelegationHeader = json_decode($data['order_delegation_header'], true);
+            $orderDelegationHeader = new OrderDelegationHeader($orderDelegationHeader);
+            $orderDelegationHeader->order()->associate($order);
+            $orderDelegationHeader->save();
+        }
+
+        // 单据文件
+        if (!empty($data['order_files'])) {
+            $orderFiles = json_decode($data['order_files'], true);
+            $orderFileRelations = [];
+            foreach ($orderFiles as $orderFile) {
+                $orderFileRelations[] = new OrderFile($orderFile);
+            }
+            $order->orderFiles()->saveMany($orderFileRelations);
+        }
+
+        // 处理箱子
+        if (!empty($data['containers'])) {
+            $containers = json_decode($data['containers'], true);
+            foreach ($containers as $container) {
+
+                $containerModel = Container::query()->where('id', $container['id'])->first();
+                if (!$containerModel) {
+                    $containerModel = new Container($container);
+                }
+                $containerModel->order()->associate($order);
+                $containerModel->save();
+
+                $containerItems = $container['container_items'];
+                foreach ($containerItems as $containerItem) {
+                    $containerItemModel = ContainerItem::query()->where('id', $containerItem['id'])->first();
+                    if (!$containerItemModel) {
+                        $containerItemModel = new ContainerItem($containerItem);
+                    }
+                    $containerItemModel->container()->associate($containerModel);
+                    $containerItemModel->save();
+                }
+
+                $containerLoadingAddresses = $container['container_loading_addresses'];
+
+                foreach ($containerLoadingAddresses as $containerLoadingAddress) {
+                    $containerLoadingAddressModel = ContainerLoadingAddress::query()->where('id', $containerLoadingAddress['id'])->first();
+                    if (!$containerLoadingAddressModel) {
+                        $containerLoadingAddressModel = new ContainerLoadingAddress($containerLoadingAddress);
+                    }
+                    $containerLoadingAddressModel->container()->associate($containerModel);
+                    $containerLoadingAddressModel->save();
+                }
+            }
+        }
+
 
         return new OrderInfoResource($order);
     }
