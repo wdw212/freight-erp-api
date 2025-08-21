@@ -30,3 +30,14 @@ https://www.kdocs.cn/l/cugZmeE4Azjj
 ### TODO
 
 https://mp.weixin.qq.com/s/fl7MNQLjD-YtROcMprFa1w
+
+### todo待办
+
+- 操作已认领的单子、商务无法删除、无法编辑
+- 商务复制单据
+- 未被认领的、可以删除
+- 操作复制的时候 不能复制商务信息
+- 费用完结时的时候 归属时间
+- 单据类型增加票价字段
+- 操作 - 应付
+- 应付款 - 完结状态

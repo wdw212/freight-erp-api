@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property mixed $id
  * @property mixed $payment_total_cny_amount
  * @property mixed $payment_total_usd_amount
+ * @property int|mixed $is_claimed
  */
 #[ObservedBy(OrderObserver::class)]
 class Order extends Model
@@ -24,7 +25,7 @@ class Order extends Model
     protected $guarded = [
         'order_payments',
     ];
-    
+
     protected $casts = [
         'booking_info' => 'json'
     ];

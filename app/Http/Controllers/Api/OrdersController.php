@@ -388,6 +388,11 @@ class OrdersController extends Controller
         if (!empty($isClaimed)) {
             $builder = $builder->where('is_claimed', 1);
         }
+
+        if (!empty($isDelivery)) {
+            $builder = $builder->where('is_delivery', $isDelivery);
+        }
+
         $order = $builder->paginate();
         return CommerceOrderResource::collection($order);
     }
@@ -420,7 +425,6 @@ class OrdersController extends Controller
             });
         }
 
-
         $orders = $builder->paginate();
         return FinanceOrderResource::collection($orders);
     }
@@ -447,6 +451,18 @@ class OrdersController extends Controller
         }
         $orderRemark->remark = $remark;
         $orderRemark->save();
+        return response()->noContent();
+    }
+
+    /**
+     * 认领
+     * @param Order $order
+     * @return Response
+     */
+    public function claimed(Order $order): Response
+    {
+        $order->is_claimed = 1;
+        $order->save();
         return response()->noContent();
     }
 }
