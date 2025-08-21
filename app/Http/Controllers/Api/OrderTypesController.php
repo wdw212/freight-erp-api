@@ -24,10 +24,18 @@ class OrderTypesController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $isPaginate = $request->input('is_paginate');
+        $keyword = $request->input('keyword');
+
+        $builder = OrderType::query();
+        
+        if (!empty($keyword)) {
+            $builder = $builder->where('name', 'like', '%' . $keyword . '%');
+        }
+
         if ($isPaginate) {
-            $orderTypes = OrderType::query()->paginate();
+            $orderTypes = $builder->paginate();
         } else {
-            $orderTypes = OrderType::query()->get();
+            $orderTypes = $builder->get();
             OrderTypeResource::wrap('data');
         }
 

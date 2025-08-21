@@ -254,7 +254,6 @@ class OrdersController extends Controller
      */
     public function commerceIndex(Request $request): AnonymousResourceCollection
     {
-        // 关键词
         $keyword = $request->input('keyword');
         $startSailingDate = $request->input('start_sailing_date');
         $endSailingDate = $request->input('end_sailing_date');
@@ -321,8 +320,9 @@ class OrdersController extends Controller
      */
     public function financeIndex(Request $request): AnonymousResourceCollection
     {
+        $keyword = $request->input('keyword');
         // 财务单据
-        $order = Order::query()
+        $builder = Order::query()
             ->with([
                 'orderType:id,name',
                 'businessUser:id,name',
@@ -331,8 +331,19 @@ class OrdersController extends Controller
                 'commerceUser:id,name',
                 'orderDelegationHeader'
             ])
-            ->latest()->paginate();
-        return FinanceOrderResource::collection($order);
+            ->latest();
+
+        if (!empty($keyword)) {
+            $builder = $builder->where(function ($query) use ($keyword) {
+                $query->where('job_no', 'like', '%' . $keyword . '%')
+                    ->orWhere('origin_port', 'like', '%' . $keyword . '%')
+                    ->orWhere('bl_no', 'like', '%' . $keyword . '%');
+            });
+        }
+
+
+        $orders = $builder->paginate();
+        return FinanceOrderResource::collection($orders);
     }
 
     /**
