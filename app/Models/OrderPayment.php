@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int|mixed $is_finish
+ */
 #[ObservedBy(OrderPaymentObserver::class)]
 class OrderPayment extends Model
 {

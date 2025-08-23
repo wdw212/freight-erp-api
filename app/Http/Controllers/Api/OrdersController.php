@@ -21,6 +21,7 @@ use App\Models\OrderPayment;
 use App\Models\OrderReceipt;
 use App\Models\OrderRemark;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -430,6 +431,28 @@ class OrdersController extends Controller
     }
 
     /**
+     * 财务统计
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function financeStatistics(Request $request): JsonResponse
+    {
+        $data = [
+            'receipt_total_cny_amount' => 0,
+            'payment_total_cny_amount' => 0,
+            'total_cny_gross_profit' => 0,
+            'total_special_amount' => 0,
+            'uncashed_amount' => 0,
+            'cashed_amount' => 0,
+            'receipt_total_usd_amount' => 0,
+            'payment_total_usd_amount' => 0,
+            'total_usd_gross_profit' => 0,
+            'total_gross_profit' => 0
+        ];
+        return response()->json($data);
+    }
+
+    /**
      * 更新单据备注
      * @param Request $request
      * @param Order $order
@@ -463,6 +486,19 @@ class OrdersController extends Controller
     {
         $order->is_claimed = 1;
         $order->save();
+        return response()->noContent();
+    }
+
+    /**
+     * 应付款完成
+     * @param Order $order
+     * @return Response
+     */
+    public function orderPaymentFinish(Order $order): Response
+    {
+        $orderPayment = OrderPayment::query()->where('order_id', $order->id)->first();
+        $orderPayment->is_finish = 1;
+        $orderPayment->save();
         return response()->noContent();
     }
 }

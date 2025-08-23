@@ -328,6 +328,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 财务单据
     Route::get('orders/finance-index', [OrdersController::class, 'financeIndex'])
         ->name('orders.finance-index');
+    // 单据 - 财务统计
+    Route::get('orders/finance-statistics', [OrdersController::class, 'financeStatistics'])
+        ->name('orders.finance-statistics');
     // 单据 - 创建
     Route::post('orders', [OrdersController::class, 'store'])
         ->name('orders.store');
@@ -343,6 +346,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 更新备注
     Route::put('orders/{order}/update-remark', [OrdersController::class, 'updateRemark'])
         ->name('orders.update-remark')->where('order', '[0-9]+');
+    // 单据 - 应付款完结
+    Route::put('orders/{order}/order-payment-finish', [OrdersController::class, 'orderPaymentFinish'])
+        ->name('orders.order-payment-finish')->where('order', '[0-9]+');
 
     // 地区 - 列表
     Route::get('regions', [RegionsController::class, 'index'])
