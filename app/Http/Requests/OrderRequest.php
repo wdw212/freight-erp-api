@@ -25,7 +25,7 @@ class OrderRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'payment_method' => '付款方式'
+            'payment_method' => '支付方式'
         ];
     }
 }
