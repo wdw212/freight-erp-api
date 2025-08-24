@@ -15,7 +15,8 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method' => 'required'
+            'payment_method' => 'required',
+            'cutoff_status' => 'required',
         ];
     }
 
@@ -25,7 +26,8 @@ class OrderRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'payment_method' => '支付方式'
+            'payment_method' => '支付方式',
+            'cutoff_status' => '截单状态'
         ];
     }
 }
