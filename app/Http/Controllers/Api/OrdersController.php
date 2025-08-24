@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\Order\CommerceOrderResource;
@@ -320,9 +321,13 @@ class OrdersController extends Controller
      * 删除
      * @param Order $order
      * @return Response
+     * @throws InvalidRequestException
      */
     public function destroy(Order $order): Response
     {
+        if ((int)$order->is_claimed === 1) {
+            throw new InvalidRequestException('当前订单已被认领,禁止删除!');
+        }
         $order->delete();
         return response()->noContent();
     }

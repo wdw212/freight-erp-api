@@ -15,7 +15,17 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'payment_method' => 'required'
+        ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function attributes(): array
+    {
+        return [
+            'payment_method' => '付款方式'
         ];
     }
 }
