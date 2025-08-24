@@ -17,6 +17,7 @@ class OrderRequest extends FormRequest
         return [
             'payment_method' => 'required',
             'cutoff_status' => 'required',
+            'bl_status' => 'required'
         ];
     }
 
@@ -27,7 +28,8 @@ class OrderRequest extends FormRequest
     {
         return [
             'payment_method' => '支付方式',
-            'cutoff_status' => '截单状态'
+            'cutoff_status' => '截单状态',
+            'bl_status' => '提单状态'
         ];
     }
 }
