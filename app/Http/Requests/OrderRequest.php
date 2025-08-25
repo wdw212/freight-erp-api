@@ -18,7 +18,7 @@ class OrderRequest extends FormRequest
 //            'payment_method' => 'required;',
 //            'cutoff_status' => 'required',
 //            'bl_status' => 'required',
-            'seller_id' => 'required',
+//            'seller_id' => 'required',
         ];
     }
 
@@ -31,7 +31,7 @@ class OrderRequest extends FormRequest
 //            'payment_method' => '支付方式',
 //            'cutoff_status' => '截单状态',
 //            'bl_status' => '提单状态',
-            'seller_id' => '销货单位'
+//            'seller_id' => '销货单位'
         ];
     }
 }
