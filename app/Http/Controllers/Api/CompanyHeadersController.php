@@ -59,6 +59,7 @@ class CompanyHeadersController extends Controller
         }
 
         if (!empty($operationUserId)) {
+            dd($operationUserId);
             $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
         }
 
