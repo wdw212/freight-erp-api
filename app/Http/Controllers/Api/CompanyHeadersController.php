@@ -38,7 +38,6 @@ class CompanyHeadersController extends Controller
         $companyTypeId = $request->input('company_type_id', '');
 
         $builder = CompanyHeader::query()
-            ->whereBelongsTo($adminUser)
             ->with(['adminUser:id,name'])
             ->latest();
 
