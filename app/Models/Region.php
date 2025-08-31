@@ -48,7 +48,7 @@ class Region extends Model
     protected function pathIds(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => array_filter(explode('-', trim($this->path, '-'))),
+            get: static fn(mixed $value, array $attributes) => array_filter(explode('-', trim($attributes['path'], '-'))),
         );
     }
 }
