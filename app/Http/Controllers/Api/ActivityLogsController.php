@@ -1,6 +1,6 @@
 <?php
 /**
- * 活动日志 Controller
+ * 操作日志 Controller
  */
 
 namespace App\Http\Controllers\Api;

@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property mixed $price
+ * @property mixed $order_type_id
+ */
 class OperationFeeItem extends Model
 {
     public $timestamps = false;

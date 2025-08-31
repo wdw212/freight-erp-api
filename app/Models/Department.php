@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Department extends Model
 {
     public $timestamps = false;
+
     protected $guarded = [];
 
     /**
@@ -26,6 +27,6 @@ class Department extends Model
      */
     public function children(): HasMany
     {
-        return $this->hasMany(__CLASS__, 'parent_id');
+        return $this->hasMany(__CLASS__, 'parent_id')->with('children');
     }
 }
