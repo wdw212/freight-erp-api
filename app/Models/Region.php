@@ -59,7 +59,6 @@ class Region extends Model
     {
         // 使用 whereIn 并利用集合的 isNotEmpty 方法做前置判断
         $ids = $this->path_ids;
-
         return self::query()
             ->when(collect($ids)->isNotEmpty(), function ($query) use ($ids) {
                 $query->whereIn('id', $ids);
@@ -75,6 +74,7 @@ class Region extends Model
     public function getFullNameAttribute(): mixed
     {
         // 利用集合的管道方法让代码更流畅
+        dd($this->ancestors);
         return $this->ancestors
             ->pluck('name')
             ->push($this->name)
