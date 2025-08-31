@@ -42,7 +42,7 @@ class Region extends Model
         return $this->hasMany(__CLASS__, 'parent_id', 'id')->with(['children']);
     }
 
-    protected function ancestors(): Attribute
+    protected function fullName(): Attribute
     {
         return Attribute::make(
             get: static function (mixed $value, array $attributes) {
@@ -52,7 +52,9 @@ class Region extends Model
                     ->whereIn('id', $pathIds)
                     // 按层级排序
                     ->orderBy('level')
-                    ->get();
+                    ->pluck('name') // 取出所有祖先类目的 name 字段作为一个数组
+                    ->push($attributes['name']) // 将当前类目的 name 字段值加到数组的末尾
+                    ->implode(' - '); // 用 - 符号将数组的值组装成一个字符串;
             }
         );
     }
