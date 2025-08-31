@@ -42,25 +42,18 @@ class Region extends Model
         return $this->hasMany(__CLASS__, 'parent_id', 'id')->with(['children']);
     }
 
-    /**
-     * Get the user's first name.
-     */
-    protected function pathIds(): Attribute
-    {
-        return Attribute::make(
-            get: static fn(mixed $value, array $attributes) => array_filter(explode('-', trim($attributes['path'], '-'))),
-        );
-    }
-
     protected function ancestors(): Attribute
     {
         return Attribute::make(
-            get: static fn(mixed $value, array $attributes) => self::query()
-                // 使用上面的访问器获取所有祖先类目 ID
-                ->whereIn('id', $attributes['path_ids'])
-                // 按层级排序
-                ->orderBy('level')
-                ->get()
+            get: static function (mixed $value, array $attributes) {
+                $pathIds = array_filter(explode('-', trim($attributes['path'], '-')));
+                self::query()
+                    // 使用上面的访问器获取所有祖先类目 ID
+                    ->whereIn('id', $pathIds)
+                    // 按层级排序
+                    ->orderBy('level')
+                    ->get();
+            }
         );
     }
 }
