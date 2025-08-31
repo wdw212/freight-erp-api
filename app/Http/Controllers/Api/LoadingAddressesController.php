@@ -34,7 +34,7 @@ class LoadingAddressesController extends Controller
         $documentUserId = $request->input('document_user_id');
 
         $builder = LoadingAddress::query()
-            ->with(['region:id,name', 'adminUser:id,name'])
+            ->with(['region', 'adminUser:id,name'])
             ->latest();
 
         if (!$adminUser->hasRole('超管')) {
