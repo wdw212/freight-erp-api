@@ -51,9 +51,9 @@ class AdminUsersController extends Controller
             }
         }
 
-        if (isset($status)) {
-            $builder = $builder->where('status', $status);
-        }
+//        if (isset($status)) {
+//            $builder = $builder->where('status', $status);
+//        }
 
         if ($isPaginate) {
             $adminUsers = $builder->paginate();

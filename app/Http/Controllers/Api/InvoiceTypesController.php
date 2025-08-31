@@ -43,7 +43,7 @@ class InvoiceTypesController extends Controller
         if (InvoiceType::query()->where('name', $name)->exists()) {
             throw new InvalidRequestException('已存在，请重试!');
         }
-
+        
         $invoiceType->fill($request->all());
         $invoiceType->save();
         return new InvoiceTypeInfoResource($invoiceType);
@@ -63,7 +63,7 @@ class InvoiceTypesController extends Controller
         if (InvoiceType::query()->whereNot('id', $invoiceType->id)->where('name', $name)->exists()) {
             throw new InvalidRequestException('已存在，请重试!');
         }
-        
+
         $invoiceType->fill($request->all());
         $invoiceType->update();
         return new InvoiceTypeInfoResource($invoiceType);

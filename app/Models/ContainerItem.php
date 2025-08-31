@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ContainerItem extends Model
 {
     public $timestamps = false;
+    
     protected $guarded = [];
 
     /**
