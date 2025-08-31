@@ -47,7 +47,7 @@ class Region extends Model
         return Attribute::make(
             get: static function (mixed $value, array $attributes) {
                 $pathIds = array_filter(explode('-', trim($attributes['path'], '-')));
-                self::query()
+                return self::query()
                     // 使用上面的访问器获取所有祖先类目 ID
                     ->whereIn('id', $pathIds)
                     // 按层级排序
