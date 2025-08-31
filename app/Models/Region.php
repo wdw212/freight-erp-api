@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Observers\RegionObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,14 +41,14 @@ class Region extends Model
     {
         return $this->hasMany(__CLASS__, 'parent_id', 'id')->with(['children']);
     }
-
+    
     /**
-     * 定义一个访问器，获取所有祖先类目的 ID 值
-     * @return string[]
+     * Get the user's first name.
      */
-    public function getPathIdsAttribute(): array
+    protected function pathIds(): Attribute
     {
-        // 使用 trim 和 explode 的组合，并通过 array_filter 移除空值
-        return array_filter(explode('-', trim($this->path, '-')));
+        return Attribute::make(
+            get: static fn(string $value) => array_filter(explode('-', trim($this->path, '-'))),
+        );
     }
 }
