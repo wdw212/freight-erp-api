@@ -41,14 +41,14 @@ class Region extends Model
     {
         return $this->hasMany(__CLASS__, 'parent_id', 'id')->with(['children']);
     }
-    
+
     /**
      * Get the user's first name.
      */
     protected function pathIds(): Attribute
     {
         return Attribute::make(
-            get: static fn(string $value) => array_filter(explode('-', trim($this->path, '-'))),
+            get: static fn($value) => array_filter(explode('-', trim($this->path, '-'))),
         );
     }
 }
