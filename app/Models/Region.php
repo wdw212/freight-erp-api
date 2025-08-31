@@ -74,11 +74,9 @@ class Region extends Model
     public function getFullNameAttribute(): mixed
     {
         // 利用集合的管道方法让代码更流畅
-        dd($this->ancestors);
         return $this->ancestors
             ->pluck('name')
             ->push($this->name)
             ->implode(' - ');
     }
-
 }
