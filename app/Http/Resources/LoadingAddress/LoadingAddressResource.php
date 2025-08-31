@@ -34,8 +34,7 @@ class LoadingAddressResource extends JsonResource
             'admin_user' => $this->adminUser,
             'region' => [
                 'id' => $this->region->id,
-                'name' => $this->region->name,
-                'full_name' => $this->region->full_name,
+                'name' => $this->region->full_name,
             ],
             'address' => $this->address,
             'contact_name' => $this->contact_name,
