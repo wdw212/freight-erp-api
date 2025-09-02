@@ -123,11 +123,16 @@ class OrdersController extends Controller
             if (!empty($data['containers'])) {
                 $containers = json_decode($data['containers'], true);
                 foreach ($containers as $container) {
+                    $container['no_image'] = $container['no_image']['path'] ?? '';
+                    $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
+                    $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
+                    $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
                     $containerModel = new Container($container);
                     $containerModel->order()->associate($order);
                     $containerModel->save();
 
                     $containerItems = $container['container_items'];
+
                     foreach ($containerItems as $containerItem) {
                         $containerItem = new ContainerItem($containerItem);
                         $containerItem->container()->associate($containerModel);
@@ -282,8 +287,11 @@ class OrdersController extends Controller
         if (!empty($data['containers'])) {
             $containers = json_decode($data['containers'], true);
             foreach ($containers as $container) {
-
                 $containerModel = Container::query()->where('id', $container['id'])->first();
+                $container['no_image'] = $container['no_image']['path'] ?? '';
+                $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
+                $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
+                $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
                 if (!$containerModel) {
                     $containerModel = new Container($container);
                 }

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SftRecord extends Model
 {
     public $guarded = [];
-
+    
     protected $casts = [
         'operation_user_ids' => 'json',
         'document_user_ids' => 'json',
