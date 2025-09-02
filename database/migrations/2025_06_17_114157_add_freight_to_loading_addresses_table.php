@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('loading_addresses', static function (Blueprint $table) {
-            $table->decimal('freight', 10)->comment('运费')->default(0);
+            $table->string('freight')->comment('运费')->nullable();
         });
     }
 
