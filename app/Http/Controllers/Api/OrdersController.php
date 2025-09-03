@@ -68,7 +68,7 @@ class OrdersController extends Controller
             if (Order::query()->where('job_no', $data['job_no'])->exists()) {
                 throw new InvalidRequestException('工作编号重复,请重试！');
             }
-            
+
             if (!empty($data['booking_info'])) {
                 $data['booking_info'] = json_decode($data['booking_info'], true);
             } else {
@@ -197,9 +197,9 @@ class OrdersController extends Controller
         } else {
             $data['booking_info'] = [];
         }
+        dd($data);
         $order->fill($data);
         $order->update();
-
         // 处理应付款
         if (!empty($data['order_payments'])) {
             $orderPayments = json_decode($data['order_payments'], true);
