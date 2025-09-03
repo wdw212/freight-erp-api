@@ -26,11 +26,9 @@ class WharvesController extends Controller
         $keyword = $request->input('keyword');
         $isPaginate = $request->input('is_paginate');
         $builder = Wharf::query()->orderByDesc('sort');
-
         if (!empty($keyword)) {
             $builder = $builder->where('name', 'like', '%' . $keyword . '%');
         }
-
         if ($isPaginate) {
             $wharves = $builder->paginate();
         } else {
