@@ -189,10 +189,16 @@ class OrdersController extends Controller
      * @param OrderRequest $request
      * @param Order $order
      * @return OrderInfoResource
+     * @throws InvalidRequestException
      */
     public function update(OrderRequest $request, Order $order): OrderInfoResource
     {
         $data = $request->all();
+
+        if (Order::query()->whereNot('id', $order->id)->where('job_no', $data['job_no'])->exists()) {
+            throw new InvalidRequestException('工作编号重复,请重试！');
+        }
+
         if (!empty($data['booking_info'])) {
             $data['booking_info'] = json_decode($data['booking_info'], true);
         } else {
