@@ -192,12 +192,12 @@ class OrdersController extends Controller
      */
     public function update(OrderRequest $request, Order $order): OrderInfoResource
     {
+        $data = $request->all();
         if (!empty($data['booking_info'])) {
             $data['booking_info'] = json_decode($data['booking_info'], true);
         } else {
             $data['booking_info'] = [];
         }
-        dd($data);
         $order->fill($data);
         $order->update();
         // 处理应付款
