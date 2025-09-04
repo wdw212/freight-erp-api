@@ -41,6 +41,9 @@ class CompanyHeadersController extends Controller
             ->with(['adminUser:id,name'])
             ->latest();
 
+        
+        Log::info($adminUser->hasRole('超管'));
+
         if (!$adminUser->hasRole('超管') || !$adminUser->hasRole('财务')) {
             $builder = $builder->where('admin_user_id', $adminUser->id);
         }
