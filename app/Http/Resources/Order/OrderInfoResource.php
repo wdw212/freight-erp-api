@@ -40,6 +40,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderReceipts
  * @property mixed $operate_user_id
  * @property mixed $booking_info
+ * @property mixed $is_finish
+ * @property mixed $entered_port_wharf_id
+ * @property mixed $insurance
+ * @property mixed $is_allowed
+ * @property mixed $port_open_at
+ * @property mixed $port_close_at
  */
 class OrderInfoResource extends JsonResource
 {
@@ -83,6 +89,12 @@ class OrderInfoResource extends JsonResource
             'order_delegation_header' => $this->orderDelegationHeader,
             'order_files' => $orderFiles,
             'containers' => $this->containers,
+            'is_finish' => $this->is_finish,
+            'entered_port_wharf_id' => $this->entered_port_wharf_id,
+            'insurance' => $this->insurance,
+            'is_allowed' => $this->is_allowed,
+            'port_open_at' => $this->port_open_at,
+            'port_close_at' => $this->port_close_at,
         ];
     }
 }

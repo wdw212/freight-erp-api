@@ -2370,16 +2370,16 @@
         },
         {
             "name": "laravel-lang/lang",
-            "version": "15.24.0",
+            "version": "15.24.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/lang.git",
-                "reference": "8081a2b14b14d3e8cd48409f7d5357fb0f613258"
+                "reference": "ca42e015b7763c270822814b4880c8ad8b2bb0b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/8081a2b14b14d3e8cd48409f7d5357fb0f613258",
-                "reference": "8081a2b14b14d3e8cd48409f7d5357fb0f613258",
+                "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/ca42e015b7763c270822814b4880c8ad8b2bb0b4",
+                "reference": "ca42e015b7763c270822814b4880c8ad8b2bb0b4",
                 "shasum": ""
             },
             "require": {
@@ -2430,7 +2430,7 @@
                 "issues": "https://github.com/Laravel-Lang/lang/issues",
                 "source": "https://github.com/Laravel-Lang/lang"
             },
-            "time": "2025-08-28T08:01:32+00:00"
+            "time": "2025-09-02T21:56:46+00:00"
         },
         {
             "name": "laravel-lang/locale-list",
@@ -3165,20 +3165,20 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.26.4",
+            "version": "v12.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "085a367a32ba86fcfa647bfc796098ae6f795b09"
+                "reference": "aa2e8af4c7e84e83a857d5171cf784c7720da4e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/085a367a32ba86fcfa647bfc796098ae6f795b09",
-                "reference": "085a367a32ba86fcfa647bfc796098ae6f795b09",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/aa2e8af4c7e84e83a857d5171cf784c7720da4e6",
+                "reference": "aa2e8af4c7e84e83a857d5171cf784c7720da4e6",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.11|^0.12|^0.13",
+                "brick/math": "^0.11|^0.12|^0.13|^0.14",
                 "composer-runtime-api": "^2.2",
                 "doctrine/inflector": "^2.0.5",
                 "dragonmantank/cron-expression": "^3.4",
@@ -3252,6 +3252,7 @@
                 "illuminate/filesystem": "self.version",
                 "illuminate/hashing": "self.version",
                 "illuminate/http": "self.version",
+                "illuminate/json-schema": "self.version",
                 "illuminate/log": "self.version",
                 "illuminate/macroable": "self.version",
                 "illuminate/mail": "self.version",
@@ -3284,7 +3285,8 @@
                 "league/flysystem-read-only": "^3.25.1",
                 "league/flysystem-sftp-v3": "^3.25.1",
                 "mockery/mockery": "^1.6.10",
-                "orchestra/testbench-core": "^10.6.3",
+                "opis/json-schema": "^2.4.1",
+                "orchestra/testbench-core": "^10.6.5",
                 "pda/pheanstalk": "^5.0.6|^7.0.0",
                 "php-http/discovery": "^1.15",
                 "phpstan/phpstan": "^2.0",
@@ -3378,20 +3380,20 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-08-29T14:15:53+00:00"
+            "time": "2025-09-03T17:04:36+00:00"
         },
         {
             "name": "laravel/horizon",
-            "version": "v5.33.4",
+            "version": "v5.33.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/horizon.git",
-                "reference": "678362049ce5b9ce96673ac0282bbfda3279eca9"
+                "reference": "ef1c74b8134432eddabbd512e6e61a2e84a13d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/678362049ce5b9ce96673ac0282bbfda3279eca9",
-                "reference": "678362049ce5b9ce96673ac0282bbfda3279eca9",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/ef1c74b8134432eddabbd512e6e61a2e84a13d7a",
+                "reference": "ef1c74b8134432eddabbd512e6e61a2e84a13d7a",
                 "shasum": ""
             },
             "require": {
@@ -3456,9 +3458,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/horizon/issues",
-                "source": "https://github.com/laravel/horizon/tree/v5.33.4"
+                "source": "https://github.com/laravel/horizon/tree/v5.33.5"
             },
-            "time": "2025-08-25T13:31:24+00:00"
+            "time": "2025-08-31T23:36:14+00:00"
         },
         {
             "name": "laravel/octane",
@@ -5410,16 +5412,16 @@
         },
         {
             "name": "overtrue/flysystem-qiniu",
-            "version": "3.2.5",
+            "version": "3.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/flysystem-qiniu.git",
-                "reference": "49c7eaa22aa24d68c8b24b01a6a93ff7ccbe980a"
+                "reference": "f450c62fb4dc625bef78296d92511a923f917cb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/flysystem-qiniu/zipball/49c7eaa22aa24d68c8b24b01a6a93ff7ccbe980a",
-                "reference": "49c7eaa22aa24d68c8b24b01a6a93ff7ccbe980a",
+                "url": "https://api.github.com/repos/overtrue/flysystem-qiniu/zipball/f450c62fb4dc625bef78296d92511a923f917cb8",
+                "reference": "f450c62fb4dc625bef78296d92511a923f917cb8",
                 "shasum": ""
             },
             "require": {
@@ -5461,7 +5463,7 @@
             "description": "Flysystem adapter for the Qiniu storage.",
             "support": {
                 "issues": "https://github.com/overtrue/flysystem-qiniu/issues",
-                "source": "https://github.com/overtrue/flysystem-qiniu/tree/3.2.5"
+                "source": "https://github.com/overtrue/flysystem-qiniu/tree/3.2.6"
             },
             "funding": [
                 {
@@ -5469,7 +5471,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-22T10:16:24+00:00"
+            "time": "2025-09-01T00:12:48+00:00"
         },
         {
             "name": "overtrue/laravel-filesystem-qiniu",
@@ -6017,16 +6019,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8"
+                "reference": "1e0cd5370df5dd2e556a36b9c62f62e555870495"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
-                "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/1e0cd5370df5dd2e556a36b9c62f62e555870495",
+                "reference": "1e0cd5370df5dd2e556a36b9c62f62e555870495",
                 "shasum": ""
             },
             "require": {
@@ -6058,9 +6060,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.2.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.0"
             },
-            "time": "2025-07-13T07:04:09+00:00"
+            "time": "2025-08-30T15:50:23+00:00"
         },
         {
             "name": "psr/clock",
@@ -12354,12 +12356,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "e7589e01dc8452bfecb4c8df977346cd3132650f"
+                "reference": "3602c597d29de335a36c0b50b96cc161d853b54f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/e7589e01dc8452bfecb4c8df977346cd3132650f",
-                "reference": "e7589e01dc8452bfecb4c8df977346cd3132650f",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/3602c597d29de335a36c0b50b96cc161d853b54f",
+                "reference": "3602c597d29de335a36c0b50b96cc161d853b54f",
                 "shasum": ""
             },
             "conflict": {
@@ -12783,7 +12785,7 @@
                 "marshmallow/nova-tiptap": "<5.7",
                 "matomo/matomo": "<1.11",
                 "matyhtf/framework": "<3.0.6",
-                "mautic/core": "<5.2.6|>=6.0.0.0-alpha,<6.0.2",
+                "mautic/core": "<5.2.8|>=6.0.0.0-alpha,<6.0.5",
                 "mautic/core-lib": ">=1.0.0.0-beta,<4.4.13|>=5.0.0.0-alpha,<5.1.1",
                 "maximebf/debugbar": "<1.19",
                 "mdanter/ecc": "<2",
@@ -12929,7 +12931,7 @@
                 "pixelfed/pixelfed": "<0.12.5",
                 "plotly/plotly.js": "<2.25.2",
                 "pocketmine/bedrock-protocol": "<8.0.2",
-                "pocketmine/pocketmine-mp": "<5.25.2",
+                "pocketmine/pocketmine-mp": "<5.32.1",
                 "pocketmine/raklib": ">=0.14,<0.14.6|>=0.15,<0.15.1",
                 "pressbooks/pressbooks": "<5.18",
                 "prestashop/autoupgrade": ">=4,<4.10.1",
@@ -13311,7 +13313,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-29T15:04:47+00:00"
+            "time": "2025-09-03T23:04:57+00:00"
         },
         {
             "name": "sebastian/cli-parser",
