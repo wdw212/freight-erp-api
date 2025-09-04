@@ -44,7 +44,7 @@ class CompanyHeadersController extends Controller
 
         Log::info($adminUser->hasRole('超管'));
 
-        if (!$adminUser->hasRole('超管') || !$adminUser->hasRole('财务')) {
+        if (!$adminUser->hasRole('超管')) {
             Log::info('执行了账号隔离');
             $builder = $builder->where('admin_user_id', $adminUser->id);
         }
