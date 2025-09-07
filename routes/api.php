@@ -570,6 +570,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 消息通知 - 清空消息
     Route::delete('notifications/clear', [NotificationsController::class, 'clear'])
         ->name('notifications.clear');
+    // 消息通知 - 未读消息数量
+    Route::get('notifications/unread-notification-count', [NotificationsController::class, 'unreadNotificationCount'])
+        ->name('notifications.unread-notification-count');
 
     // 发票类型 - 列表
     Route::get('invoice-types', [InvoiceTypesController::class, 'index'])

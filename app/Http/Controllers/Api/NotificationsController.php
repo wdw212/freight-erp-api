@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Notification\NotificationResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -85,5 +86,18 @@ class NotificationsController extends Controller
         $adminUser = $request->user();
         $adminUser->notifications()->delete();
         return response()->noContent();
+    }
+
+    /**
+     * 消息数量
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function unreadNotificationCount(Request $request): JsonResponse
+    {
+        $adminUser = $request->user();
+        return response()->json([
+            'count' => $adminUser->unreadNotifications()->count(),
+        ]);
     }
 }
