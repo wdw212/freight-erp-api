@@ -136,6 +136,7 @@ class OrdersController extends Controller
                     $container['fleet_id'] = empty($container['fleet_id']) ? 0 : $container['fleet_id'];
                     $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
                     $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
+                    $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
                     $containerModel = new Container();
                     $containerModel->fill($container);
                     $containerModel->order()->associate($order);
