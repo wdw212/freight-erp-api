@@ -43,8 +43,8 @@ class CompanyHeadersController extends Controller
 
         if (!$adminUser->hasRole('超管')) {
             $builder = $builder->where(function ($query) use ($adminUser) {
-                $query->whereJsonContains('operation_user_id', $adminUser->id)
-                    ->orWhereJsonContains('operation_user_id', $adminUser->id);
+                $query->whereJsonContains('operation_user_ids', $adminUser->id)
+                    ->orWhereJsonContains('operation_user_ids', $adminUser->id);
             });
         }
 
