@@ -24,13 +24,16 @@ class ContainerObserver
             ->map(function ($item) {
                 return [
                     'type_id' => $item->container_type_id,
-                    'type_name' => $item->containerType->name,
+                    'type_name' => $item->containerType->name ?? null,
                     'count' => $item->count,
                 ];
             });
 
         $containerType = '';
         foreach ($containerTypeStats as $containerTypeStat) {
+            if (empty($containerTypeStat->type_name)) {
+                continue;
+            }
             $containerType = $containerTypeStat['count'] . '*' . $containerTypeStat['type_name'] . ';';
         }
         $container->order->container_type = $containerType;
