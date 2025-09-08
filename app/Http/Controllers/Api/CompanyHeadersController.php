@@ -49,13 +49,13 @@ class CompanyHeadersController extends Controller
             $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
         }
 
-        if (!empty($operationUserId)) {
-            $builder = $builder->whereJsonContains('operation_user_ids', (int)$operationUserId);
-        }
+//        if (!empty($operationUserId)) {
+//            $builder = $builder->whereJsonContains('operation_user_ids', (int)$operationUserId);
+//        }
 
-        if (!empty($documentUserId)) {
-            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
-        }
+//        if (!empty($documentUserId)) {
+//            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
+//        }
 
         if (!empty($companyTypeId)) {
             Log::info('--搜索条件--222---' . $companyTypeId);
