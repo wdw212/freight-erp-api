@@ -40,10 +40,12 @@ class CompanyHeadersController extends Controller
         $builder = CompanyHeader::query()
             ->with(['adminUser:id,name'])
             ->latest();
-        
+
         if (!$adminUser->hasRole('超管')) {
-            Log::info('执行了账号隔离');
-            $builder = $builder->where('admin_user_id', $adminUser->id);
+            $builder = $builder->where(function ($query) use ($adminUser) {
+                $query->whereJsonContains('operation_user_id', $adminUser->id)
+                    ->orWhereJsonContains('operation_user_id', $adminUser->id);
+            });
         }
 
         if (!empty($keyword)) {

@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('container_type_id')->comment('柜型ID');
             $table->string('no')->comment('箱号');
             $table->string('seal_number')->comment('封号');
-            $table->unsignedBigInteger('pre_pull_wharf_id')->comment('预提');
-            $table->unsignedBigInteger('wharf_id')->comment('提箱码头');
-            $table->unsignedBigInteger('drop_off_wharf_id')->comment('落箱');
+            $table->unsignedBigInteger('pre_pull_wharf_id')->comment('预提')->nullable();
+            $table->unsignedBigInteger('wharf_id')->comment('提箱码头')->nullable();
+            $table->unsignedBigInteger('drop_off_wharf_id')->comment('落箱')->nullable();
             $table->tinyInteger('is_entered_port')->comment('是否进港 0否 1是')->default(0);
             $table->string('driver')->comment('司机信息')->nullable();
             $table->unsignedBigInteger('fleet_id')->comment('车队ID')->nullable();
