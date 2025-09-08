@@ -42,10 +42,7 @@ class CompanyHeadersController extends Controller
             ->latest();
 
         if (!$adminUser->hasRole('超管')) {
-            $builder = $builder->where(function ($query) use ($adminUser) {
-                $query->whereJsonContains('operation_user_ids', $adminUser->id)
-                    ->orWhereJsonContains('operation_user_ids', $adminUser->id);
-            });
+            $builder = $builder->where('admin_user_id', $adminUser->id);
         }
 
         if (!empty($keyword)) {
