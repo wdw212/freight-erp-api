@@ -132,6 +132,7 @@ class OrdersController extends Controller
                     $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                     $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
                     $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
+                    $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? 0 : $container['drop_off_wharf_id'];
                     $containerModel = new Container($container);
                     $containerModel->order()->associate($order);
                     $containerModel->save();
