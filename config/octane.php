@@ -135,7 +135,7 @@ return [
     ],
 
     'flush' => [
-        \App\Providers\AppServiceProvider::class,
+        ...Octane::prepareApplicationForNextOperation()
     ],
 
     /*
