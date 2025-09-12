@@ -135,7 +135,7 @@ return [
     ],
 
     'flush' => [
-        \Illuminate\Http\Resources\Json\JsonResource::class,
+        \App\Providers\AppServiceProvider::class,
     ],
 
     /*
