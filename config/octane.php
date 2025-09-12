@@ -77,7 +77,7 @@ return [
         ],
 
         RequestHandled::class => [
-            //
+            RequestHandled::class,
         ],
 
         RequestTerminated::class => [
@@ -135,7 +135,6 @@ return [
     ],
 
     'flush' => [
-        ...Octane::prepareApplicationForNextOperation()
     ],
 
     /*
