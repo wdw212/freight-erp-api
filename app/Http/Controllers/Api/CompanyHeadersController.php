@@ -48,15 +48,7 @@ class CompanyHeadersController extends Controller
         if (!empty($keyword)) {
             $builder = $builder->whereLike('company_name', '%' . $keyword . '%');
         }
-
-//        if (!empty($operationUserId)) {
-//            $builder = $builder->whereJsonContains('operation_user_ids', (int)$operationUserId);
-//        }
-
-//        if (!empty($documentUserId)) {
-//            $builder = $builder->whereJsonContains('document_user_ids', $documentUserId);
-//        }
-
+        
         if (!empty($companyTypeId)) {
             Log::info('--搜索条件--222---' . $companyTypeId);
             $builder = $builder->whereJsonContains('company_type', (int)$companyTypeId);
@@ -169,7 +161,6 @@ class CompanyHeadersController extends Controller
      */
     public function show(CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
-        dd($companyHeader);
         return new CompanyHeaderInfoResource($companyHeader);
     }
 
