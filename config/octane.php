@@ -77,7 +77,7 @@ return [
         ],
 
         RequestHandled::class => [
-            RequestHandled::class,
+           
         ],
 
         RequestTerminated::class => [
