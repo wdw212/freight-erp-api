@@ -169,7 +169,7 @@ class CompanyHeadersController extends Controller
      */
     public function show(CompanyHeader $companyHeader): CompanyHeaderInfoResource
     {
-        dd('公司抬头');
+        dd($companyHeader);
         return new CompanyHeaderInfoResource($companyHeader);
     }
 
