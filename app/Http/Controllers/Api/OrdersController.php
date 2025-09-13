@@ -331,10 +331,12 @@ class OrdersController extends Controller
 
                 $containerItems = $container['container_items'];
                 foreach ($containerItems as $containerItem) {
-                    $containerItemModel = ContainerItem::query()->where('id', $containerItem['id'])->first();
-                    if (!$containerItemModel) {
-                        $containerItemModel = new ContainerItem($containerItem);
+                    if (isset($containerItem['id'])) {
+                        $containerItemModel = ContainerItem::query()->where('id', $containerItem['id'])->first();
+                    } else {
+                        $containerItemModel = new ContainerItem();
                     }
+                    $containerItemModel->fill($containerItem);
                     $containerItemModel->container()->associate($containerModel);
                     $containerItemModel->save();
                 }
@@ -342,12 +344,14 @@ class OrdersController extends Controller
                 $containerLoadingAddresses = $container['container_loading_addresses'];
 
                 foreach ($containerLoadingAddresses as $containerLoadingAddress) {
-                    $containerLoadingAddressModel = ContainerLoadingAddress::query()
-                        ->where('id', $containerLoadingAddress['id'])
-                        ->first();
-                    if (!$containerLoadingAddressModel) {
-                        $containerLoadingAddressModel = new ContainerLoadingAddress($containerLoadingAddress);
+                    if (isset($containerLoadingAddress['id'])) {
+                        $containerLoadingAddressModel = ContainerLoadingAddress::query()
+                            ->where('id', $containerLoadingAddress['id'])
+                            ->first();
+                    } else {
+                        $containerLoadingAddressModel = new ContainerLoadingAddress();
                     }
+                    $containerLoadingAddressModel->fill($containerLoadingAddress);
                     $containerLoadingAddressModel->container()->associate($containerModel);
                     $containerLoadingAddressModel->save();
                 }
