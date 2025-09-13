@@ -308,8 +308,6 @@ class OrdersController extends Controller
         if (!empty($data['containers'])) {
             $containers = json_decode($data['containers'], true);
             foreach ($containers as $container) {
-
-
                 if (isset($container['id'])) {
                     $containerModel = Container::query()
                         ->where('id', $container['id'])
@@ -317,12 +315,17 @@ class OrdersController extends Controller
                 } else {
                     $containerModel = new Container();
                 }
-                
                 $container['no_image'] = $container['no_image']['path'] ?? '';
                 $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                 $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
                 $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
-
+                $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? 0 : $container['drop_off_wharf_id'];
+                $container['fleet_id'] = empty($container['fleet_id']) ? 0 : $container['fleet_id'];
+                $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
+                $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
+                $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
+                $container['container_type_id'] = empty($container['container_type_id']) ? null : $container['container_type_id'];
+                $containerModel->fill($container);
                 $containerModel->order()->associate($order);
                 $containerModel->save();
 

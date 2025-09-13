@@ -13,7 +13,6 @@ class ContainerObserver
     public function saved(Container $container): void
     {
         Log::info('--集装箱保存完成--');
-
         // 更新订单 柜子类型
         $containerTypeStats = Container::query()
             ->where('order_id', $container->order->id)
