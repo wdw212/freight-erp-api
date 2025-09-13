@@ -307,6 +307,12 @@ class OrdersController extends Controller
         // 处理箱子
         if (!empty($data['containers'])) {
             $containers = json_decode($data['containers'], true);
+
+            $oldContainerIds = Container::query()->where('order_id', $order->id)->pluck('id')->toArray();
+            $newContainerIds = collect($containers)->pluck('id')->toArray();
+            $deletedContainerIds = array_diff($oldContainerIds, $newContainerIds);
+            Container::query()->whereIn('id', $deletedContainerIds)->delete();
+
             foreach ($containers as $container) {
                 if (isset($container['id'])) {
                     $containerModel = Container::query()
@@ -343,7 +349,7 @@ class OrdersController extends Controller
                         $containerItemModel->save();
                     }
                 }
-                
+
                 if (isset($container['container_loading_addresses'])) {
                     $containerLoadingAddresses = $container['container_loading_addresses'];
                     foreach ($containerLoadingAddresses as $containerLoadingAddress) {
