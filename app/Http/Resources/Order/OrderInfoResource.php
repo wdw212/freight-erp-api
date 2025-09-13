@@ -46,6 +46,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $is_allowed
  * @property mixed $port_open_at
  * @property mixed $port_close_at
+ * @property mixed $cutoff_at
  */
 class OrderInfoResource extends JsonResource
 {
@@ -84,6 +85,7 @@ class OrderInfoResource extends JsonResource
             'sailing_at' => $this->sailing_at,
             'arrival_at' => $this->arrival_at,
             'finish_at' => $this->finish_at,
+            'cutoff_at' => $this->cutoff_at,
             'order_payments' => OrderPaymentResource::collection($this->orderPayments),
             'order_receipts' => OrderReceiptResource::collection($this->orderReceipts),
             'order_delegation_header' => $this->orderDelegationHeader,

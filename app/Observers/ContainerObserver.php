@@ -27,7 +27,6 @@ class ContainerObserver
                     'count' => $item->count,
                 ];
             });
-
         $containerType = '';
         foreach ($containerTypeStats as $containerTypeStat) {
             if (empty($containerTypeStat->type_name)) {
