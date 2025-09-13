@@ -308,14 +308,21 @@ class OrdersController extends Controller
         if (!empty($data['containers'])) {
             $containers = json_decode($data['containers'], true);
             foreach ($containers as $container) {
-                $containerModel = Container::query()->where('id', $container['id'])->first();
+
+
+                if (isset($container['id'])) {
+                    $containerModel = Container::query()
+                        ->where('id', $container['id'])
+                        ->first();
+                } else {
+                    $containerModel = new Container();
+                }
+                
                 $container['no_image'] = $container['no_image']['path'] ?? '';
                 $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                 $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
                 $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
-                if (!$containerModel) {
-                    $containerModel = new Container($container);
-                }
+
                 $containerModel->order()->associate($order);
                 $containerModel->save();
 
@@ -332,7 +339,9 @@ class OrdersController extends Controller
                 $containerLoadingAddresses = $container['container_loading_addresses'];
 
                 foreach ($containerLoadingAddresses as $containerLoadingAddress) {
-                    $containerLoadingAddressModel = ContainerLoadingAddress::query()->where('id', $containerLoadingAddress['id'])->first();
+                    $containerLoadingAddressModel = ContainerLoadingAddress::query()
+                        ->where('id', $containerLoadingAddress['id'])
+                        ->first();
                     if (!$containerLoadingAddressModel) {
                         $containerLoadingAddressModel = new ContainerLoadingAddress($containerLoadingAddress);
                     }
@@ -341,7 +350,6 @@ class OrdersController extends Controller
                 }
             }
         }
-
 
         return new OrderInfoResource($order);
     }

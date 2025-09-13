@@ -34,8 +34,11 @@ class AdminUserInfoResource extends JsonResource
         $roleId = collect($this->roles)->first()->id ?? 0;
         $role = collect($this->roles)->select(['id', 'name', 'code'])->first();
 
-        $permissionIds = collect($this->roles)->first()->permissions->pluck('id')->toArray();
-        $builder = Permission::query()->where('parent_id', 0)
+        $permissionIds = collect($this->roles)->first()->permissions->pluck('id')
+            ->toArray();
+        
+        $builder = Permission::query()
+            ->where('parent_id', 0)
             ->with('children');
 
         if ($role['code'] !== 'SUPER_ADMIN') {
