@@ -329,32 +329,37 @@ class OrdersController extends Controller
                 $containerModel->order()->associate($order);
                 $containerModel->save();
 
-                $containerItems = $container['container_items'];
-                foreach ($containerItems as $containerItem) {
-                    if (isset($containerItem['id'])) {
-                        $containerItemModel = ContainerItem::query()->where('id', $containerItem['id'])->first();
-                    } else {
-                        $containerItemModel = new ContainerItem();
+
+                if (isset($container['container_items'])) {
+                    $containerItems = $container['container_items'];
+                    foreach ($containerItems as $containerItem) {
+                        if (isset($containerItem['id'])) {
+                            $containerItemModel = ContainerItem::query()->where('id', $containerItem['id'])->first();
+                        } else {
+                            $containerItemModel = new ContainerItem();
+                        }
+                        $containerItemModel->fill($containerItem);
+                        $containerItemModel->container()->associate($containerModel);
+                        $containerItemModel->save();
                     }
-                    $containerItemModel->fill($containerItem);
-                    $containerItemModel->container()->associate($containerModel);
-                    $containerItemModel->save();
+                }
+                
+                if (isset($container['container_loading_addresses'])) {
+                    $containerLoadingAddresses = $container['container_loading_addresses'];
+                    foreach ($containerLoadingAddresses as $containerLoadingAddress) {
+                        if (isset($containerLoadingAddress['id'])) {
+                            $containerLoadingAddressModel = ContainerLoadingAddress::query()
+                                ->where('id', $containerLoadingAddress['id'])
+                                ->first();
+                        } else {
+                            $containerLoadingAddressModel = new ContainerLoadingAddress();
+                        }
+                        $containerLoadingAddressModel->fill($containerLoadingAddress);
+                        $containerLoadingAddressModel->container()->associate($containerModel);
+                        $containerLoadingAddressModel->save();
+                    }
                 }
 
-                $containerLoadingAddresses = $container['container_loading_addresses'];
-
-                foreach ($containerLoadingAddresses as $containerLoadingAddress) {
-                    if (isset($containerLoadingAddress['id'])) {
-                        $containerLoadingAddressModel = ContainerLoadingAddress::query()
-                            ->where('id', $containerLoadingAddress['id'])
-                            ->first();
-                    } else {
-                        $containerLoadingAddressModel = new ContainerLoadingAddress();
-                    }
-                    $containerLoadingAddressModel->fill($containerLoadingAddress);
-                    $containerLoadingAddressModel->container()->associate($containerModel);
-                    $containerLoadingAddressModel->save();
-                }
             }
         }
 
