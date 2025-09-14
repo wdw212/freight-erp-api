@@ -34,6 +34,7 @@ class SftRecordsController extends Controller
 
         if (!empty($keyword)) {
             $builder = $builder->whereLike('name', '%' . $keyword . '%')
+                ->orWhereLike('keyword', '%' . $keyword . '%')
                 ->orWhereLike('remark', '%' . $keyword . '%');
         }
 
