@@ -27,6 +27,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class OrdersController extends Controller
@@ -214,7 +215,8 @@ class OrdersController extends Controller
             $data['booking_info'] = [];
         }
 
-        \Illuminate\Support\Facades\Log::info('----');
+        Log::info('--打印测试参数--');
+        Log::info($data);
 
         $order->fill($data);
         $order->update();
