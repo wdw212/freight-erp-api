@@ -47,6 +47,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $port_open_at
  * @property mixed $port_close_at
  * @property mixed $cutoff_at
+ * @property mixed $remark
  */
 class OrderInfoResource extends JsonResource
 {
@@ -97,6 +98,7 @@ class OrderInfoResource extends JsonResource
             'is_allowed' => $this->is_allowed,
             'port_open_at' => $this->port_open_at,
             'port_close_at' => $this->port_close_at,
+            'remark' => $this->remark,
         ];
     }
 }
