@@ -36,7 +36,7 @@ class ContainerObserver
             if (empty($containerTypeStat->type_name)) {
                 continue;
             }
-            $containerType .= $containerTypeStat['count'] . '*' . $containerTypeStat['type_name'] . ';';
+            $containerType .= $containerTypeStat->count . '*' . $containerTypeStat->type_name . ';';
         }
         Log::info('--打印拼接结果--');
         Log::info($containerType);
