@@ -33,6 +33,8 @@ class ContainerObserver
 
         $containerType = '';
         foreach ($containerTypeStats as $containerTypeStat) {
+            Log::info('--test--');
+            Log::info($containerTypeStat->type_name);
             if (empty($containerTypeStat->type_name)) {
                 continue;
             }
