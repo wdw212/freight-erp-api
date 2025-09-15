@@ -34,11 +34,11 @@ class ContainerObserver
         $containerType = '';
         foreach ($containerTypeStats as $containerTypeStat) {
             Log::info('--test--');
-            Log::info($containerTypeStat->type_name);
+            Log::info($containerTypeStat['type_name']);
             if (empty($containerTypeStat->type_name)) {
                 continue;
             }
-            $containerType .= $containerTypeStat->count . '*' . $containerTypeStat->type_name . ';';
+            $containerType .= $containerTypeStat['count'] . '*' . $containerTypeStat['type_name'] . ';';
         }
         Log::info('--打印拼接结果--');
         Log::info($containerType);
