@@ -27,6 +27,10 @@ class ContainerObserver
                     'count' => $item->count,
                 ];
             });
+        
+        Log::info('--打印统计参数--');
+        Log::info($containerTypeStats);
+
         $containerType = '';
         foreach ($containerTypeStats as $containerTypeStat) {
             if (empty($containerTypeStat->type_name)) {
