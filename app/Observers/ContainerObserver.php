@@ -35,7 +35,7 @@ class ContainerObserver
         foreach ($containerTypeStats as $containerTypeStat) {
             Log::info('--test--');
             Log::info($containerTypeStat['type_name']);
-            if (empty($containerTypeStat->type_name)) {
+            if (empty($containerTypeStat['type_name'])) {
                 continue;
             }
             $containerType .= $containerTypeStat['count'] . '*' . $containerTypeStat['type_name'] . ';';
