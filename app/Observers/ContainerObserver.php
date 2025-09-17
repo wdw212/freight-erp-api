@@ -27,21 +27,13 @@ class ContainerObserver
                     'count' => $item->count,
                 ];
             });
-
-        Log::info('--打印统计参数--');
-        Log::info($containerTypeStats);
-
         $containerType = '';
         foreach ($containerTypeStats as $containerTypeStat) {
-            Log::info('--test--');
-            Log::info($containerTypeStat['type_name']);
             if (empty($containerTypeStat['type_name'])) {
                 continue;
             }
             $containerType .= $containerTypeStat['count'] . '*' . $containerTypeStat['type_name'] . ';';
         }
-        Log::info('--打印拼接结果--');
-        Log::info($containerType);
         $container->order->container_type = $containerType;
         $container->order->save();
     }
