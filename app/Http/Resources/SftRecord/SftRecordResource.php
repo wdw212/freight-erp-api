@@ -22,6 +22,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $aeo_company_code
  * @property mixed $contact_name
  * @property mixed $contact_phone
+ * @property mixed $keyword
  */
 class SftRecordResource extends JsonResource
 {
@@ -42,13 +43,14 @@ class SftRecordResource extends JsonResource
             'confirm_user' => $this->confirmUser,
             'generate_information' => $this->generate_information,
             'remark' => $this->remark,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'code' => $this->code,
             'address' => $this->address,
             'country' => $this->country,
             'aeo_company_code' => $this->aeo_company_code,
             'contact_name' => $this->contact_name,
             'contact_phone' => $this->contact_phone,
+            'keyword' => $this->keyword,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

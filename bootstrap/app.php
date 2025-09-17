@@ -2,6 +2,7 @@
 
 use App\Exceptions\InvalidRequestException;
 use App\Http\Middleware\AcceptHeader;
+use App\Http\Middleware\withoutWrapping;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -29,7 +30,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             // 设置默认请求头
             AcceptHeader::class,
+            withoutWrapping::class,
         ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // 不报告的异常

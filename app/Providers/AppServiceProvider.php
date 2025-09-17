@@ -20,7 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // 禁用最外层包裹
-        JsonResource::withoutWrapping();
+
     }
 }
