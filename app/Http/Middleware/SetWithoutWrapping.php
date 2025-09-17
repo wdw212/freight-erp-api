@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\Response;
 
-class WithoutWrapping
+class SetWithoutWrapping
 {
     /**
      * Handle an incoming request.
