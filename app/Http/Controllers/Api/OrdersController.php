@@ -249,7 +249,7 @@ class OrdersController extends Controller
                         'remark' => $orderPayment['remark'],
                     ]);
                 } else {
-                    $orderPaymentRelations[] = new OrderPayment([
+                    $data = [
                         'company_header_id' => $orderPayment['company_header_id'],
                         'no_invoice_remark' => $orderPayment['no_invoice_remark'],
                         'cny_amount' => $orderPayment['cny_amount'] ?? 0,
@@ -259,7 +259,10 @@ class OrdersController extends Controller
                         'usd_invoice_number' => $orderPayment['usd_invoice_number'],
                         'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
                         'remark' => $orderPayment['remark'],
-                    ]);
+                    ];
+                    Log::info('打印测试');
+                    Log::info($data);
+                    $orderPaymentRelations[] = new OrderPayment($data);
                 }
             }
             $order->orderPayments()->saveMany($orderPaymentRelations);
