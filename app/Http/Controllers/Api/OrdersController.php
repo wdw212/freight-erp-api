@@ -249,7 +249,17 @@ class OrdersController extends Controller
                         'remark' => $orderPayment['remark'],
                     ]);
                 } else {
-                    $orderPaymentRelations[] = new OrderPayment($orderPayment);
+                    $orderPaymentRelations[] = new OrderPayment([
+                        'company_header_id' => $orderPayment['company_header_id'],
+                        'no_invoice_remark' => $orderPayment['no_invoice_remark'],
+                        'cny_amount' => $orderPayment['cny_amount'] ?? 0,
+                        'cny_invoice_number' => $orderPayment['cny_invoice_number'],
+                        'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
+                        'usd_amount' => $orderPayment['usd_amount'] ?? 0,
+                        'usd_invoice_number' => $orderPayment['usd_invoice_number'],
+                        'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
+                        'remark' => $orderPayment['remark'],
+                    ]);
                 }
             }
             $order->orderPayments()->saveMany($orderPaymentRelations);
@@ -284,7 +294,17 @@ class OrdersController extends Controller
                         'remark' => $orderReceipt['remark'] ?? '',
                     ]);
                 } else {
-                    $orderReceiptRelations[] = new OrderReceipt($orderReceipt);
+                    $orderReceiptRelations[] = new OrderReceipt([
+                        'company_header_id' => $orderReceipt['company_header_id'],
+                        'no_invoice_remark' => $orderReceipt['no_invoice_remark'],
+                        'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
+                        'cny_invoice_number' => $orderReceipt['cny_invoice_number'],
+                        'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
+                        'usd_amount' => $orderReceipt['usd_amount'] ?? 0,
+                        'usd_invoice_number' => $orderReceipt['usd_invoice_number'],
+                        'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
+                        'remark' => $orderReceipt['remark'] ?? '',
+                    ]);
                 }
             }
             $order->orderReceipts()->saveMany($orderReceiptRelations);
