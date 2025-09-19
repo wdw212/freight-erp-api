@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('order_payments', static function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id')->comment('关联单据ID');
-            $table->unsignedBigInteger('company_header_id')->comment('公司抬头ID');
+            $table->unsignedBigInteger('company_header_id')->comment('公司抬头ID')->nullable();
             $table->string('no_invoice_remark')->comment('不开票备注')->nullable();
             $table->decimal('cny_amount', 10)->comment('人民币费用')->default(0);
             $table->string('cny_invoice_number')->comment('人民币发票号')->nullable();
