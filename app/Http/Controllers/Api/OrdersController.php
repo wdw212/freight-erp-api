@@ -246,7 +246,7 @@ class OrdersController extends Controller
                         'usd_amount' => $orderPayment['usd_amount'] ?? 0,
                         'usd_invoice_number' => $orderPayment['usd_invoice_number'],
                         'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
-                        'remark' => $orderPayment['remark'],
+                        'remark' => $orderPayment['remark'] ?? '',
                     ]);
                 } else {
                     $data = [
@@ -258,10 +258,8 @@ class OrdersController extends Controller
                         'usd_amount' => $orderPayment['usd_amount'] ?? 0,
                         'usd_invoice_number' => $orderPayment['usd_invoice_number'],
                         'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
-                        'remark' => $orderPayment['remark'],
+                        'remark' => $orderPayment['remark'] ?? '',
                     ];
-                    Log::info('打印测试');
-                    Log::info($data);
                     $orderPaymentRelations[] = new OrderPayment($data);
                 }
             }
@@ -350,6 +348,7 @@ class OrdersController extends Controller
                 } else {
                     $containerModel = new Container();
                 }
+
                 $container['no_image'] = $container['no_image']['path'] ?? '';
                 $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                 $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
@@ -363,7 +362,6 @@ class OrdersController extends Controller
                 $containerModel->fill($container);
                 $containerModel->order()->associate($order);
                 $containerModel->save();
-
 
                 if (isset($container['container_items'])) {
                     $containerItems = $container['container_items'];
