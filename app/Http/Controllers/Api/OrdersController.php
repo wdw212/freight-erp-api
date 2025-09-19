@@ -258,7 +258,7 @@ class OrdersController extends Controller
                         'usd_amount' => $orderPayment['usd_amount'] ?? 0,
                         'usd_invoice_number' => $orderPayment['usd_invoice_number'],
                         'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
-                        'remark' => $orderPayment['remark'] ?? '',
+                        'remark' => isset($orderPayment['remark']) ? $orderPayment['remark'] : '',
                     ];
                     $orderPaymentRelations[] = new OrderPayment($data);
                 }
