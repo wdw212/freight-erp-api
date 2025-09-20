@@ -50,11 +50,15 @@ class CompanyHeadersController extends Controller
         if (!empty($companyType)) {
             Log::info('--搜索条件--222---' . $companyType);
             $companyType = json_decode($companyType, true);
-            $builder = $builder->where(function ($query) use ($companyType) {
-                foreach ($companyType as $type) {
-                    $query->orWhereJsonContains('company_type', (int)$type);
-                }
-            });
+            if (is_array($companyType)) {
+                $builder = $builder->where(function ($query) use ($companyType) {
+                    foreach ($companyType as $type) {
+                        $query->orWhereJsonContains('company_type', (int)$type);
+                    }
+                });
+            } else {
+                $builder = $builder->whereJsonContains('company_type', (int)$companyType);
+            }
         }
         if ((int)$isPaginate === 1) {
             $companyHeaders = $builder->paginate();
