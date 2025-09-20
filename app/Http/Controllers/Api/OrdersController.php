@@ -314,15 +314,15 @@ class OrdersController extends Controller
 
         // 单据委托抬头
         if (!empty($data['order_delegation_header'])) {
-            $orderDelegationHeader = json_decode($data['order_delegation_header'], true);
+            $temp = json_decode($data['order_delegation_header'], true);
             Log::info('打印单据委托抬头信息');
-            Log::info($orderDelegationHeader);
+            Log::info($temp);
 
-            $companyHeader = CompanyHeader::query()->where('id', $orderDelegationHeader['company_header_id'])->first();
+            $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
             Log::info('打印公司抬头信息');
             Log::info($companyHeader->contact_person);
             Log::info($companyHeader->contact_phone);
-            $orderDelegationHeader = new OrderDelegationHeader($orderDelegationHeader);
+            $orderDelegationHeader = new OrderDelegationHeader($temp);
             $orderDelegationHeader->contact_person = $companyHeader->contact_person;
             $orderDelegationHeader->contact_phone = $companyHeader->contact_phone;
             $orderDelegationHeader->order()->associate($order);
