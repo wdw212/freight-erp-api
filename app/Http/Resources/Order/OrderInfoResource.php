@@ -50,6 +50,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $remark
  * @property mixed $actual_sailing_at
  * @property mixed $actual_arrival_at
+ * @property mixed $file
  */
 class OrderInfoResource extends JsonResource
 {
@@ -61,7 +62,11 @@ class OrderInfoResource extends JsonResource
     public function toArray(Request $request): array
     {
         $orderFiles = collect($this->orderFiles)->map(function ($item) {
-            return new OrderFileInfoResource($item);
+            return [
+                'id' => $item->id,
+                'file' => $item->file,
+                'url' => formatUrl($this->file)
+            ];
         });
         return [
             'id' => $this->id,

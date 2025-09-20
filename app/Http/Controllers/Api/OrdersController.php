@@ -325,8 +325,15 @@ class OrdersController extends Controller
         if (!empty($data['order_files'])) {
             $orderFiles = json_decode($data['order_files'], true);
             $orderFileRelations = [];
-            foreach ($orderFiles as $orderFile) {
-                $orderFileRelations[] = new OrderFile($orderFile);
+            foreach ($orderFiles as $item) {
+                if (isset($item['id'])) {
+                    $orderFile = OrderFile::query()->where('id', $item['id'])->first();
+                    $orderFile->file = $item['file'];
+                    $orderFile->update();
+                } else {
+                    $orderFileRelations[] = new OrderFile($item);
+                }
+
             }
             $order->orderFiles()->saveMany($orderFileRelations);
         }
