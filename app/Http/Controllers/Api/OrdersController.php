@@ -12,6 +12,7 @@ use App\Http\Resources\Order\CommerceOrderResource;
 use App\Http\Resources\Order\FinanceOrderResource;
 use App\Http\Resources\Order\OrderInfoResource;
 use App\Http\Resources\Order\OrderResource;
+use App\Models\CompanyHeader;
 use App\Models\Container;
 use App\Models\ContainerItem;
 use App\Models\ContainerLoadingAddress;
@@ -316,7 +317,12 @@ class OrdersController extends Controller
             $orderDelegationHeader = json_decode($data['order_delegation_header'], true);
             Log::info('打印单据委托抬头信息');
             Log::info($orderDelegationHeader);
+
+            $companyHeader = CompanyHeader::query()->where('id', $orderDelegationHeader['company_header_id'])->first();
+
             $orderDelegationHeader = new OrderDelegationHeader($orderDelegationHeader);
+            $orderDelegationHeader->contact_person = $companyHeader->contact_person;
+            $orderDelegationHeader->contact_phone = $companyHeader->contact_phone;
             $orderDelegationHeader->order()->associate($order);
             $orderDelegationHeader->save();
         }
