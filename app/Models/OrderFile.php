@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderFile extends Model
 {
-    protected $guarded = [];
+    protected $guarded = [
+        'url'
+    ];
 
     /**
      * @return BelongsTo
