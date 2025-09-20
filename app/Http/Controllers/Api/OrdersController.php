@@ -319,7 +319,8 @@ class OrdersController extends Controller
             Log::info($orderDelegationHeader);
 
             $companyHeader = CompanyHeader::query()->where('id', $orderDelegationHeader['company_header_id'])->first();
-
+            Log::info('打印公司抬头信息');
+            Log::info($companyHeader);
             $orderDelegationHeader = new OrderDelegationHeader($orderDelegationHeader);
             $orderDelegationHeader->contact_person = $companyHeader->contact_person;
             $orderDelegationHeader->contact_phone = $companyHeader->contact_phone;
