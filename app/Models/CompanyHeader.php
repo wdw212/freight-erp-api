@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property mixed $company_name
+ * @property mixed $contact_person
+ * @property mixed $contact_phone
  */
 class CompanyHeader extends Model
 {
