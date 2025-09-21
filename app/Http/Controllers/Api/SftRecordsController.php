@@ -1,4 +1,7 @@
 <?php
+/**
+ * 收发通 Controller
+ */
 
 namespace App\Http\Controllers\Api;
 
@@ -31,7 +34,6 @@ class SftRecordsController extends Controller
         $builder = SftRecord::query()
             ->with(['confirmUser:id,name'])
             ->latest();
-
         if (!empty($keyword)) {
             $builder = $builder->whereLike('name', '%' . $keyword . '%')
                 ->orWhereLike('keyword', '%' . $keyword . '%')
@@ -46,7 +48,11 @@ class SftRecordsController extends Controller
             $builder = $builder->where('is_confirm', $isConfirm);
         }
 
-        if (!empty($operationUserId) || !empty($documentUserId) || !empty($commerceUserId)) {
+        if (!$user->hasRole('超管')) {
+            $builder = $builder->whereJsonContains('operation_user_ids', $user->id)
+                ->orWhereJsonContains('document_user_ids', $user->id)
+                ->orWhereJsonContains('commerce_user_ids', $user->id);
+        } else if (!empty($operationUserId) || !empty($documentUserId) || !empty($commerceUserId)) {
             if (!empty($operationUserId)) {
                 $builder = $builder->whereJsonContains('operation_user_ids', $operationUserId);
             }
@@ -56,10 +62,6 @@ class SftRecordsController extends Controller
             if (!empty($commerceUserId)) {
                 $builder = $builder->whereJsonContains('commerce_user_ids', $commerceUserId);
             }
-        } else if (!$user->hasRole('超管')) {
-            $builder = $builder->whereJsonContains('operation_user_ids', $user->id)
-                ->orWhereJsonContains('document_user_ids', $user->id)
-                ->orWhereJsonContains('commerce_user_ids', $user->id);
         }
 
 
