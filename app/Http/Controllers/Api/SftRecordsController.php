@@ -28,12 +28,13 @@ class SftRecordsController extends Controller
         $keyword = $request->input('keyword');
         $type = $request->input('type');
         $isConfirm = $request->input('is_confirm');
-        $operationUserId = $request->input('operation_user_id');
-        $documentUserId = $request->input('document_user_id');
-        $commerceUserId = $request->input('commerce_user_id');
+        $operationUserId = (int)$request->input('operation_user_id');
+        $documentUserId = (int)$request->input('document_user_id');
+        $commerceUserId = (int)$request->input('commerce_user_id');
         $builder = SftRecord::query()
             ->with(['confirmUser:id,name'])
             ->latest();
+
         if (!empty($keyword)) {
             $builder = $builder->whereLike('name', '%' . $keyword . '%')
                 ->orWhereLike('keyword', '%' . $keyword . '%')
