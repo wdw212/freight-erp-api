@@ -48,7 +48,7 @@ class OrdersController extends Controller
             'documentUser:id,name',
             'commerceUser:id,name',
             'orderDelegationHeader',
-            'orderDelegationHeader.companyHeader',
+            'orderDelegationHeader.companyHeader:id,company_name',
         ])->with('orderRemark', function ($query) use ($adminUser) {
             return $query->where('admin_user_id', $adminUser->id);
         })->orderByDesc('created_at')->paginate();
