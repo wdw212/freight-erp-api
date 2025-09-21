@@ -120,8 +120,10 @@ class OrdersController extends Controller
             if (!empty($data['order_files'])) {
                 $orderFiles = json_decode($data['order_files'], true);
                 $orderFileRelations = [];
-                foreach ($orderFiles as $orderFile) {
-                    $orderFileRelations[] = new OrderFile($orderFile);
+                foreach ($orderFiles as $item) {
+                    $orderFileRelations[] = new OrderFile([
+                        'file' => $item['file'],
+                    ]);
                 }
                 $order->orderFiles()->saveMany($orderFileRelations);
             }
@@ -338,9 +340,10 @@ class OrdersController extends Controller
                     $orderFile->file = $item['file'];
                     $orderFile->update();
                 } else {
-                    $orderFileRelations[] = new OrderFile($item);
+                    $orderFileRelations[] = new OrderFile([
+                        'file' => $item['file'],
+                    ]);
                 }
-
             }
             $order->orderFiles()->saveMany($orderFileRelations);
         }

@@ -50,7 +50,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $remark
  * @property mixed $actual_sailing_at
  * @property mixed $actual_arrival_at
- * @property mixed $file
  */
 class OrderInfoResource extends JsonResource
 {
@@ -65,7 +64,7 @@ class OrderInfoResource extends JsonResource
             return [
                 'id' => $item->id,
                 'file' => $item->file,
-                'url' => formatUrl($this->file)
+                'url' => formatUrl($item->file)
             ];
         });
         return [
