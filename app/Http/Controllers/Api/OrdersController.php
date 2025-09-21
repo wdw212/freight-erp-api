@@ -47,7 +47,8 @@ class OrdersController extends Controller
             'operateUser:id,name',
             'documentUser:id,name',
             'commerceUser:id,name',
-            'orderDelegationHeader'
+            'orderDelegationHeader',
+            'orderDelegationHeader.companyHeader',
         ])->with('orderRemark', function ($query) use ($adminUser) {
             return $query->where('admin_user_id', $adminUser->id);
         })->orderByDesc('created_at')->paginate();
@@ -218,11 +219,9 @@ class OrdersController extends Controller
             $data['booking_info'] = [];
         }
 
-        Log::info('--打印测试参数--');
-        Log::info($data);
-
         $order->fill($data);
         $order->update();
+
         // 处理应付款
         if (!empty($data['order_payments'])) {
             $orderPayments = json_decode($data['order_payments'], true);
