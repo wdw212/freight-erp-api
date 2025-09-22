@@ -32,7 +32,8 @@ class Container extends Model
         'driver',
         'fleet_id',
         'cargo_weight',
-        'loading_at'
+        'loading_at',
+        'remark'
     ];
 
     /**
