@@ -396,7 +396,7 @@ class OrdersController extends Controller
                 if (isset($container['container_loading_addresses'])) {
                     $containerLoadingAddresses = $container['container_loading_addresses'];
 
-                    $oldContainerLoadingAddressIds = ContainerLoadingAddress::query()->where('order_id', $order->id)->pluck('id')->toArray();
+                    $oldContainerLoadingAddressIds = ContainerLoadingAddress::query()->where('container_id', $containerModel->id)->pluck('id')->toArray();
                     $newContainerLoadingAddressIds = collect($containerLoadingAddresses)->pluck('id')->toArray();
                     $deleteContainerLoadingAddressIds = array_diff($oldContainerLoadingAddressIds, $newContainerLoadingAddressIds);
 
