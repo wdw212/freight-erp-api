@@ -33,7 +33,9 @@ class Container extends Model
         'fleet_id',
         'cargo_weight',
         'loading_at',
-        'remark'
+        'remark',
+        'freight_status',
+        'freight_remark',
     ];
 
     /**
