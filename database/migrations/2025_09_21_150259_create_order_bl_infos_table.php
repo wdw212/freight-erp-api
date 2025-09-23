@@ -20,7 +20,6 @@ return new class extends Migration {
             $table->text('receiver_info')->comment('收货人信息')->nullable();
             $table->unsignedBigInteger('notifier_id')->comment('通知人id')->nullable();
             $table->text('notifier_info')->comment('通知人信息')->nullable();
-            $table->string('bl_no')->comment('提单号')->nullable();
             $table->text('freight_forwarding')->comment('货运代理')->nullable();
             $table->string('ship_name')->comment('船名')->nullable();
             $table->string('ship_no')->comment('航次')->nullable();
