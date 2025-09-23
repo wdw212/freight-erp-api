@@ -29,6 +29,7 @@ return new class extends Migration {
             $table->text('no')->comment('集装箱号、封条号、唛头号')->nullable();
             $table->text('number')->comment('包裹数量')->nullable();
             $table->text('description')->comment('货物描述')->nullable();
+            $table->text('gross_weight')->comment('毛重')->nullable();
             $table->text('volume')->comment('体积')->nullable();
             $table->tinyInteger('freight_payment_method')->comment('运费付款方式 0预付 1到付')->default(0);
             $table->json('sender')->comment('发货人')->nullable();
