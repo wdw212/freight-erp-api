@@ -15,11 +15,11 @@ class OrderBlInfoObserver
     }
 
     /**
-     * Handle the OrderBlInfo "updated" event.
+     * Handle the OrderBlInfo "saved" event.
      */
-    public function updated(OrderBlInfo $orderBlInfo): void
+    public function saved(OrderBlInfo $orderBlInfo): void
     {
-        //
+
     }
 
     /**

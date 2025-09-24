@@ -17,6 +17,7 @@ use App\Models\Container;
 use App\Models\ContainerItem;
 use App\Models\ContainerLoadingAddress;
 use App\Models\Order;
+use App\Models\OrderBlInfo;
 use App\Models\OrderDelegationHeader;
 use App\Models\OrderFile;
 use App\Models\OrderPayment;
@@ -169,6 +170,14 @@ class OrdersController extends Controller
                 }
             }
 
+            // 处理提单信息
+            if (!empty($data['bl_info'])) {
+                $tempBlInfo = json_decode($data['bl_info'], true);
+                $orderBlInfo = new OrderBlInfo();
+                $orderBlInfo->order()->associate($order);
+                $orderBlInfo->fill($tempBlInfo);
+                $orderBlInfo->update();
+            }
             return $order;
         });
 
@@ -417,6 +426,14 @@ class OrdersController extends Controller
                 }
 
             }
+        }
+
+        // 处理提单信息
+        if (!empty($data['bl_info'])) {
+            $tempBlInfo = json_decode($data['bl_info'], true);
+            $orderBlInfo = $order->orderBlInfo;
+            $orderBlInfo->fill($tempBlInfo);
+            $orderBlInfo->update();
         }
 
         return new OrderInfoResource($order);

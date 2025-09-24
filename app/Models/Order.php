@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property mixed $payment_total_cny_amount
  * @property mixed $payment_total_usd_amount
  * @property int|mixed $is_claimed
+ * @property mixed $orderBlInfo
  */
 #[ObservedBy(OrderObserver::class)]
 class Order extends Model
@@ -26,6 +27,9 @@ class Order extends Model
         'order_payments',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $casts = [
         'booking_info' => 'json'
     ];
@@ -126,5 +130,14 @@ class Order extends Model
     public function orderRemark(): HasOne
     {
         return $this->hasOne(OrderRemark::class);
+    }
+
+    /**
+     * 单据信息
+     * @return HasOne
+     */
+    public function orderBlInfo(): HasOne
+    {
+        return $this->hasOne(OrderBlInfo::class);
     }
 }
