@@ -391,6 +391,12 @@ class OrdersController extends Controller
 
                 if (isset($container['container_items'])) {
                     $containerItems = $container['container_items'];
+
+                    $oldContainerItemIds = ContainerItem::query()->where('container_id', $containerModel->id)->pluck('id')->toArray();
+                    $newContainerItemIds = collect($containerItems)->pluck('id')->toArray();
+                    $deletedContainerItemIds = array_diff($oldContainerItemIds, $newContainerItemIds);
+                    ContainerItem::query()->whereIn('id', $deletedContainerItemIds)->delete();
+
                     foreach ($containerItems as $containerItem) {
                         if (isset($containerItem['id'])) {
                             $containerItemModel = ContainerItem::query()->where('id', $containerItem['id'])->first();
