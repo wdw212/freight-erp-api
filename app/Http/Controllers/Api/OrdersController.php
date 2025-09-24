@@ -205,6 +205,7 @@ class OrdersController extends Controller
             'containers',
             'containers.containerItems',
             'containers.containerLoadingAddresses',
+            'orderBlInfo'
         ]));
     }
 

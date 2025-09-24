@@ -138,6 +138,6 @@ class Order extends Model
      */
     public function orderBlInfo(): HasOne
     {
-        return $this->hasOne(OrderBlInfo::class);
+        return $this->hasOne(OrderBlInfo::class,'order_id','id');
     }
 }
