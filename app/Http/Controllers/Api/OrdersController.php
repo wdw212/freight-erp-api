@@ -440,7 +440,7 @@ class OrdersController extends Controller
             $orderBlInfo->update();
         }
 
-        return new OrderInfoResource($order);
+        return new OrderInfoResource($order->load('orderBlInfo'));
     }
 
     /**
