@@ -223,229 +223,236 @@ class OrdersController extends Controller
         if (Order::query()->whereNot('id', $order->id)->where('job_no', $data['job_no'])->exists()) {
             throw new InvalidRequestException('工作编号重复,请重试！');
         }
-        if (!empty($data['booking_info'])) {
-            $data['booking_info'] = json_decode($data['booking_info'], true);
-        } else {
-            $data['booking_info'] = [];
-        }
 
-        $order->fill($data);
-        $order->update();
-
-        // 处理应付款
-        if (!empty($data['order_payments'])) {
-            $orderPayments = json_decode($data['order_payments'], true);
-            // 处理需要删除的数据
-            $oldOrderPaymentIds = OrderPayment::query()
-                ->where('order_id', $order->id)
-                ->pluck('id')
-                ->toArray();
-            $newOrderPaymentIds = collect($orderPayments)
-                ->pluck('id')
-                ->toArray();
-            $orderPaymentIds = array_diff($oldOrderPaymentIds, $newOrderPaymentIds);
-            OrderPayment::query()->whereIn('id', $orderPaymentIds)->delete();
-            $orderPaymentRelations = [];
-            foreach ($orderPayments as $orderPayment) {
-                if (isset($orderPayment['id'])) {
-                    OrderPayment::query()->where('id', $orderPayment['id'])->update([
-                        'order_id' => $order->id,
-                        'company_header_id' => $orderPayment['company_header_id'],
-                        'no_invoice_remark' => $orderPayment['no_invoice_remark'],
-                        'cny_amount' => $orderPayment['cny_amount'] ?? 0,
-                        'cny_invoice_number' => $orderPayment['cny_invoice_number'],
-                        'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
-                        'usd_amount' => $orderPayment['usd_amount'] ?? 0,
-                        'usd_invoice_number' => $orderPayment['usd_invoice_number'],
-                        'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
-                        'remark' => $orderPayment['remark'] ?? '',
-                    ]);
-                } else {
-                    $data = [
-                        'company_header_id' => $orderPayment['company_header_id'],
-                        'no_invoice_remark' => $orderPayment['no_invoice_remark'],
-                        'cny_amount' => $orderPayment['cny_amount'] ?? 0,
-                        'cny_invoice_number' => $orderPayment['cny_invoice_number'],
-                        'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
-                        'usd_amount' => $orderPayment['usd_amount'] ?? 0,
-                        'usd_invoice_number' => $orderPayment['usd_invoice_number'],
-                        'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
-                        'remark' => $orderPayment['remark'] ?? '',
-                    ];
-                    $orderPaymentRelations[] = new OrderPayment($data);
-                }
+        // 事务处理
+        $order = DB::transaction(function () use ($data, $order) {
+            if (!empty($data['booking_info'])) {
+                $data['booking_info'] = json_decode($data['booking_info'], true);
+            } else {
+                $data['booking_info'] = [];
             }
-            $order->orderPayments()->saveMany($orderPaymentRelations);
-        }
 
-        // 处理应收款
-        if (!empty($data['order_receipts'])) {
-            $orderReceipts = json_decode($data['order_receipts'], true);
-            // 处理需要应删除的数据
-            $oldOrderReceiptIds = OrderReceipt::query()
-                ->where('order_id', $order->id)
-                ->pluck('id')
-                ->toArray();
-            $newOrderReceiptIds = collect($orderReceipts)
-                ->pluck('id')
-                ->toArray();
-            $orderReceiptIds = array_diff($oldOrderReceiptIds, $newOrderReceiptIds);
-            OrderReceipt::query()->whereIn('id', $orderReceiptIds)->delete();
-            $orderReceiptRelations = [];
-            foreach ($orderReceipts as $orderReceipt) {
-                if (isset($orderReceipt['id'])) {
-                    OrderReceipt::query()->where('id', $orderReceipt['id'])->update([
-                        'order_id' => $order->id,
-                        'company_header_id' => $orderReceipt['company_header_id'],
-                        'no_invoice_remark' => $orderReceipt['no_invoice_remark'],
-                        'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
-                        'cny_invoice_number' => $orderReceipt['cny_invoice_number'],
-                        'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
-                        'usd_amount' => $orderReceipt['usd_amount'] ?? 0,
-                        'usd_invoice_number' => $orderReceipt['usd_invoice_number'],
-                        'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
-                        'remark' => $orderReceipt['remark'] ?? '',
-                    ]);
-                } else {
-                    $orderReceiptRelations[] = new OrderReceipt([
-                        'company_header_id' => $orderReceipt['company_header_id'],
-                        'no_invoice_remark' => $orderReceipt['no_invoice_remark'],
-                        'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
-                        'cny_invoice_number' => $orderReceipt['cny_invoice_number'],
-                        'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
-                        'usd_amount' => $orderReceipt['usd_amount'] ?? 0,
-                        'usd_invoice_number' => $orderReceipt['usd_invoice_number'],
-                        'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
-                        'remark' => $orderReceipt['remark'] ?? '',
-                    ]);
-                }
-            }
-            $order->orderReceipts()->saveMany($orderReceiptRelations);
-        }
+            $order->fill($data);
+            $order->update();
 
-        // 单据委托抬头
-        if (!empty($data['order_delegation_header'])) {
-            $temp = json_decode($data['order_delegation_header'], true);
-            Log::info('打印单据委托抬头信息');
-            Log::info($temp);
-
-            $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
-            Log::info('打印公司抬头信息');
-            $temp['contact_person'] = $companyHeader->contact_person;
-            $item['contact_phone'] = $companyHeader->contact_phone;
-            $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
-            $orderDelegationHeader->fill($temp);
-            $orderDelegationHeader->order()->associate($order);
-            $orderDelegationHeader->save();
-        }
-
-        // 单据文件
-        if (!empty($data['order_files'])) {
-            $orderFiles = json_decode($data['order_files'], true);
-            $orderFileRelations = [];
-            foreach ($orderFiles as $item) {
-                if (isset($item['id'])) {
-                    $orderFile = OrderFile::query()->where('id', $item['id'])->first();
-                    $orderFile->file = $item['file'];
-                    $orderFile->update();
-                } else {
-                    $orderFileRelations[] = new OrderFile([
-                        'file' => $item['file'],
-                    ]);
-                }
-            }
-            $order->orderFiles()->saveMany($orderFileRelations);
-        }
-
-        // 处理箱子
-        if (!empty($data['containers'])) {
-            $containers = json_decode($data['containers'], true);
-
-            $oldContainerIds = Container::query()->where('order_id', $order->id)->pluck('id')->toArray();
-            $newContainerIds = collect($containers)->pluck('id')->toArray();
-            $deletedContainerIds = array_diff($oldContainerIds, $newContainerIds);
-            Container::query()->whereIn('id', $deletedContainerIds)->delete();
-
-            foreach ($containers as $container) {
-                if (isset($container['id'])) {
-                    $containerModel = Container::query()
-                        ->where('id', $container['id'])
-                        ->first();
-                } else {
-                    $containerModel = new Container();
-                }
-
-                $container['no_image'] = $container['no_image']['path'] ?? '';
-                $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
-                $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
-                $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
-                $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? 0 : $container['drop_off_wharf_id'];
-                $container['fleet_id'] = empty($container['fleet_id']) ? 0 : $container['fleet_id'];
-                $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
-                $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
-                $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
-                $container['container_type_id'] = empty($container['container_type_id']) ? null : $container['container_type_id'];
-                $containerModel->fill($container);
-                $containerModel->order()->associate($order);
-                $containerModel->save();
-
-                if (isset($container['container_items'])) {
-                    $containerItems = $container['container_items'];
-
-                    $oldContainerItemIds = ContainerItem::query()->where('container_id', $containerModel->id)->pluck('id')->toArray();
-                    $newContainerItemIds = collect($containerItems)->pluck('id')->toArray();
-                    $deletedContainerItemIds = array_diff($oldContainerItemIds, $newContainerItemIds);
-                    ContainerItem::query()->whereIn('id', $deletedContainerItemIds)->delete();
-
-                    foreach ($containerItems as $containerItem) {
-                        if (isset($containerItem['id'])) {
-                            $containerItemModel = ContainerItem::query()->where('id', $containerItem['id'])->first();
-                        } else {
-                            $containerItemModel = new ContainerItem();
-                        }
-                        $containerItemModel->fill($containerItem);
-                        $containerItemModel->container()->associate($containerModel);
-                        $containerItemModel->save();
+            // 处理应付款
+            if (!empty($data['order_payments'])) {
+                $orderPayments = json_decode($data['order_payments'], true);
+                // 处理需要删除的数据
+                $oldOrderPaymentIds = OrderPayment::query()
+                    ->where('order_id', $order->id)
+                    ->pluck('id')
+                    ->toArray();
+                $newOrderPaymentIds = collect($orderPayments)
+                    ->pluck('id')
+                    ->toArray();
+                $orderPaymentIds = array_diff($oldOrderPaymentIds, $newOrderPaymentIds);
+                OrderPayment::query()->whereIn('id', $orderPaymentIds)->delete();
+                $orderPaymentRelations = [];
+                foreach ($orderPayments as $orderPayment) {
+                    if (isset($orderPayment['id'])) {
+                        OrderPayment::query()->where('id', $orderPayment['id'])->update([
+                            'order_id' => $order->id,
+                            'company_header_id' => $orderPayment['company_header_id'],
+                            'no_invoice_remark' => $orderPayment['no_invoice_remark'],
+                            'cny_amount' => $orderPayment['cny_amount'] ?? 0,
+                            'cny_invoice_number' => $orderPayment['cny_invoice_number'],
+                            'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
+                            'usd_amount' => $orderPayment['usd_amount'] ?? 0,
+                            'usd_invoice_number' => $orderPayment['usd_invoice_number'],
+                            'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
+                            'remark' => $orderPayment['remark'] ?? '',
+                        ]);
+                    } else {
+                        $data = [
+                            'company_header_id' => $orderPayment['company_header_id'],
+                            'no_invoice_remark' => $orderPayment['no_invoice_remark'],
+                            'cny_amount' => $orderPayment['cny_amount'] ?? 0,
+                            'cny_invoice_number' => $orderPayment['cny_invoice_number'],
+                            'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
+                            'usd_amount' => $orderPayment['usd_amount'] ?? 0,
+                            'usd_invoice_number' => $orderPayment['usd_invoice_number'],
+                            'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
+                            'remark' => $orderPayment['remark'] ?? '',
+                        ];
+                        $orderPaymentRelations[] = new OrderPayment($data);
                     }
                 }
+                $order->orderPayments()->saveMany($orderPaymentRelations);
+            }
 
-                if (isset($container['container_loading_addresses'])) {
-                    $containerLoadingAddresses = $container['container_loading_addresses'];
-
-                    $oldContainerLoadingAddressIds = ContainerLoadingAddress::query()->where('container_id', $containerModel->id)->pluck('id')->toArray();
-                    $newContainerLoadingAddressIds = collect($containerLoadingAddresses)->pluck('id')->toArray();
-                    $deleteContainerLoadingAddressIds = array_diff($oldContainerLoadingAddressIds, $newContainerLoadingAddressIds);
-
-                    ContainerLoadingAddress::query()->whereIn('id', $deleteContainerLoadingAddressIds)->delete();
-
-                    foreach ($containerLoadingAddresses as $containerLoadingAddress) {
-                        if (isset($containerLoadingAddress['id'])) {
-                            $containerLoadingAddressModel = ContainerLoadingAddress::query()
-                                ->where('id', $containerLoadingAddress['id'])
-                                ->first();
-                        } else {
-                            $containerLoadingAddressModel = new ContainerLoadingAddress();
-                        }
-                        $containerLoadingAddressModel->fill($containerLoadingAddress);
-                        $containerLoadingAddressModel->container()->associate($containerModel);
-                        $containerLoadingAddressModel->save();
+            // 处理应收款
+            if (!empty($data['order_receipts'])) {
+                $orderReceipts = json_decode($data['order_receipts'], true);
+                // 处理需要应删除的数据
+                $oldOrderReceiptIds = OrderReceipt::query()
+                    ->where('order_id', $order->id)
+                    ->pluck('id')
+                    ->toArray();
+                $newOrderReceiptIds = collect($orderReceipts)
+                    ->pluck('id')
+                    ->toArray();
+                $orderReceiptIds = array_diff($oldOrderReceiptIds, $newOrderReceiptIds);
+                OrderReceipt::query()->whereIn('id', $orderReceiptIds)->delete();
+                $orderReceiptRelations = [];
+                foreach ($orderReceipts as $orderReceipt) {
+                    if (isset($orderReceipt['id'])) {
+                        OrderReceipt::query()->where('id', $orderReceipt['id'])->update([
+                            'order_id' => $order->id,
+                            'company_header_id' => $orderReceipt['company_header_id'],
+                            'no_invoice_remark' => $orderReceipt['no_invoice_remark'],
+                            'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
+                            'cny_invoice_number' => $orderReceipt['cny_invoice_number'],
+                            'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
+                            'usd_amount' => $orderReceipt['usd_amount'] ?? 0,
+                            'usd_invoice_number' => $orderReceipt['usd_invoice_number'],
+                            'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
+                            'remark' => $orderReceipt['remark'] ?? '',
+                        ]);
+                    } else {
+                        $orderReceiptRelations[] = new OrderReceipt([
+                            'company_header_id' => $orderReceipt['company_header_id'],
+                            'no_invoice_remark' => $orderReceipt['no_invoice_remark'],
+                            'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
+                            'cny_invoice_number' => $orderReceipt['cny_invoice_number'],
+                            'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
+                            'usd_amount' => $orderReceipt['usd_amount'] ?? 0,
+                            'usd_invoice_number' => $orderReceipt['usd_invoice_number'],
+                            'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
+                            'remark' => $orderReceipt['remark'] ?? '',
+                        ]);
                     }
                 }
-
+                $order->orderReceipts()->saveMany($orderReceiptRelations);
             }
-        }
 
-        // 处理提单信息
-        if (!empty($data['bl_info'])) {
-            $tempBlInfo = json_decode($data['bl_info'], true);
-            $orderBlInfo = $order->orderBlInfo;
-            if (!$orderBlInfo) {
-                $orderBlInfo = new OrderBlInfo();
-                $orderBlInfo->order()->associate($order);
+            // 单据委托抬头
+            if (!empty($data['order_delegation_header'])) {
+                $temp = json_decode($data['order_delegation_header'], true);
+                Log::info('打印单据委托抬头信息');
+                Log::info($temp);
+
+                $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
+                Log::info('打印公司抬头信息');
+                $temp['contact_person'] = $companyHeader->contact_person;
+                $item['contact_phone'] = $companyHeader->contact_phone;
+                $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
+                $orderDelegationHeader->fill($temp);
+                $orderDelegationHeader->order()->associate($order);
+                $orderDelegationHeader->save();
             }
-            $orderBlInfo->fill($tempBlInfo);
-            $orderBlInfo->save();
-        }
+
+            // 单据文件
+            if (!empty($data['order_files'])) {
+                $orderFiles = json_decode($data['order_files'], true);
+                $orderFileRelations = [];
+                foreach ($orderFiles as $item) {
+                    if (isset($item['id'])) {
+                        $orderFile = OrderFile::query()->where('id', $item['id'])->first();
+                        $orderFile->file = $item['file'];
+                        $orderFile->update();
+                    } else {
+                        $orderFileRelations[] = new OrderFile([
+                            'file' => $item['file'],
+                        ]);
+                    }
+                }
+                $order->orderFiles()->saveMany($orderFileRelations);
+            }
+
+            // 处理箱子
+            if (!empty($data['containers'])) {
+                $containers = json_decode($data['containers'], true);
+
+                $oldContainerIds = Container::query()->where('order_id', $order->id)->pluck('id')->toArray();
+                $newContainerIds = collect($containers)->pluck('id')->toArray();
+                $deletedContainerIds = array_diff($oldContainerIds, $newContainerIds);
+
+                Container::query()->whereIn('id', $deletedContainerIds)->delete();
+
+                foreach ($containers as $container) {
+                    if (isset($container['id'])) {
+                        $containerModel = Container::query()
+                            ->where('id', $container['id'])
+                            ->first();
+                    } else {
+                        $containerModel = new Container();
+                    }
+
+                    $container['no_image'] = $container['no_image']['path'] ?? '';
+                    $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
+                    $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
+                    $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
+                    $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? 0 : $container['drop_off_wharf_id'];
+                    $container['fleet_id'] = empty($container['fleet_id']) ? 0 : $container['fleet_id'];
+                    $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
+                    $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
+                    $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
+                    $container['container_type_id'] = empty($container['container_type_id']) ? null : $container['container_type_id'];
+                    $containerModel->fill($container);
+                    $containerModel->order()->associate($order);
+                    $containerModel->save();
+
+                    if (isset($container['container_items'])) {
+                        $containerItems = $container['container_items'];
+
+                        $oldContainerItemIds = ContainerItem::query()->where('container_id', $containerModel->id)->pluck('id')->toArray();
+                        $newContainerItemIds = collect($containerItems)->pluck('id')->toArray();
+                        $deletedContainerItemIds = array_diff($oldContainerItemIds, $newContainerItemIds);
+                        ContainerItem::query()->whereIn('id', $deletedContainerItemIds)->delete();
+
+                        foreach ($containerItems as $containerItem) {
+                            if (isset($containerItem['id'])) {
+                                $containerItemModel = ContainerItem::query()->where('id', $containerItem['id'])->first();
+                            } else {
+                                $containerItemModel = new ContainerItem();
+                            }
+                            $containerItemModel->fill($containerItem);
+                            $containerItemModel->container()->associate($containerModel);
+                            $containerItemModel->save();
+                        }
+                    }
+
+                    if (isset($container['container_loading_addresses'])) {
+                        $containerLoadingAddresses = $container['container_loading_addresses'];
+
+                        $oldContainerLoadingAddressIds = ContainerLoadingAddress::query()->where('container_id', $containerModel->id)->pluck('id')->toArray();
+                        $newContainerLoadingAddressIds = collect($containerLoadingAddresses)->pluck('id')->toArray();
+                        $deleteContainerLoadingAddressIds = array_diff($oldContainerLoadingAddressIds, $newContainerLoadingAddressIds);
+
+                        ContainerLoadingAddress::query()->whereIn('id', $deleteContainerLoadingAddressIds)->delete();
+
+                        foreach ($containerLoadingAddresses as $containerLoadingAddress) {
+                            if (isset($containerLoadingAddress['id'])) {
+                                $containerLoadingAddressModel = ContainerLoadingAddress::query()
+                                    ->where('id', $containerLoadingAddress['id'])
+                                    ->first();
+                            } else {
+                                $containerLoadingAddressModel = new ContainerLoadingAddress();
+                            }
+                            $containerLoadingAddressModel->fill($containerLoadingAddress);
+                            $containerLoadingAddressModel->container()->associate($containerModel);
+                            $containerLoadingAddressModel->save();
+                        }
+                    }
+
+                }
+            }
+
+            // 处理提单信息
+            if (!empty($data['bl_info'])) {
+                $tempBlInfo = json_decode($data['bl_info'], true);
+                $orderBlInfo = $order->orderBlInfo;
+                if (!$orderBlInfo) {
+                    $orderBlInfo = new OrderBlInfo();
+                    $orderBlInfo->order()->associate($order);
+                }
+                $orderBlInfo->fill($tempBlInfo);
+                $orderBlInfo->save();
+            }
+
+            return $order;
+        });
 
         return new OrderInfoResource($order->load('orderBlInfo'));
     }
