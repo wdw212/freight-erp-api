@@ -432,6 +432,10 @@ class OrdersController extends Controller
         if (!empty($data['bl_info'])) {
             $tempBlInfo = json_decode($data['bl_info'], true);
             $orderBlInfo = $order->orderBlInfo;
+            if (!$orderBlInfo) {
+                $orderBlInfo = new OrderBlInfo();
+                $orderBlInfo->order()->associate($order);
+            }
             $orderBlInfo->fill($tempBlInfo);
             $orderBlInfo->update();
         }
