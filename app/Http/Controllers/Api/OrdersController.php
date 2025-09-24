@@ -438,7 +438,7 @@ class OrdersController extends Controller
                 $orderBlInfo->order()->associate($order);
             }
             $orderBlInfo->fill($tempBlInfo);
-            $orderBlInfo->update();
+            $orderBlInfo->save();
         }
 
         return new OrderInfoResource($order->load('orderBlInfo'));
