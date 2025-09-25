@@ -218,6 +218,7 @@ class OrdersController extends Controller
      */
     public function update(OrderRequest $request, Order $order): OrderInfoResource
     {
+        $adminUser = $request->user();
         $data = $request->all();
 
         if (Order::query()->whereNot('id', $order->id)->where('job_no', $data['job_no'])->exists()) {
@@ -225,11 +226,15 @@ class OrdersController extends Controller
         }
 
         // 事务处理
-        $order = DB::transaction(function () use ($data, $order) {
+        $order = DB::transaction(function () use ($data, $order, $adminUser) {
             if (!empty($data['booking_info'])) {
                 $data['booking_info'] = json_decode($data['booking_info'], true);
             } else {
                 $data['booking_info'] = [];
+            }
+
+            if ($adminUser->hasRole('操作')) {
+                $data['operate_user_id'] = $adminUser->id;
             }
 
             $order->fill($data);
