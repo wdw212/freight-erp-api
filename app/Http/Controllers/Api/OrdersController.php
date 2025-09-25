@@ -453,7 +453,6 @@ class OrdersController extends Controller
 
             return $order;
         });
-
         return new OrderInfoResource($order->load('orderBlInfo'));
     }
 
@@ -639,11 +638,10 @@ class OrdersController extends Controller
      * @param Order $order
      * @return Response
      */
-    public function orderPaymentFinish(Order $order): Response
+    public function paymentFinish(Order $order): Response
     {
-        $orderPayment = OrderPayment::query()->where('order_id', $order->id)->first();
-        $orderPayment->is_finish = 1;
-        $orderPayment->save();
+        $order->payment_status = 1;
+        $order->save();
         return response()->noContent();
     }
 }

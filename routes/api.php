@@ -347,8 +347,8 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::put('orders/{order}/update-remark', [OrdersController::class, 'updateRemark'])
         ->name('orders.update-remark')->where('order', '[0-9]+');
     // 单据 - 应付款完结
-    Route::put('orders/{order}/order-payment-finish', [OrdersController::class, 'orderPaymentFinish'])
-        ->name('orders.order-payment-finish')->where('order', '[0-9]+');
+    Route::put('orders/{order}/payment-finish', [OrdersController::class, 'paymentFinish'])
+        ->name('orders.payment-finish')->where('order', '[0-9]+');
     // 单据 - 认领
     Route::put('orders/{order}/claimed', [OrdersController::class, 'claimed'])
         ->name('orders.claimed')->where('order', '[0-9]+');
