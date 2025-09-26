@@ -38,6 +38,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $documentUser
  * @property mixed $commerceUser
  * @property mixed $orderRemark
+ * @property mixed $payment_status
  */
 class OrderResource extends JsonResource
 {
@@ -74,6 +75,7 @@ class OrderResource extends JsonResource
             'arrival_at' => !empty($this->arrival_at) ? Carbon::parse($this->arrival_at)->format('Y-m-d') : '',
             'finish_at' => $this->finish_at,
             'order_remark' => $this->orderRemark->remark ?? null,
+            'payment_status' => $this->payment_status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
