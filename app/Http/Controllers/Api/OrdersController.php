@@ -79,6 +79,14 @@ class OrdersController extends Controller
                 $data['booking_info'] = [];
             }
 
+            if ($adminUser->hasRole('操作')) {
+                Log::info('是操作');
+                $data['operate_user_id'] = $adminUser->id;
+            } else {
+                Log::info('不是操作');
+            }
+
+
             $order->fill($data);
             $order->is_delivery = 0;
             $order->save();
