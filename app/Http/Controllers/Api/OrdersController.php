@@ -66,7 +66,7 @@ class OrdersController extends Controller
     public function store(OrderRequest $request, Order $order): OrderInfoResource
     {
         $order = DB::transaction(static function () use ($request, $order) {
-
+            $adminUser = $request->user();
             $data = $request->all();
 
             if (Order::query()->where('job_no', $data['job_no'])->exists()) {
