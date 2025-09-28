@@ -35,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
     })
     ->withSchedule(function (Illuminate\Console\Scheduling\Schedule $schedule) {
-//        Schedule::command('telescope:prune')->daily();
+        $schedule->command('telescope:prune')->daily();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // 不报告的异常
