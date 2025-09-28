@@ -657,7 +657,8 @@ class OrdersController extends Controller
     public function paymentFinish(Order $order): Response
     {
         $order->payment_status = 1;
+        $order->finish_at = Carbon::now();
         $order->save();
-        return response()->noContent();
+        return response()->json();
     }
 }
