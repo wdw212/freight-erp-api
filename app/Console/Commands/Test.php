@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\OrderFile;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class Test extends Command
 {
@@ -31,7 +32,9 @@ class Test extends Command
         $orderFiles = OrderFile::query()->get();
 
         foreach ($orderFiles as $orderFile) {
-            $this->info('文件:'.$orderFile->file);
+            $size = Storage::fileSize($orderFile->file);
+            $this->info('文件:'.$orderFile->file.'大小:'.$size);
+
         }
     }
 }
