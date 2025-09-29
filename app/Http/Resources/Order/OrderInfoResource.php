@@ -68,7 +68,7 @@ class OrderInfoResource extends JsonResource
                 'id' => $item->id,
                 'file' => $item->file,
                 'url' => formatUrl($item->file),
-                'size' => formatFileSize($item->size),
+                'size' => $item->size,
             ];
         });
         return [
