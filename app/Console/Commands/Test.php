@@ -33,7 +33,7 @@ class Test extends Command
 
         foreach ($orderFiles as $orderFile) {
             $size = Storage::fileSize($orderFile->file);
-            $this->info('文件:'.$orderFile->file.'大小:'.$size);
+            $this->info('文件:'.$orderFile->file.'大小:'.formatFileSize($size));
 
         }
     }
