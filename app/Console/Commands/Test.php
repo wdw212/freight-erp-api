@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\OrderFile;
 use Illuminate\Console\Command;
 
 class Test extends Command
@@ -27,5 +28,10 @@ class Test extends Command
     {
         $this->info('--测试--');
         $this->info('hello world');
+        $orderFiles = OrderFile::query()->get();
+
+        foreach ($orderFiles as $orderFile) {
+            $this->info('文件:'.$orderFile->file);
+        }
     }
 }
