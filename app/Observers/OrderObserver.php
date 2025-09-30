@@ -13,9 +13,9 @@ class OrderObserver
      */
     public function saving(Order $order): void
     {
-//        if ((int)$order->payment_status === 0) {
-//            $order->finish_at = null;
-//        }
+        if ((int)$order->payment_status === 0) {
+            $order->finish_at = null;
+        }
     }
 
     /**
@@ -26,13 +26,6 @@ class OrderObserver
         //
     }
 
-    /**
-     * Handle the Order "saving" event.
-     */
-    public function saving(Order $order): void
-    {
-        // 统计单据应付款人民币 和 美金
-    }
 
     /**
      * Handle the Order "deleted" event.
