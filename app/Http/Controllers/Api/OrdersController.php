@@ -184,7 +184,7 @@ class OrdersController extends Controller
                 $orderBlInfo = new OrderBlInfo();
                 $orderBlInfo->order()->associate($order);
                 $orderBlInfo->fill($tempBlInfo);
-                $orderBlInfo->update();
+                $orderBlInfo->save();
             }
             return $order;
         });
@@ -652,13 +652,22 @@ class OrdersController extends Controller
     /**
      * 应付款完成
      * @param Order $order
-     * @return Response
+     * @return JsonResponse
      */
-    public function paymentFinish(Order $order): Response
+    public function paymentFinish(Order $order): JsonResponse
     {
-        $order->payment_status = 1;
-        $order->finish_at = Carbon::now();
+        if ((int)$order->payment_status === 1) {
+            $order->payment_status = 0;
+            $order->finish_at = Carbon::now();
+        } else {
+            $order->payment_status = 1;
+        }
         $order->save();
-        return response()->json();
+
+        $finishAt = !empty($order->finished_at) ? Carbon::parse($order->finish_at)->format('Y-m-d') : '';
+
+        return response()->json([
+            'finish_at' => $finishAt
+        ]);
     }
 }
