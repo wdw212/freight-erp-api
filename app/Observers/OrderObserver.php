@@ -4,15 +4,18 @@ namespace App\Observers;
 
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class OrderObserver
 {
     /**
-     * Handle the Order "created" event.
+     * Handle the Order "saving" event.
      */
-    public function created(Order $order): void
+    public function saving(Order $order): void
     {
-        //
+        if ((int)$order->payment_status === 0) {
+            $order->finish_at = null;
+        }
     }
 
     /**
