@@ -656,10 +656,13 @@ class OrdersController extends Controller
      */
     public function paymentFinish(Order $order): JsonResponse
     {
+        Log::info('打印参数:'.$order->payment_status);
         if ((int)$order->payment_status === 1) {
+            Log::info('逻辑1111');
             $order->payment_status = 0;
             $order->finish_at = null;
         } else {
+            Log::info('逻辑2222');
             $order->payment_status = 1;
             $order->finish_at = Carbon::now();
         }
