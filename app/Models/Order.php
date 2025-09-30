@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int|mixed $is_delivery
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|mixed $is_claimed
  * @property mixed $orderBlInfo
  * @property int|mixed $payment_status
+ * @property Carbon|mixed $finish_at
  */
 #[ObservedBy(OrderObserver::class)]
 class Order extends Model

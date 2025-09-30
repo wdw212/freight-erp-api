@@ -658,9 +658,10 @@ class OrdersController extends Controller
     {
         if ((int)$order->payment_status === 1) {
             $order->payment_status = 0;
-            $order->finish_at = Carbon::now();
+            $order->finish_at = '';
         } else {
             $order->payment_status = 1;
+            $order->finish_at = Carbon::now();
         }
         $order->save();
 
