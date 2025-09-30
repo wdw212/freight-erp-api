@@ -668,7 +668,7 @@ class OrdersController extends Controller
         }
         $order->save();
 
-        $finishAt = !empty($order->finished_at) ? Carbon::parse($order->finish_at)->format('Y-m-d') : '';
+        $finishAt = !empty($order->finish_at) ? Carbon::parse($order->finish_at)->format('Y-m-d') : '';
 
         return response()->json([
             'finish_at' => $finishAt
