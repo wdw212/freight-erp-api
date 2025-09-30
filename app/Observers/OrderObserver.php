@@ -13,9 +13,9 @@ class OrderObserver
      */
     public function saving(Order $order): void
     {
-        if ((int)$order->payment_status === 0) {
-            $order->finish_at = null;
-        }
+//        if ((int)$order->payment_status === 0) {
+//            $order->finish_at = null;
+//        }
     }
 
     /**
