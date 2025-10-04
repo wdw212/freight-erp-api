@@ -15,7 +15,11 @@ class OrderObserver
     {
         if ((int)$order->payment_status === 0) {
             $order->finish_at = null;
+        } else if (empty($order->finish_at)) {
+            $order->finish_at = Carbon::now();
         }
+
+
     }
 
     /**
