@@ -65,6 +65,7 @@ class OrdersController extends Controller
      */
     public function store(OrderRequest $request, Order $order): OrderInfoResource
     {
+        Log::info('---单据新增操作---');
         $order = DB::transaction(static function () use ($request, $order) {
             $adminUser = $request->user();
             $data = $request->all();
@@ -131,7 +132,8 @@ class OrdersController extends Controller
                     $item['company_header_id'] = null;
                 }
 
-                $orderDelegationHeader = new OrderDelegationHeader($temp);
+                $orderDelegationHeader = new OrderDelegationHeader();
+                $orderDelegationHeader->fill($item);
                 $orderDelegationHeader->order()->associate($order);
                 $orderDelegationHeader->save();
             }
@@ -236,6 +238,7 @@ class OrdersController extends Controller
      */
     public function update(OrderRequest $request, Order $order): OrderInfoResource
     {
+        Log::info('---单据编辑操作---');
         $adminUser = $request->user();
         $data = $request->all();
 
