@@ -158,8 +158,8 @@ class OrdersController extends Controller
                     $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                     $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
                     $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
-                    $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? 0 : $container['drop_off_wharf_id'];
-                    $container['fleet_id'] = empty($container['fleet_id']) ? 0 : $container['fleet_id'];
+                    $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? null : $container['drop_off_wharf_id'];
+                    $container['fleet_id'] = empty($container['fleet_id']) ? null : $container['fleet_id'];
                     $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
                     $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
                     $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
@@ -415,8 +415,8 @@ class OrdersController extends Controller
                     $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                     $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
                     $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
-                    $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? 0 : $container['drop_off_wharf_id'];
-                    $container['fleet_id'] = empty($container['fleet_id']) ? 0 : $container['fleet_id'];
+                    $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? null : $container['drop_off_wharf_id'];
+                    $container['fleet_id'] = empty($container['fleet_id']) ? null : $container['fleet_id'];
                     $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
                     $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
                     $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
