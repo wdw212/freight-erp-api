@@ -262,7 +262,7 @@ class OrdersController extends Controller
             }
 
             $order->fill($data);
-            $order->update();
+            $order->save();
 
             // 处理应付款
             if (!empty($data['order_payments'])) {
