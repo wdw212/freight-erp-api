@@ -93,21 +93,21 @@ class OrdersController extends Controller
             $order->save();
 
             // 单据应付款
-            if (!empty($data['order_payments'])) {
-                $orderPayments = json_decode($data['order_payments'], true);
-                $orderPaymentRelations = [];
-                // 应付款总计人民币
-                $paymentTotalCnyAmount = collect($orderPayments)->sum('cny_amount');
-                // 应付款总计美元
-                $paymentTotalUsdAmount = collect($orderPayments)->sum('usd_amount');
-                foreach ($orderPayments as $orderPayment) {
-                    $orderPaymentRelations[] = new OrderPayment($orderPayment);
-                }
-                $order->orderPayments()->saveMany($orderPaymentRelations);
-                $order->payment_total_cny_amount = $paymentTotalCnyAmount;
-                $order->payment_total_usd_amount = $paymentTotalUsdAmount;
-                $order->save();
-            }
+//            if (!empty($data['order_payments'])) {
+//                $orderPayments = json_decode($data['order_payments'], true);
+//                $orderPaymentRelations = [];
+//                // 应付款总计人民币
+//                $paymentTotalCnyAmount = collect($orderPayments)->sum('cny_amount');
+//                // 应付款总计美元
+//                $paymentTotalUsdAmount = collect($orderPayments)->sum('usd_amount');
+//                foreach ($orderPayments as $orderPayment) {
+//                    $orderPaymentRelations[] = new OrderPayment($orderPayment);
+//                }
+//                $order->orderPayments()->saveMany($orderPaymentRelations);
+//                $order->payment_total_cny_amount = $paymentTotalCnyAmount;
+//                $order->payment_total_usd_amount = $paymentTotalUsdAmount;
+//                $order->save();
+//            }
 
             // 单据应收款
             if (!empty($data['order_receipts'])) {
