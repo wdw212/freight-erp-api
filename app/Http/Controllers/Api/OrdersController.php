@@ -41,20 +41,68 @@ class OrdersController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        Log::info('--打印搜索提交的信息--');
-        Log::info($request->all());
+        $keyword = $request->input('keyword');
+        $startSailingDate = $request->input('start_sailing_date');
+        $endSailingDate = $request->input('end_sailing_date');
+        $startArrivalDate = $request->input('start_arrival_date');
+        $endArrivalDate = $request->input('end_arrival_date');
+        $finishingDate = $request->input('finishing_date');
+        $businessUserId = $request->input('business_user_id');
+        $operationUserId = $request->input('operation_user_id');
+        $isDelivery = $request->input('is_delivery');
+        $paymentMethod = $request->input('payment_method');
+        $sellerId = $request->input('seller_id');
+        $isClaimed = $request->input('is_claimed');
         $adminUser = $request->user();
-        $orders = Order::query()->with([
-            'orderType:id,name',
-            'businessUser:id,name',
-            'operateUser:id,name',
-            'documentUser:id,name',
-            'commerceUser:id,name',
-            'orderDelegationHeader',
-            'orderDelegationHeader.companyHeader:id,company_name',
-        ])->with('orderRemark', function ($query) use ($adminUser) {
-            return $query->where('admin_user_id', $adminUser->id);
-        })->orderByDesc('created_at')->paginate();
+
+        $builder = Order::query()
+            ->with([
+                'orderType:id,name',
+                'businessUser:id,name',
+                'operateUser:id,name',
+                'documentUser:id,name',
+                'commerceUser:id,name',
+                'orderDelegationHeader',
+                'orderDelegationHeader.companyHeader:id,company_name',
+            ])
+            ->with('orderRemark', function ($query) use ($adminUser) {
+                return $query->where('admin_user_id', $adminUser->id);
+            })->latest();
+
+        if (!empty($keyword)) {
+            $builder = $builder->where(function ($query) use ($keyword) {
+                $query->where('job_no', 'like', '%' . $keyword . '%')
+                    ->orWhere('origin_port', 'like', '%' . $keyword . '%')
+                    ->orWhere('bl_no', 'like', '%' . $keyword . '%');
+            });
+        }
+        if (!empty($startSailingDate) && !empty($endSailingDate)) {
+            $builder = $builder->whereBetween('sailing_at', [$startSailingDate, $endSailingDate]);
+        }
+        if (!empty($startArrivalDate) && !empty($endArrivalDate)) {
+            $builder = $builder->whereBetween('arrival_at', [$startArrivalDate, $endArrivalDate]);
+        }
+        if (!empty($finishingDate)) {
+            $startFinishingDate = Carbon::parse($finishingDate)->startOfMonth();
+            $endFinishingDate = Carbon::parse($finishingDate)->endOfMonth();
+            $builder = $builder->whereBetween('finished_at', [$startFinishingDate, $endFinishingDate]);
+        }
+        if (!empty($businessUserId)) {
+            $builder = $builder->where('business_user_id', $businessUserId);
+        }
+        if (!empty($operationUserId)) {
+            $builder = $builder->where('operation_user_id', $operationUserId);
+        }
+        if (!empty($isClaimed)) {
+            $builder = $builder->where('is_claimed', 1);
+        }
+
+        if (!empty($isDelivery)) {
+            $builder = $builder->where('is_delivery', $isDelivery);
+        }
+
+        $orders = $builder->paginate();
+
         return OrderResource::collection($orders);
     }
 
@@ -71,25 +119,20 @@ class OrdersController extends Controller
         $order = DB::transaction(static function () use ($request, $order) {
             $adminUser = $request->user();
             $data = $request->all();
-
             if (Order::query()->where('job_no', $data['job_no'])->exists()) {
                 throw new InvalidRequestException('工作编号重复,请重试！');
             }
-
             if (!empty($data['booking_info'])) {
                 $data['booking_info'] = json_decode($data['booking_info'], true);
             } else {
                 $data['booking_info'] = [];
             }
-
             if ($adminUser->hasRole('操作')) {
                 Log::info('是操作');
                 $data['operate_user_id'] = $adminUser->id;
             } else {
                 Log::info('不是操作');
             }
-
-
             $order->fill($data);
             $order->is_delivery = 0;
             $order->save();
@@ -570,8 +613,8 @@ class OrdersController extends Controller
             $builder = $builder->where('is_delivery', $isDelivery);
         }
 
-        $order = $builder->paginate();
-        return CommerceOrderResource::collection($order);
+        $orders = $builder->paginate();
+        return CommerceOrderResource::collection($orders);
     }
 
     /**
