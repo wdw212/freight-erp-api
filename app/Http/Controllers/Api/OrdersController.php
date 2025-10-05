@@ -41,6 +41,8 @@ class OrdersController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        Log::info('--打印搜索提交的信息--');
+        Log::info($request->all());
         $adminUser = $request->user();
         $orders = Order::query()->with([
             'orderType:id,name',
