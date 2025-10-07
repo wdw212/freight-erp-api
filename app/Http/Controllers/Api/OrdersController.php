@@ -53,8 +53,8 @@ class OrdersController extends Controller
         $paymentMethod = $request->input('payment_method');
         $sellerId = $request->input('seller_id');
         $isClaimed = $request->input('is_claimed');
+        $finishAt = $request->input('finish_at');
         $adminUser = $request->user();
-
         $builder = Order::query()
             ->with([
                 'orderType:id,name',
@@ -68,7 +68,6 @@ class OrdersController extends Controller
             ->with('orderRemark', function ($query) use ($adminUser) {
                 return $query->where('admin_user_id', $adminUser->id);
             })->latest();
-
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
                 $query->where('job_no', 'like', '%' . $keyword . '%')
@@ -96,9 +95,13 @@ class OrdersController extends Controller
         if (!empty($isClaimed)) {
             $builder = $builder->where('is_claimed', 1);
         }
-
         if (!empty($isDelivery)) {
             $builder = $builder->where('is_delivery', $isDelivery);
+        }
+        if (!empty($finishAt)) {
+            $startFinishAt = Carbon::parse($finishAt)->startOfMonth();
+            $endFinishAt = Carbon::parse($finishAt)->endOfMonth();
+            $builder = $builder->whereBetween('finished_at', [$startFinishAt, $endFinishAt]);
         }
 
         $orders = $builder->paginate();

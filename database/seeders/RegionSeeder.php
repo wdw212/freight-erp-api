@@ -45,7 +45,6 @@ class RegionSeeder extends Seeder
             ]
         ];
 
-
         foreach ($data as $item) {
             $parent = new Region();
             $parent->parent_id = 0;
