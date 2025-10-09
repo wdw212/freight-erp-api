@@ -28,7 +28,7 @@ class UploadsController extends Controller
         }
 
         // 获取是否保留原名的参数（默认不保留）
-        $keepOriginalName = $request->boolean('keep_original_name', 0);
+        $keepOriginalName = $request->input('keep_original_name', 0);
 
         // 获取文件扩展名
         $extension = strtolower($file->getClientOriginalExtension());
