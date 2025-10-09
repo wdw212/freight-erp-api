@@ -48,9 +48,6 @@ class UploadsController extends Controller
             // 生成随机文件名（原逻辑）
             $filename = time() . '_' . Str::random(10) . '.' . $extension;
         }
-
-        $extension = strtolower($file->getClientOriginalExtension());
-        $filename = time() . '_' . Str::random(10) . '.' . $extension;
         Storage::put($filename, $file->getContent());
         return response()->json([
             'path' => $filename,
