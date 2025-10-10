@@ -136,10 +136,7 @@ class OrdersController extends Controller
             } else {
                 Log::info('不是操作');
             }
-            Log::info('--打印新增提交的参数--');
-            Log::info($data);
             $order->fill($data);
-            $order->is_delivery = 0;
             $order->save();
 
             // 单据应付款
