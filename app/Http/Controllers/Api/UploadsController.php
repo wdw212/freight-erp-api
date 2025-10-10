@@ -37,7 +37,6 @@ class UploadsController extends Controller
         if ($keepOriginalName) {
             // 保留原名（移除扩展名后拼接，避免重复添加）
             $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            // 处理特殊字符，确保文件名安全
             $filename = $originalName . '.' . $extension;
             // 可选：若文件已存在，添加时间戳避免覆盖
             if (Storage::exists($filename)) {
