@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->timestamp('port_cutoff_at')->comment('截港时间')->nullable();
             $table->string('sailing_schedule')->comment('船期')->nullable();
             $table->tinyInteger('bl_status')->comment('提单状态 1正常提单 2等通知电放 3已电放 4已seawaybil')->default(0);
-            $table->tinyInteger('is_delivery')->comment('提货 0->未提货 1已提货')->default(0);
+            $table->tinyInteger('is_delivery')->comment('提货 0->未提货 1->已提货 2->超期未提货')->default(0);
             $table->timestamp('sailing_at')->comment('开船时间')->nullable();
             $table->date('actual_sailing_at')->comment('实际开船时间')->nullable();
             $table->timestamp('arrival_at')->comment('到港时间')->nullable();

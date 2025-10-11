@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -27,5 +29,15 @@ class HandleOrder extends Command
     public function handle(): void
     {
         Log::info('--处理单据--');
+
+        // Todo: 处理超期订单
+        $orders = Order::query()->where('is_delivery',0)->get();
+        foreach ($orders as $order) {
+            if (Carbon::parse($order->actual_arrival_at)->addDays(7) < Carbon::now()) {
+                $order->update([
+                    'is_delivery' => 2,
+                ]);
+            }
+        }
     }
 }

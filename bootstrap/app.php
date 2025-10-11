@@ -38,7 +38,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // 清理日志
         $schedule->command('telescope:prune')->daily();
         // 处理订单
-        // $schedule->command('app:handle-order')->everyFiveSeconds();
+        $schedule->command('app:handle-order')->everyFiveSeconds();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // 不报告的异常
