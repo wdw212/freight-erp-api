@@ -10,9 +10,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InvoiceType extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'sort',
+        'tax_rate',
+        'remark,'
     ];
 
     public $timestamps = false;
