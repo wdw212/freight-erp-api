@@ -43,9 +43,19 @@ class InvoiceTypesController extends Controller
         if (InvoiceType::query()->where('name', $name)->exists()) {
             throw new InvalidRequestException('已存在，请重试!');
         }
-        
+
         $invoiceType->fill($request->all());
         $invoiceType->save();
+        return new InvoiceTypeInfoResource($invoiceType);
+    }
+
+    /**
+     * 详情
+     * @param InvoiceType $invoiceType
+     * @return InvoiceTypeInfoResource
+     */
+    public function show(InvoiceType $invoiceType): InvoiceTypeInfoResource
+    {
         return new InvoiceTypeInfoResource($invoiceType);
     }
 
@@ -68,6 +78,7 @@ class InvoiceTypesController extends Controller
         $invoiceType->update();
         return new InvoiceTypeInfoResource($invoiceType);
     }
+
 
     /**
      * 删除

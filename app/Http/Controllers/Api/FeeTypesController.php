@@ -49,6 +49,16 @@ class FeeTypesController extends Controller
     }
 
     /**
+     * 详情
+     * @param FeeType $feeType
+     * @return FeeTypeInfoResource
+     */
+    public function show(FeeType $feeType): FeeTypeInfoResource
+    {
+        return new FeeTypeInfoResource($feeType);
+    }
+
+    /**
      * 编辑
      * @param FeeTypeRequest $request
      * @param FeeType $feeType

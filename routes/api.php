@@ -580,6 +580,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 发票类型 - 新增
     Route::post('invoice-types', [InvoiceTypesController::class, 'store'])
         ->name('invoice-types.store');
+    // 发票类型 - 详情
+    Route::get('invoice-types/{invoiceType}', [InvoiceTypesController::class, 'show'])
+        ->name('invoice-types.show');
     // 发票类型 - 编辑
     Route::put('invoice-types/{invoiceType}', [InvoiceTypesController::class, 'update'])
         ->name('invoice-types.update');
@@ -593,6 +596,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 费用类型 - 新增
     Route::post('fee-types', [FeeTypesController::class, 'store'])
         ->name('fee-types.store');
+    // 费用类型 - 详情
+    Route::get('fee-types/{feeType}', [FeeTypesController::class, 'show'])
+        ->name('fee-types.show');
     // 费用类型 - 编辑
     Route::put('fee-types/{feeType}', [FeeTypesController::class, 'update'])
         ->name('fee-types.update');
