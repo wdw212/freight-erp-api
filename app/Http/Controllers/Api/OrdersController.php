@@ -65,6 +65,7 @@ class OrdersController extends Controller
                 'orderDelegationHeader',
                 'orderDelegationHeader.companyHeader:id,company_name',
             ])
+            ->withCount('orderFiles')
             ->with('orderRemark', function ($query) use ($adminUser) {
                 return $query->where('admin_user_id', $adminUser->id);
             })->latest();
