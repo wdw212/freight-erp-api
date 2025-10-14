@@ -42,7 +42,13 @@ class SellersController extends Controller
      */
     public function store(SellerRequest $request, Seller $seller): SellerInfoResource
     {
-        $seller->fill($request->validated());
+        $data = $request->all();
+
+        if (!empty($data['logo'])) {
+            $data['logo'] = json_decode($data['logo'], true)['path'] ?? null;
+        }
+
+        $seller->fill($data);
         $seller->save();
         return new SellerInfoResource($seller);
     }
@@ -65,7 +71,13 @@ class SellersController extends Controller
      */
     public function update(Request $request, Seller $seller): SellerInfoResource
     {
-        $seller->fill($request->all());
+        $data = $request->all();
+
+        if (!empty($data['logo'])) {
+            $data['logo'] = json_decode($data['logo'], true)['path'] ?? null;
+        }
+
+        $seller->fill($data);
         $seller->save();
         return new SellerInfoResource($seller);
     }
