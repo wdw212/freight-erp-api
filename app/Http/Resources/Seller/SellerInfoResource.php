@@ -15,6 +15,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $created_at
  * @property mixed $name
  * @property mixed $logo
+ * @property mixed $financial_seal
  */
 class SellerInfoResource extends JsonResource
 {
@@ -30,6 +31,10 @@ class SellerInfoResource extends JsonResource
             'logo' => [
                 'path' => $this->logo,
                 'url' => formatUrl($this->logo)
+            ],
+            'financial_seal' => [
+                'path' => $this->financial_seal,
+                'url' => formatUrl($this->financial_seal)
             ],
             'name' => $this->name,
             'tax_number' => $this->tax_number,

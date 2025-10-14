@@ -48,6 +48,10 @@ class SellersController extends Controller
             $data['logo'] = json_decode($data['logo'], true)['path'] ?? null;
         }
 
+        if (!empty($data['financial_seal'])) {
+            $data['financial_seal'] = json_decode($data['financial_seal'], true)['path'] ?? null;
+        }
+
         $seller->fill($data);
         $seller->save();
         return new SellerInfoResource($seller);
@@ -75,6 +79,10 @@ class SellersController extends Controller
 
         if (!empty($data['logo'])) {
             $data['logo'] = json_decode($data['logo'], true)['path'] ?? null;
+        }
+
+        if (!empty($data['financial_seal'])) {
+            $data['financial_seal'] = json_decode($data['financial_seal'], true)['path'] ?? null;
         }
 
         $seller->fill($data);
