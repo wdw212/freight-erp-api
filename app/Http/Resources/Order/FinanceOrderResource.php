@@ -26,6 +26,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $receipt_usd_cashed_status
  * @property mixed $cashed_status
  * @property mixed $invoice_status
+ * @property mixed $is_claimed
  */
 class FinanceOrderResource extends JsonResource
 {
@@ -59,6 +60,7 @@ class FinanceOrderResource extends JsonResource
             'after_tax_discount' => 0,
             'cashed_status' => $this->cashed_status,
             'invoice_status' => $this->invoice_status,
+            'is_claimed' => $this->is_claimed,
         ];
     }
 }
