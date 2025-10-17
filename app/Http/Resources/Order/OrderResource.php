@@ -40,6 +40,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderRemark
  * @property mixed $payment_status
  * @property mixed $orderFilesCount
+ * @property mixed $is_claimed
  */
 class OrderResource extends JsonResource
 {
@@ -78,6 +79,7 @@ class OrderResource extends JsonResource
             'order_remark' => $this->orderRemark->remark ?? null,
             'payment_status' => $this->payment_status,
             'order_file_count' => $this->orderFilesCount,
+            'is_claimed' => $this->is_claimed,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }

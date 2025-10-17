@@ -553,6 +553,7 @@ class OrdersController extends Controller
      */
     public function commerceIndex(Request $request): AnonymousResourceCollection
     {
+        $adminUser = $request->user();
         $keyword = $request->input('keyword');
         $startSailingDate = $request->input('start_sailing_date');
         $endSailingDate = $request->input('end_sailing_date');
@@ -565,8 +566,6 @@ class OrdersController extends Controller
         $paymentMethod = $request->input('payment_method');
         $sellerId = $request->input('seller_id');
         $isClaimed = $request->input('is_claimed');
-
-        $adminUser = $request->user();
 
         $builder = Order::query()
             ->with([
@@ -613,6 +612,7 @@ class OrdersController extends Controller
             $builder = $builder->where('is_delivery', $isDelivery);
         }
 
+        // is_claimed
         $orders = $builder->paginate();
         return CommerceOrderResource::collection($orders);
     }
@@ -715,7 +715,7 @@ class OrdersController extends Controller
      */
     public function paymentFinish(Order $order): JsonResponse
     {
-        Log::info('打印参数:'.$order->payment_status);
+        Log::info('打印参数:' . $order->payment_status);
         if ((int)$order->payment_status === 1) {
             Log::info('逻辑1111');
             $order->payment_status = 0;

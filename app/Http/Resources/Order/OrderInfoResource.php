@@ -53,6 +53,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $blInfo
  * @property mixed $orderBlInfo
  * @property mixed $payment_status
+ * @property mixed $is_claimed
  */
 class OrderInfoResource extends JsonResource
 {
@@ -112,6 +113,7 @@ class OrderInfoResource extends JsonResource
             'actual_sailing_at' => $this->actual_sailing_at,
             'actual_arrival_at' => $this->actual_arrival_at,
             'bl_info' => $this->orderBlInfo,
+            'is_claimed' => $this->is_claimed,
             'payment_status' => $this->payment_status,
         ];
     }
