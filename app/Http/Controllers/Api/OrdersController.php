@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Api;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
+use App\Http\Resources\Order\BusinessOrderResource;
 use App\Http\Resources\Order\CommerceOrderResource;
 use App\Http\Resources\Order\FinanceOrderResource;
 use App\Http\Resources\Order\OrderInfoResource;
@@ -647,6 +648,38 @@ class OrdersController extends Controller
 
         $orders = $builder->paginate();
         return FinanceOrderResource::collection($orders);
+    }
+
+    /**
+     * 业务单据 - 列表
+     * @param Request $request
+     * @return AnonymousResourceCollection
+     */
+    public function businessIndex(Request $request): AnonymousResourceCollection
+    {
+        $keyword = $request->input('keyword');
+        // 财务单据
+        $builder = Order::query()
+            ->with([
+                'orderType:id,name',
+                'businessUser:id,name',
+                'operateUser:id,name',
+                'documentUser:id,name',
+                'commerceUser:id,name',
+                'orderDelegationHeader'
+            ])
+            ->latest();
+
+        if (!empty($keyword)) {
+            $builder = $builder->where(function ($query) use ($keyword) {
+                $query->where('job_no', 'like', '%' . $keyword . '%')
+                    ->orWhere('origin_port', 'like', '%' . $keyword . '%')
+                    ->orWhere('bl_no', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        $orders = $builder->paginate();
+        return BusinessOrderResource::collection($orders);
     }
 
     /**

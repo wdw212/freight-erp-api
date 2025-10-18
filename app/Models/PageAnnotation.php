@@ -35,5 +35,6 @@ class PageAnnotation extends Model
     ];
 
     public $timestamps = false;
+    
     protected $guarded = [];
 }

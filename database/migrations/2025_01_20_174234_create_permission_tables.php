@@ -17,14 +17,13 @@ return new class extends Migration {
         $pivotPermission = $columnNames['permission_pivot_key'] ?? 'permission_id';
 
         if (empty($tableNames)) {
-            throw new \Exception('Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.');
+            throw new \RuntimeException('Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
         if ($teams && empty($columnNames['team_foreign_key'] ?? null)) {
-            throw new \Exception('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
+            throw new \RuntimeException('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
 
         Schema::create($tableNames['permissions'], static function (Blueprint $table) {
-            //$table->engine('InnoDB');
             $table->bigIncrements('id');
             $table->string('guard_name')->comment('认证守卫');
             $table->unsignedBigInteger('parent_id')->comment('上级ID')->default(0);
@@ -40,12 +39,10 @@ return new class extends Migration {
             $table->tinyInteger('is_show')->comment('是否显示 0否 1是')->default(1);
             $table->tinyInteger('status')->comment('状态 0禁用 1启用')->default(1);
             $table->timestamps();
-            $table->unique(['name', 'guard_name']);
             $table->comment('权限表');
         });
 
         Schema::create($tableNames['roles'], static function (Blueprint $table) use ($teams, $columnNames) {
-            //$table->engine('InnoDB');
             $table->bigIncrements('id');
             if ($teams || config('permission.testing')) {
                 $table->unsignedBigInteger($columnNames['team_foreign_key'])->nullable();
@@ -138,7 +135,7 @@ return new class extends Migration {
         $tableNames = config('permission.table_names');
 
         if (empty($tableNames)) {
-            throw new \Exception('Error: config/permission.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.');
+            throw new \RuntimeException('Error: config/permission.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.');
         }
 
         Schema::drop($tableNames['role_has_permissions']);
