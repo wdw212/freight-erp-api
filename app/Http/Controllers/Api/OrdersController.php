@@ -278,7 +278,7 @@ class OrdersController extends Controller
      * @param OrderRequest $request
      * @param Order $order
      * @return OrderInfoResource
-     * @throws InvalidRequestException
+     * @throws InvalidRequestException|Throwable
      */
     public function update(OrderRequest $request, Order $order): OrderInfoResource
     {
@@ -669,7 +669,6 @@ class OrdersController extends Controller
                 'orderDelegationHeader'
             ])
             ->latest();
-
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
                 $query->where('job_no', 'like', '%' . $keyword . '%')
@@ -677,7 +676,6 @@ class OrdersController extends Controller
                     ->orWhere('bl_no', 'like', '%' . $keyword . '%');
             });
         }
-
         $orders = $builder->paginate();
         return BusinessOrderResource::collection($orders);
     }
