@@ -414,6 +414,7 @@ class OrdersController extends Controller
                 }
                 Log::info('---打印测试----');
                 Log::info($temp);
+                Log::info(OrderDelegationHeader::query()->where('order_id', $order->id)->count());
                 $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
                 $orderDelegationHeader->fill($temp);
                 $orderDelegationHeader->order()->associate($order);
