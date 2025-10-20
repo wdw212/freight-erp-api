@@ -407,12 +407,12 @@ class OrdersController extends Controller
                     $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
                     Log::info('打印公司抬头信息');
                     $temp['contact_person'] = $companyHeader->contact_person;
-                    $item['contact_phone'] = $companyHeader->contact_phone;
+                    $temp['contact_phone'] = $companyHeader->contact_phone;
                 } else {
-                    $item['company_header_id'] = null;
+                    $temp['company_header_id'] = null;
                 }
                 $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
-                $orderDelegationHeader->fill($item);
+                $orderDelegationHeader->fill($temp);
                 $orderDelegationHeader->order()->associate($order);
                 $orderDelegationHeader->save();
 
