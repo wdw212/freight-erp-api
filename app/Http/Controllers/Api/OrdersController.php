@@ -408,9 +408,12 @@ class OrdersController extends Controller
                     Log::info('打印公司抬头信息');
                     $temp['contact_person'] = $companyHeader->contact_person;
                     $temp['contact_phone'] = $companyHeader->contact_phone;
+
                 } else {
                     $temp['company_header_id'] = null;
                 }
+                Log::info('---打印测试----');
+                Log::info($temp);
                 $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
                 $orderDelegationHeader->fill($temp);
                 $orderDelegationHeader->order()->associate($order);
