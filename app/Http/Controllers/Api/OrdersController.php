@@ -412,7 +412,7 @@ class OrdersController extends Controller
                     $item['company_header_id'] = null;
                 }
                 $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
-                $orderDelegationHeader->fill($temp);
+                $orderDelegationHeader->fill($item);
                 $orderDelegationHeader->order()->associate($order);
                 $orderDelegationHeader->save();
 

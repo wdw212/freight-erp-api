@@ -41,6 +41,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $payment_status
  * @property mixed $orderFilesCount
  * @property mixed $is_claimed
+ * @property mixed $order_files_count
  */
 class OrderResource extends JsonResource
 {
