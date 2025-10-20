@@ -78,7 +78,7 @@ class OrderResource extends JsonResource
             'finish_at' => $this->finish_at,
             'order_remark' => $this->orderRemark->remark ?? null,
             'payment_status' => $this->payment_status,
-            'order_file_count' => $this->orderFilesCount,
+            'order_files_count' => $this->order_files_count,
             'is_claimed' => $this->is_claimed,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
