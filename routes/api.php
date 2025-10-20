@@ -339,13 +339,13 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
         ->name('orders.store');
     // 单据 - 详情
     Route::get('orders/{order}', [OrdersController::class, 'show'])
-        ->name('orders.show');
+        ->name('orders.show')->where(['order' => '[0-9]+']);
     // 单据 - 编辑
     Route::put('orders/{order}', [OrdersController::class, 'update'])
-        ->name('orders.update');
+        ->name('orders.update')->where(['order' => '[0-9]+']);
     // 单据 - 删除
     Route::delete('orders/{order}', [OrdersController::class, 'destroy'])
-        ->name('orders.destroy');
+        ->name('orders.destroy')->where(['order' => '[0-9]+']);
     // 单据 - 更新备注
     Route::put('orders/{order}/update-remark', [OrdersController::class, 'updateRemark'])
         ->name('orders.update-remark')->where('order', '[0-9]+');
