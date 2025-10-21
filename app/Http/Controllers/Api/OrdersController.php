@@ -458,7 +458,8 @@ class OrdersController extends Controller
                     } else {
                         $containerModel = new Container();
                     }
-
+                    Log::info('--调试数据--');
+                    Log::info($container['no_image']);
                     $container['no_image'] = $container['no_image']['path'] ?? '';
                     $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                     $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
