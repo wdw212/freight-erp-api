@@ -470,6 +470,8 @@ class OrdersController extends Controller
                     $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
                     $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
                     $container['container_type_id'] = empty($container['container_type_id']) ? null : $container['container_type_id'];
+                    Log::info('--需要提交的数据--');
+                    Log::info($container);
                     $containerModel->fill($container);
                     $containerModel->order()->associate($order);
                     $containerModel->save();
