@@ -34,14 +34,15 @@ function formatDate(string|null $date): string
 /**
  * 格式化时间
  * @param $at
+ * @param string $format
  * @return string
  */
-function formatAt($at): string
+function formatAt($at, string $format = 'Y-m-d H:i:s'): string
 {
     if (empty($at)) {
         return '';
     }
-    return Carbon::parse($at)->format('Y-m-d H:i:s');
+    return Carbon::parse($at)->format($format);
 }
 
 /**

@@ -7,6 +7,22 @@ use App\Models\OrderType;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', static function () {
+    $data = \Illuminate\Support\Arr::crossJoin([
+        '红色',
+        '蓝色',
+        '绿色'
+    ], [
+        '64G',
+        '128G',
+        '256G'
+    ]);
+
+    $relation = [];
+    foreach ($data as $item) {
+        $relation[] = implode('-', $item);
+    }
+
+    dd($relation);
     return view('welcome');
 });
 
