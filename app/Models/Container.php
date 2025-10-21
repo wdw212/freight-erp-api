@@ -36,6 +36,11 @@ class Container extends Model
         'remark',
         'freight_status',
         'freight_remark',
+        'no_image',
+        'seal_number_image',
+        'wharf_record_image',
+        'entered_port_record_image',
+        'entered_port_info'
     ];
 
     /**
