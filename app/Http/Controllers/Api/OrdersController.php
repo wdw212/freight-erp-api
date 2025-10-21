@@ -55,6 +55,7 @@ class OrdersController extends Controller
         $sellerId = $request->input('seller_id');
         $isClaimed = $request->input('is_claimed');
         $finishAt = $request->input('finish_at');
+        $pageSize = $request->input('page_size', 15);
         $adminUser = $request->user();
         $builder = Order::query()
             ->with([
@@ -106,7 +107,7 @@ class OrdersController extends Controller
             $builder = $builder->whereBetween('finished_at', [$startFinishAt, $endFinishAt]);
         }
 
-        $orders = $builder->paginate();
+        $orders = $builder->paginate($pageSize);
 
         return OrderResource::collection($orders);
     }
@@ -120,7 +121,6 @@ class OrdersController extends Controller
      */
     public function store(OrderRequest $request, Order $order): OrderInfoResource
     {
-        Log::info('---单据新增操作---');
         $order = DB::transaction(static function () use ($request, $order) {
             $adminUser = $request->user();
             $data = $request->all();
@@ -571,6 +571,7 @@ class OrdersController extends Controller
         $paymentMethod = $request->input('payment_method');
         $sellerId = $request->input('seller_id');
         $isClaimed = $request->input('is_claimed');
+        $pageSize = $request->input('page_size', 15);
 
         $builder = Order::query()
             ->with([
@@ -579,7 +580,8 @@ class OrdersController extends Controller
                 'operateUser:id,name',
                 'documentUser:id,name',
                 'commerceUser:id,name',
-                'orderDelegationHeader'
+                'orderDelegationHeader',
+                'orderDelegationHeader.companyHeader:id,company_name',
             ])
             ->with('orderRemark', function ($query) use ($adminUser) {
                 return $query->where('admin_user_id', $adminUser->id);
@@ -617,8 +619,7 @@ class OrdersController extends Controller
             $builder = $builder->where('is_delivery', $isDelivery);
         }
 
-        // is_claimed
-        $orders = $builder->paginate();
+        $orders = $builder->paginate($pageSize);
         return CommerceOrderResource::collection($orders);
     }
 
@@ -630,6 +631,7 @@ class OrdersController extends Controller
     public function financeIndex(Request $request): AnonymousResourceCollection
     {
         $keyword = $request->input('keyword');
+        $pageSize = $request->input('page_size', 15);
         // 财务单据
         $builder = Order::query()
             ->with([
@@ -638,7 +640,8 @@ class OrdersController extends Controller
                 'operateUser:id,name',
                 'documentUser:id,name',
                 'commerceUser:id,name',
-                'orderDelegationHeader'
+                'orderDelegationHeader',
+                'orderDelegationHeader.companyHeader:id,company_name',
             ])
             ->latest();
 
@@ -650,7 +653,7 @@ class OrdersController extends Controller
             });
         }
 
-        $orders = $builder->paginate();
+        $orders = $builder->paginate($pageSize);
         return FinanceOrderResource::collection($orders);
     }
 
@@ -670,7 +673,8 @@ class OrdersController extends Controller
                 'operateUser:id,name',
                 'documentUser:id,name',
                 'commerceUser:id,name',
-                'orderDelegationHeader'
+                'orderDelegationHeader',
+                'orderDelegationHeader.companyHeader:id,company_name',
             ])
             ->latest();
         if (!empty($keyword)) {
