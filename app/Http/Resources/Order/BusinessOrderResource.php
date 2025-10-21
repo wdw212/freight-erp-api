@@ -6,6 +6,13 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $id
+ * @property mixed $job_no
+ * @property mixed $orderDelegationHeader
+ * @property mixed $orderType
+ * @property mixed $bl_no
+ */
 class BusinessOrderResource extends JsonResource
 {
     /**
@@ -19,6 +26,7 @@ class BusinessOrderResource extends JsonResource
             'id' => $this->id,
             'job_no' => $this->job_no,
             'order_delegation_header' => $this->orderDelegationHeader,
+            'order_type' => $this->orderType,
             'bl_no' => $this->bl_no,
             'destination_port' => $this->destination_port,
             'sailing_at' => !empty($this->sailing_at) ? Carbon::parse($this->sailing_at)->format('Y-m-d') : '',
