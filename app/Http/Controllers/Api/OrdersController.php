@@ -676,9 +676,10 @@ class OrdersController extends Controller
                 'operateUser:id,name',
                 'documentUser:id,name',
                 'commerceUser:id,name',
-                'orderDelegationHeader',
+                'orderDelegationHeader:id,company_header_id',
                 'orderDelegationHeader.companyHeader:id,company_name',
             ])
+            ->withCount('orderFiles')
             ->latest();
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {

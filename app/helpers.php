@@ -62,6 +62,7 @@ function formatFullUrl(string|null $image): array|string
 }
 
 /**
+ * 格式化文件大小
  * @param $bytes
  * @return string
  */

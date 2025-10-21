@@ -19,6 +19,7 @@ class Invoice extends Model
     }
 
     /**
+     * 发票详情
      * @return HasMany
      */
     public function invoiceItems(): HasMany
