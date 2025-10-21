@@ -47,10 +47,10 @@ function formatAt($at, string $format = 'Y-m-d H:i:s'): string
 
 /**
  * 格式化图片
- * @param string $image
+ * @param string|null $image
  * @return array|string
  */
-function formatFullUrl(string $image): array|string
+function formatFullUrl(string|null $image): array|string
 {
     if (empty($image)) {
         return '';
