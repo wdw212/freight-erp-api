@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Order;
 
+use App\Http\Resources\Container\ContainerResource;
 use App\Http\Resources\OrderFile\OrderFileInfoResource;
 use App\Http\Resources\OrderFile\OrderFileResource;
 use App\Http\Resources\OrderPayment\OrderPaymentResource;
@@ -102,7 +103,7 @@ class OrderInfoResource extends JsonResource
             'order_receipts' => OrderReceiptResource::collection($this->orderReceipts),
             'order_delegation_header' => $this->orderDelegationHeader,
             'order_files' => $orderFiles,
-            'containers' => $this->containers,
+            'containers' => ContainerResource::collection($this->containers),
             'is_finish' => $this->is_finish,
             'entered_port_wharf_id' => $this->entered_port_wharf_id,
             'insurance' => $this->insurance,

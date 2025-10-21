@@ -46,6 +46,22 @@ function formatAt($at, string $format = 'Y-m-d H:i:s'): string
 }
 
 /**
+ * 格式化图片
+ * @param string $image
+ * @return array|string
+ */
+function formatFullUrl(string $image): array|string
+{
+    if (empty($image)) {
+        return '';
+    }
+    return [
+        'path' => $image,
+        'url' => Storage::url($image),
+    ];
+}
+
+/**
  * @param $bytes
  * @return string
  */
