@@ -12,6 +12,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderDelegationHeader
  * @property mixed $orderType
  * @property mixed $bl_no
+ * @property mixed $destination_port
+ * @property mixed $operateUser
+ * @property mixed $bl_status
+ * @property mixed $receipt_total_cny_amount
+ * @property mixed $receipt_cny_cashed_status
+ * @property mixed $receipt_total_usd_amount
+ * @property mixed $receipt_usd_cashed_status
+ * @property mixed $gross_profit
+ * @property mixed $special_fee
+ * @property mixed $cashed_status
+ * @property mixed $order_files_count
+ * @property mixed $created_at
  */
 class BusinessOrderResource extends JsonResource
 {
@@ -42,6 +54,7 @@ class BusinessOrderResource extends JsonResource
             'cashed_status' => $this->cashed_status,
             'order_remark' => $this->orderRemark->remark ?? null,
             'order_files_count' => $this->order_files_count,
+            'invoice_date' => $this->invoice_date ?? '',
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
