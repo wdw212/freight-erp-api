@@ -41,14 +41,7 @@ class WechatController extends Controller
                         $imageContent = $media->getBody()->getContents(); // 读取流内容
 
                         // 2. 生成七牛云存储的文件名（确保唯一，避免覆盖）
-                        $mimeType = $media->getHeaderLine('Content-Type');
-                        Log::info($mimeType);
-                        $mimeTypeMap = [
-                            'image/jpeg' => 'jpg',
-                            'image/png' => 'png',
-                            'image/gif' => 'gif',
-                        ];
-                        $extension = $mimeTypeMap[$mimeType] ?? 'jpg';
+                        $extension = 'jpg';
                         $fileName = date('Ymd') . '/' . time() . '.' . $extension;
                         // 路径说明：wechat/images/20251023/xxx.jpg（按日期分类，便于管理）
                         // 3. 上传到七牛云（使用 qiniu 磁盘）
