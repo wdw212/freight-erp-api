@@ -28,10 +28,8 @@ class HandleOrder extends Command
      */
     public function handle(): void
     {
-        Log::info('--处理单据--');
-
         // Todo: 处理超期订单
-        $orders = Order::query()->where('is_delivery',0)->get();
+        $orders = Order::query()->where('is_delivery', 0)->get();
         foreach ($orders as $order) {
             if (Carbon::parse($order->actual_arrival_at)->addDays(7) < Carbon::now()) {
                 $order->update([
