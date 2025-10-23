@@ -15,7 +15,7 @@ class WechatController extends Controller
      * 接入微信公众号
      * @return mixed
      */
-    public function serve()
+    public function server()
     {
         $app = (new OfficialAccountService())->getApp();
         $server = $app->getServer();

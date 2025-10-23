@@ -53,8 +53,8 @@ Route::get('select-options/{key}', [SelectOptionsController::class, 'index'])
     ->name('select-options.index');
 
 // 接入微信公众号
-Route::any('wechat/serve', [WechatController::class, 'serve'])
-    ->name('wechat.serve');
+Route::any('wechat/server', [WechatController::class, 'server'])
+    ->name('wechat.server');
 
 // 令牌路由
 Route::group(['middleware' => 'auth:sanctum'], static function () {
