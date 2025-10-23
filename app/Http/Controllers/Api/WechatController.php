@@ -32,7 +32,7 @@ class WechatController extends Controller
                 Log::info('打印message');
                 Log::info(json_encode($message, JSON_UNESCAPED_UNICODE));
 
-                $msgType = $message['type'];
+                $msgType = $message['MsgType'];
                 switch ($msgType) {
                     case 'image':
                         // 1. 通过 EasyWeChat 获取微信图片流
@@ -41,7 +41,13 @@ class WechatController extends Controller
                         $imageContent = $media->getBody()->getContents(); // 读取流内容
 
                         // 2. 生成七牛云存储的文件名（确保唯一，避免覆盖）
-                        $extension = 'jpg';
+                        $mimeType = $media->getHeaderLine('Content-Type');
+                        $mimeTypeMap = [
+                            'image/jpeg' => 'jpg',
+                            'image/png' => 'png',
+                            'image/gif' => 'gif',
+                        ];
+                        $extension = $mimeTypeMap[$mimeType] ?? 'jpg';
                         $fileName = date('Ymd') . '/' . time() . '.' . $extension;
                         // 路径说明：wechat/images/20251023/xxx.jpg（按日期分类，便于管理）
                         // 3. 上传到七牛云（使用 qiniu 磁盘）
