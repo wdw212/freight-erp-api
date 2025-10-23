@@ -42,7 +42,7 @@ class WechatController extends Controller
                             'media_id' => $mediaId,
                         ]);
                         Log::info('--打印请求媒体的结果--');
-                        Log::info($response);
+                        Log::info($response->getContent());
 //                        $imageContent = $media->getBody()->getContents(); // 读取流内容
 //
 //                        // 2. 生成七牛云存储的文件名（确保唯一，避免覆盖）
