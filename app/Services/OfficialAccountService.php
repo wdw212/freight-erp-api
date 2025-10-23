@@ -19,7 +19,7 @@ class OfficialAccountService
     /**
      * @return mixed
      */
-    public function getApp()
+    public function getApp(): mixed
     {
         return $this->app;
     }

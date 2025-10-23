@@ -18,6 +18,15 @@ class WechatController extends Controller
     public function serve()
     {
         $app = (new OfficialAccountService())->getApp();
-        return $app->server->serve();
+        $server = $app->getServer();
+
+        $server->with(function ($message, \Closure $next) {
+            return '谢谢关注！';
+
+            // 你的自定义逻辑
+            // return $next($message);
+        });
+
+        return $server->serve();
     }
 }
