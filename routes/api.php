@@ -35,6 +35,7 @@ use App\Http\Controllers\Api\SpecialTaxRatesController;
 use App\Http\Controllers\Api\TodosController;
 use App\Http\Controllers\Api\UploadsController;
 use App\Http\Controllers\Api\UsdExchangeRatesController;
+use App\Http\Controllers\Api\WechatController;
 use App\Http\Controllers\Api\WharvesController;
 use App\Http\Controllers\Api\YardWharvesController;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,10 @@ Route::post('uploads/file', [UploadsController::class, 'file'])
 // 选择框options
 Route::get('select-options/{key}', [SelectOptionsController::class, 'index'])
     ->name('select-options.index');
+
+// 接入微信公众号
+Route::any('wechat/serve', [WechatController::class, 'serve'])
+    ->name('wechat.serve');
 
 // 令牌路由
 Route::group(['middleware' => 'auth:sanctum'], static function () {

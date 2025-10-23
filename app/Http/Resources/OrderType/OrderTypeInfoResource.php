@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $id
  * @property mixed $name
  * @property mixed $sort
+ * @property mixed $role_ids
  */
 class OrderTypeInfoResource extends JsonResource
 {
@@ -22,6 +23,7 @@ class OrderTypeInfoResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'role_ids' => $this->role_ids,
             'sort' => (int)$this->sort,
         ];
     }

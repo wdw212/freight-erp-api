@@ -27,7 +27,7 @@ class OrderTypesController extends Controller
         $keyword = $request->input('keyword');
 
         $builder = OrderType::query();
-        
+
         if (!empty($keyword)) {
             $builder = $builder->where('name', 'like', '%' . $keyword . '%');
         }
@@ -50,7 +50,15 @@ class OrderTypesController extends Controller
      */
     public function store(OrderTypeRequest $request, OrderType $orderType): OrderTypeInfoResource
     {
-        $orderType->fill($request->all());
+        $data = $request->all();
+
+        if (!empty($data['roles_ids'])) {
+            $data['roles_ids'] = json_decode($data['roles_ids'], true);
+        } else {
+            $data['roles_ids'] = [];
+        }
+
+        $orderType->fill($data);
         $orderType->save();
         return new OrderTypeInfoResource($orderType);
     }
@@ -73,7 +81,15 @@ class OrderTypesController extends Controller
      */
     public function update(OrderTypeRequest $request, OrderType $orderType): OrderTypeInfoResource
     {
-        $orderType->fill($request->all());
+        $data = $request->all();
+
+        if (!empty($data['roles_ids'])) {
+            $data['roles_ids'] = json_decode($data['roles_ids'], true);
+        } else {
+            $data['roles_ids'] = [];
+        }
+
+        $orderType->fill($data);
         $orderType->update();
         return new OrderTypeInfoResource($orderType);
     }

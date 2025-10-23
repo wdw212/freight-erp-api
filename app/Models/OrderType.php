@@ -10,5 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 class OrderType extends Model
 {
     public $timestamps = false;
+
     protected $guarded = [];
+    
+    protected $casts = [
+        'role_ids' => 'json'
+    ];
 }

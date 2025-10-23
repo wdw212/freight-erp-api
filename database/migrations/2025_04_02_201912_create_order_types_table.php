@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('order_types', static function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('名称');
+            $table->json('role_ids')->comment('角色ids');
             $table->integer('sort')->comment('排序')->default(0);
             $table->comment('单据类型表');
         });

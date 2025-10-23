@@ -23,7 +23,8 @@
         "overtrue/laravel-filesystem-qiniu": "^2.4",
         "php-mcp/laravel": "^1.1",
         "spatie/laravel-activitylog": "^4.10.2",
-        "spatie/laravel-permission": "^6.20.0"
+        "spatie/laravel-permission": "^6.20.0",
+        "w7corp/easywechat": "^6.18"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
