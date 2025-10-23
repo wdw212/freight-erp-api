@@ -64,7 +64,7 @@ class WechatController extends Controller
                         Log::info('文字内容');
                         $content = $message['Content'];
                         Log::info(Str::contains($content, '箱号'));
-                        if (Str::contains('箱号', $content)) {
+                        if (Str::contains($content, '箱号')) {
                             Log::info('指令解析成功');
                             $content = explode('+', $content);
                             $container = Container::query()->where('no', $content[1])->first();
