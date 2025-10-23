@@ -57,7 +57,7 @@ class WechatController extends Controller
                             $fileUrl = Storage::url($filename);
                             // 记录日志（可选：保存URL到数据库）
                             Log::info('图片上传成功:' . $fileUrl);
-                            Cache::put('IMAGE', $fileUrl, 60);
+                            Cache::put('IMAGE', $filename, 60);
                         }
                         break;
                     case 'text':
