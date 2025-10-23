@@ -6,10 +6,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Container;
 use App\Services\OfficialAccountService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class WechatController extends Controller
 {
@@ -44,19 +48,31 @@ class WechatController extends Controller
                         $imageContent = $response->getContent(); // 读取流内容
                         // 2. 生成七牛云存储的文件名（确保唯一，避免覆盖）
                         $extension = 'jpg';
-                        $fileName = date('Ymd') . '/' . time() . '.' . $extension;
+                        $filename = time() . '_' . Str::random(10) . '.' . $extension;
                         // 路径说明：wechat/images/20251023/xxx.jpg（按日期分类，便于管理）
                         // 3. 上传到七牛云（使用 qiniu 磁盘）
-                        $result = Storage::put($fileName, $imageContent);
+                        $result = Storage::put($filename, $imageContent);
                         if ($result) {
                             // 上传成功：获取七牛上的文件URL
-                            $fileUrl = Storage::url($fileName);
+                            $fileUrl = Storage::url($filename);
                             // 记录日志（可选：保存URL到数据库）
                             Log::info('图片上传成功:' . $fileUrl);
-                            return $fileUrl; // 返回URL供后续使用
+                            Cache::put('IMAGE', $fileUrl, 60);
                         }
-
                         break;
+                    case 'text':
+                        $content = $message['Content'];
+                        if (Str::contains('箱号', $content)) {
+                            Log::info('指令解析成功');
+                            $content = explode('+', $content);
+                            $container = Container::query()->where('no', $content[1])->first();
+                            $image = Cache::get('IMAGE');
+                            $container->no_image = $image;
+                            $container->save();
+                            Log::info('上传成功');
+                        }
+                        break;
+
                 }
 
                 return $next($message);
