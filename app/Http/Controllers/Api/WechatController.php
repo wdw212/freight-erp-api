@@ -41,7 +41,8 @@ class WechatController extends Controller
                         $imageContent = $media->getBody()->getContents(); // 读取流内容
 
                         // 2. 生成七牛云存储的文件名（确保唯一，避免覆盖）
-                        $mimeType = $media->getHeaderLine('Content-Type'); // 例如：image/jpeg 或 image/png
+                        $mimeType = $media->getHeaderLine('Content-Type');
+                        Log::info($mimeType);
                         $mimeTypeMap = [
                             'image/jpeg' => 'jpg',
                             'image/png' => 'png',
