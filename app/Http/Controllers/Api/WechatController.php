@@ -53,10 +53,6 @@ class WechatController extends Controller
                         // 3. 上传到七牛云（使用 qiniu 磁盘）
                         $result = Storage::put($filename, $imageContent);
                         if ($result) {
-                            // 上传成功：获取七牛上的文件URL
-                            $fileUrl = Storage::url($filename);
-                            // 记录日志（可选：保存URL到数据库）
-                            Log::info('图片上传成功:' . $fileUrl);
                             Cache::put('IMAGE', $filename, 60);
                             return '图片上传成功,请输入指令信息';
                         }

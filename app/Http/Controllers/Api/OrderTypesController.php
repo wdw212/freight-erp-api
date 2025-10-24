@@ -52,10 +52,10 @@ class OrderTypesController extends Controller
     {
         $data = $request->all();
 
-        if (!empty($data['roles_ids'])) {
-            $data['roles_ids'] = json_decode($data['roles_ids'], true);
+        if (!empty($data['role_ids'])) {
+            $data['role_ids'] = json_decode($data['role_ids'], true);
         } else {
-            $data['roles_ids'] = [];
+            $data['role_ids'] = [];
         }
 
         $orderType->fill($data);
@@ -83,10 +83,10 @@ class OrderTypesController extends Controller
     {
         $data = $request->all();
 
-        if (!empty($data['roles_ids'])) {
-            $data['roles_ids'] = json_decode($data['roles_ids'], true);
+        if (!empty($data['role_ids'])) {
+            $data['role_ids'] = json_decode($data['role_ids'], true);
         } else {
-            $data['roles_ids'] = [];
+            $data['role_ids'] = [];
         }
 
         $orderType->fill($data);
