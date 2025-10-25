@@ -36,4 +36,13 @@ class OrderBill extends Model
     {
         return $this->hasMany(OrderBillItem::class);
     }
+
+    /**
+     * 账单箱子
+     * @return HasMany
+     */
+    public function orderBillContainers(): HasMany
+    {
+        return $this->hasMany(OrderBillContainer::class);
+    }
 }

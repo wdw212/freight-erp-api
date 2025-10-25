@@ -21,6 +21,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderBillItems
  * @property mixed $cny_amount
  * @property mixed $usd_amount
+ * @property mixed $orderBillContainers
  */
 class OrderBillInfoResource extends JsonResource
 {
@@ -44,6 +45,7 @@ class OrderBillInfoResource extends JsonResource
             'sailing_at' => !empty($this->sailing_at) ? Carbon::parse($this->sailing_at)->format('Y-m-d') : '',
             'arrival_at' => !empty($this->arrival_at) ? Carbon::parse($this->arrival_at)->format('Y-m-d') : '',
             'order_bill_items' => $this->orderBillItems,
+            'order_bill_containers' => $this->orderBillContainers,
             'cny_amount' => $this->cny_amount,
             'usd_amount' => $this->usd_amount,
             'remark' => $this->remark,

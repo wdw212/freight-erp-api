@@ -11,6 +11,7 @@ use App\Http\Requests\OrderBillRequest;
 use App\Http\Resources\OrderBill\OrderBillInfoResource;
 use App\Http\Resources\OrderBill\OrderBillResource;
 use App\Models\OrderBill;
+use App\Models\OrderBillContainer;
 use App\Models\OrderBillItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -70,6 +71,14 @@ class OrderBillsController extends Controller
             }
             $orderBill->orderBillItems()->saveMany($orderBillItemRelation);
 
+            // 处理账单箱子
+            $orderBillContainers = json_decode($request->input('order_bill_containers'), true);
+            $orderBillContainerRelation = [];
+            foreach ($orderBillContainers as $orderBillContainer) {
+                $orderBillContainerRelation[] = new OrderBillContainer($orderBillContainer);
+            }
+            $orderBill->orderBillContainers()->saveMany($orderBillContainerRelation);
+
             $orderBill->update([
                 'cny_amount' => $cnyAmount,
                 'usd_amount' => $usdAmount,
@@ -77,7 +86,7 @@ class OrderBillsController extends Controller
 
             return $orderBill;
         });
-        return new OrderBillInfoResource($orderBill);
+        return new OrderBillInfoResource($orderBill->load(['orderBillItems', 'orderBillContainers']));
     }
 
     /**
@@ -87,7 +96,7 @@ class OrderBillsController extends Controller
      */
     public function show(OrderBill $orderBill): OrderBillInfoResource
     {
-        return new OrderBillInfoResource($orderBill->load(['orderBillItems']));
+        return new OrderBillInfoResource($orderBill->load(['orderBillItems', 'orderBillContainers']));
     }
 
     /**
@@ -99,7 +108,7 @@ class OrderBillsController extends Controller
     public function update(Request $request, OrderBill $orderBill): OrderBillInfoResource
     {
         $orderBill->update($request->all());
-        return new OrderBillInfoResource($orderBill);
+        return new OrderBillInfoResource($orderBill->load(['orderBillItems', 'orderBillContainers']));
     }
 
     /**
