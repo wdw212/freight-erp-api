@@ -58,15 +58,15 @@ class OrderBillsController extends Controller
             // 处理账单详情
             $orderBillItems = json_decode($request->input('order_bill_items'), true);
             $orderBillItemRelation = [];
-            
+
             $cnyAmount = 0;
             $usdAmount = 0;
             foreach ($orderBillItems as $orderBillItem) {
                 $orderBillItemRelation[] = new OrderBillItem($orderBillItem);
                 if ($orderBillItem['currency'] === 'cny') {
-                    $cnyAmount += $orderBillItem['amount'] * $orderBillItem['quantity'];
+                    $cnyAmount += $orderBillItem['price'] * $orderBillItem['quantity'];
                 } else {
-                    $usdAmount += $orderBillItem['amount'] * $orderBillItem['quantity'];
+                    $usdAmount += $orderBillItem['price'] * $orderBillItem['quantity'];
                 }
             }
             $orderBill->orderBillItems()->saveMany($orderBillItemRelation);
