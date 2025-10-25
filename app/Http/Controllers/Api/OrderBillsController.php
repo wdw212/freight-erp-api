@@ -11,6 +11,7 @@ use App\Http\Requests\OrderBillRequest;
 use App\Http\Resources\OrderBill\OrderBillInfoResource;
 use App\Http\Resources\OrderBill\OrderBillResource;
 use App\Models\OrderBill;
+use App\Models\OrderBillItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -56,6 +57,24 @@ class OrderBillsController extends Controller
 
             // 处理账单详情
             $orderBillItems = json_decode($request->input('order_bill_items'), true);
+            $orderBillItemRelation = [];
+            
+            $cnyAmount = 0;
+            $usdAmount = 0;
+            foreach ($orderBillItems as $orderBillItem) {
+                $orderBillItemRelation[] = new OrderBillItem($orderBillItem);
+                if ($orderBillItem['currency'] === 'cny') {
+                    $cnyAmount += $orderBillItem['amount'] * $orderBillItem['quantity'];
+                } else {
+                    $usdAmount += $orderBillItem['amount'] * $orderBillItem['quantity'];
+                }
+            }
+            $orderBill->orderBillItems()->saveMany($orderBillItemRelation);
+
+            $orderBill->update([
+                'cny_amount' => $cnyAmount,
+                'usd_amount' => $usdAmount,
+            ]);
 
             return $orderBill;
         });

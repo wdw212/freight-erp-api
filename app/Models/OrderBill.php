@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property float|int|mixed $cny_amount
+ * @property float|int|mixed $usd_amount
+ */
 class OrderBill extends Model
 {
     /**
