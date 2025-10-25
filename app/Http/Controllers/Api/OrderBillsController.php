@@ -87,7 +87,7 @@ class OrderBillsController extends Controller
      */
     public function show(OrderBill $orderBill): OrderBillInfoResource
     {
-        return new OrderBillInfoResource($orderBill);
+        return new OrderBillInfoResource($orderBill->load(['orderBillItems']));
     }
 
     /**
