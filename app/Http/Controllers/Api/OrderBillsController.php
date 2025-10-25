@@ -44,7 +44,7 @@ class OrderBillsController extends Controller
      */
     public function store(OrderBillRequest $request, OrderBill $orderBill): OrderBillInfoResource
     {
-        $orderBill = DB::transaction(function () use ($request, $orderBill) {
+        $orderBill = DB::transaction(static function () use ($request, $orderBill) {
             $orderBillItems = $request->input('order_bill_items');
 
             if (!json_validate($orderBillItems)) {
@@ -58,7 +58,6 @@ class OrderBillsController extends Controller
             // 处理账单详情
             $orderBillItems = json_decode($request->input('order_bill_items'), true);
             $orderBillItemRelation = [];
-
             $cnyAmount = 0;
             $usdAmount = 0;
             foreach ($orderBillItems as $orderBillItem) {
