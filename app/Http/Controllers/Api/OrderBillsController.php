@@ -86,7 +86,7 @@ class OrderBillsController extends Controller
      * @param OrderBill $orderBill
      * @return OrderBillInfoResource
      */
-    public function show(OrderBill $orderBill)
+    public function show(OrderBill $orderBill): OrderBillInfoResource
     {
         return new OrderBillInfoResource($orderBill);
     }
