@@ -24,6 +24,8 @@ return new class extends Migration {
             $table->timestamp('sailing_at')->comment('开船时间')->nullable();
             $table->timestamp('arrival_at')->comment('到港时间')->nullable();
             $table->string('remark')->comment('备注')->nullable();
+            $table->decimal('cny_amount', 10)->comment('人民币金额')->default(0);
+            $table->decimal('usd_amount', 10)->comment('美金金额')->default(0);
             $table->timestamps();
             $table->comment('单据账单表');
         });
