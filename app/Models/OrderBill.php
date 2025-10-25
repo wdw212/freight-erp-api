@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrderBill extends Model
 {
-    protected $guarded = [];
+    /**
+     * @var string[]
+     */
+    protected $guarded = [
+        'order_bill_items'
+    ];
 
     /**
      * 关联单据

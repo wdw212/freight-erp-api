@@ -15,7 +15,7 @@ class OrderBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+            'order_bill_items' => 'json'
         ];
     }
 }

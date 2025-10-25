@@ -7,22 +7,6 @@ use App\Models\OrderType;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', static function () {
-    $data = \Illuminate\Support\Arr::crossJoin([
-        '红色',
-        '蓝色',
-        '绿色'
-    ], [
-        '64G',
-        '128G',
-        '256G'
-    ]);
-
-    $relation = [];
-    foreach ($data as $item) {
-        $relation[] = implode('-', $item);
-    }
-
-    dd($relation);
     return view('welcome');
 });
 
@@ -37,41 +21,23 @@ Route::get('/test', static function () {
 Route::get('/test2', static function () {
     $data = [
         [
-            'no' => '内容1',
-            'seal_number' => '封号',
-            'container_type_id' => 1,
-            'serial_number' => '序列号',
-            'pre_pull_wharf_id' => 1,
-            'wharf_id' => 1,
-            'drop_off_wharf_id' => 1,
-            'is_entered_port' => 1,
-            'driver' => '司机信息',
-            'fleet_id' => 1,
-            'cargo_weight' => 100,
-            'loading_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-            'container_items' => [
-                [
-                    'bl_no' => '213123',
-                    'quantity' => 1,
-                    'gross_weight' => '100',
-                    'volume' => 10,
-                    'remark' => '备注'
-                ],
-            ],
-            'container_loading_addresses' => [
-                [
-                    'loading_address_id' => 1,
-                    'loading_address' => '装柜地址',
-                    'address' => '地址',
-                    'contact_name' => '联系人',
-                    'phone' => '联系方式',
-                    'remark' => '备注'
-                ]
-            ]
+            'fee_type_id' => 1,
+            'currency' => 'cny',
+            'quantity' => 1,
+            'price' => 1,
+            'remark' => '备注',
+        ],
+        [
+            'fee_type_id' => 1,
+            'currency' => 'cny',
+            'quantity' => 1,
+            'price' => 1,
+            'remark' => '备注',
         ],
     ];
 
     $string = json_encode($data, JSON_UNESCAPED_UNICODE);
+    dd($string);
 });
 
 Route::get('/test3', static function () {
