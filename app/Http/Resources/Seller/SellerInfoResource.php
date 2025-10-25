@@ -16,6 +16,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $name
  * @property mixed $logo
  * @property mixed $financial_seal
+ * @property mixed $remark
  */
 class SellerInfoResource extends JsonResource
 {
@@ -42,6 +43,7 @@ class SellerInfoResource extends JsonResource
             'phone' => $this->phone,
             'bank_name' => $this->bank_name,
             'bank_account' => $this->bank_account,
+            'remark' => $this->remark,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
