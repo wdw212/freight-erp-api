@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\NoticesController;
 use App\Http\Controllers\Api\NoticeTagsController;
 use App\Http\Controllers\Api\NotificationsController;
 use App\Http\Controllers\Api\OperationFeesController;
+use App\Http\Controllers\Api\OrderBillsController;
 use App\Http\Controllers\Api\OrderFilesController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OrderTypesController;
@@ -613,5 +614,21 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 费用类型 - 删除
     Route::delete('fee-types/{feeType}', [FeeTypesController::class, 'destroy'])
         ->name('fee-types.destroy');
+
+    // 单据账单 - 列表
+    Route::get('order-bills', [OrderBillsController::class, 'index'])
+        ->name('order-bills.index');
+    // 单据账单 - 新增
+    Route::post('order-bills', [OrderBillsController::class, 'store'])
+        ->name('order-bills.store');
+    // 单据账单 - 详情
+    Route::get('order-bills/{orderBill}', [OrderBillsController::class, 'show'])
+        ->name('order-bills.show')->where('orderBill', '[0-9]+');
+    // 单据账单 - 编辑
+    Route::put('order-bills/{orderBill}', [OrderBillsController::class, 'update'])
+        ->name('order-bills.update')->where('orderBill', '[0-9]+');
+    // 单据账单 - 删除
+    Route::delete('order-bills/{orderBill}', [OrderBillsController::class, 'destroy'])
+        ->name('order-bills.destroy')->where('orderBill', '[0-9]+');
 });
 

@@ -99,7 +99,7 @@ class OrderTypesController extends Controller
      * @param OrderType $orderType
      * @return Response
      */
-    public function destroy(OrderType $orderType)
+    public function destroy(OrderType $orderType): Response
     {
         $orderType->delete();
         return response()->noContent();
