@@ -5,6 +5,14 @@ namespace App\Http\Resources\OrderBillTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $id
+ * @property mixed $name
+ * @property mixed $order_bill_items
+ * @property mixed $cost_share
+ * @property mixed $customer_payment_info
+ * @property mixed $company_receipt_info
+ */
 class OrderBillTemplateInfoResource extends JsonResource
 {
     /**
