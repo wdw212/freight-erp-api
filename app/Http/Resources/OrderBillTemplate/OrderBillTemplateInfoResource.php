@@ -14,6 +14,13 @@ class OrderBillTemplateInfoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'order_bill_items' => $this->order_bill_items,
+            'cost_share' => $this->cost_share,
+            'customer_payment_info' => $this->customer_payment_info,
+            'company_receipt_info' => $this->company_receipt_info,
+        ];
     }
 }
