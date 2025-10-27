@@ -41,7 +41,15 @@ class OrderBillTemplatesController extends Controller
     public function store(OrderBillTemplateRequest $request, OrderBillTemplate $orderBillTemplate): OrderBillTemplateInfoResource
     {
         $adminUser = $request->user();
-        $orderBillTemplate->fill($request->all());
+        $data = $request->all();
+
+        if (!empty($data['order_bill_items'])) {
+            $data['order_bill_items'] = json_decode($data['order_bill_items'], true);
+        } else {
+            $data['order_bill_items'] = [];
+        }
+
+        $orderBillTemplate->fill($data);
         $orderBillTemplate->adminUser()->associate($adminUser);
         $orderBillTemplate->save();
 
