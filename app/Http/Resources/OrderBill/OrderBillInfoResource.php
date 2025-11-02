@@ -25,6 +25,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $cost_share
  * @property mixed $customer_payment_info
  * @property mixed $company_receipt_info
+ * @property mixed $is_show_seal
  */
 class OrderBillInfoResource extends JsonResource
 {
@@ -51,6 +52,7 @@ class OrderBillInfoResource extends JsonResource
             'order_bill_containers' => $this->orderBillContainers,
             'cny_amount' => $this->cny_amount,
             'usd_amount' => $this->usd_amount,
+            'is_show_seal' => $this->is_show_seal,
             'cost_share' => $this->cost_share,
             'customer_payment_info' => $this->customer_payment_info,
             'company_receipt_info' => $this->company_receipt_info,
