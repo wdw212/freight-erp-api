@@ -25,6 +25,7 @@ class InvoicesController extends Controller
         $orderId = $request->input('order_id');
         $invoices = Invoice::query()
             ->where('order_id', $orderId)
+            ->with(['invoiceType'])
             ->latest()
             ->paginate();
         return InvoiceResource::collection($invoices);
