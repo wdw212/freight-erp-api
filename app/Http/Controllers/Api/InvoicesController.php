@@ -22,7 +22,11 @@ class InvoicesController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $invoices = Invoice::query()->latest()->paginate();
+        $orderId = $request->input('order_id');
+        $invoices = Invoice::query()
+            ->where('order_id', $orderId)
+            ->latest()
+            ->paginate();
         return InvoiceResource::collection($invoices);
     }
 
