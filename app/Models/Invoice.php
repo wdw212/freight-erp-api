@@ -47,4 +47,22 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
+
+    /**
+     * 人民币发票详情
+     * @return HasMany
+     */
+    public function cnyInvoiceItems(): HasMany
+    {
+        return $this->hasMany(InvoiceItem::class)->where('currency', 'cny');
+    }
+
+    /**
+     * 美金发票详情
+     * @return HasMany
+     */
+    public function usdInvoiceItems(): HasMany
+    {
+        return $this->hasMany(InvoiceItem::class)->where('currency', 'usd');
+    }
 }
