@@ -47,10 +47,7 @@ class InvoicesController extends Controller
         $saleUscCode = $request->input('sale_usc_code');
         $cnyInvoiceItems = $request->input('cny_invoice_items');
         $usdInvoiceItems = $request->input('usd_invoice_items');
-        $cnyInvoiceItems = json_decode($cnyInvoiceItems, true);
-        $usdInvoiceItems = json_decode($usdInvoiceItems, true);
-        $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
-        dd($invoiceItems);
+
         // 如果单据完成 修改订单信息
         if ((int)$isFinish === 1) {
             Order::query()->where('id', $orderId)->update([
@@ -76,10 +73,13 @@ class InvoicesController extends Controller
         $invoice->sale_usc_code = $saleUscCode;
         $invoice->save();
 
+        $cnyInvoiceItems = json_decode($cnyInvoiceItems, true);
+        $usdInvoiceItems = json_decode($usdInvoiceItems, true);
+        $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
 
         $invoiceItemRelation = [];
         foreach ($invoiceItems as $item) {
-            $invoiceItemRelation = new InvoiceItem($item);
+            $invoiceItemRelation[] = new InvoiceItem($item);
         }
         $invoice->invoiceItems()->saveMany($invoiceItemRelation);
         return new InvoiceInfoResource($invoice);
