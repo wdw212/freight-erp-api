@@ -82,12 +82,17 @@ class InvoicesController extends Controller
             $invoiceItemRelation[] = new InvoiceItem($item);
         }
         $invoice->invoiceItems()->saveMany($invoiceItemRelation);
-        return new InvoiceInfoResource($invoice);
+        return new InvoiceInfoResource($invoice->load(['cnyInvoiceItems', 'usdInvoiceItems']));
     }
 
-    public function show(Invoice $invoice)
+    /**
+     * 详情
+     * @param Invoice $invoice
+     * @return InvoiceInfoResource
+     */
+    public function show(Invoice $invoice): InvoiceInfoResource
     {
-
+        return new InvoiceInfoResource($invoice->load(['cnyInvoiceItems', 'usdInvoiceItems']));
     }
 
     public function update(InvoiceRequest $request, Invoice $invoice)

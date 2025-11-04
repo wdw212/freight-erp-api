@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('invoice_items', static function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('invoice_id')->comment('发票id');
             $table->string('currency', 20)->comment('货币: cny人民币 usd美金');
             $table->unsignedBigInteger('fee_type_id')->comment('费用类型id');
             $table->unsignedBigInteger('unit')->comment('单位')->nullable();
