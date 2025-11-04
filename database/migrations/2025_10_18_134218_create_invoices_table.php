@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->string('purchase_usc_code')->comment('购买方 统一社会信用代码');
             $table->json('purchase_entity')->comment('销售方 id usc_code')->nullable();
             $table->string('sale_entity_id')->comment('购买方');
-            $table->string('sale_usc_code')->comment('销售方 统一社会信用代码');
+            $table->string('sale_usc_code')->comment('购买方 统一社会信用代码');
             $table->timestamps();
             $table->comment('发票表');
         });

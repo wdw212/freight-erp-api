@@ -4,20 +4,73 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceRequest;
+use App\Http\Resources\Invoice\InvoiceInfoResource;
+use App\Http\Resources\Invoice\InvoiceResource;
 use App\Models\Invoice;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class InvoicesController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * 列表
+     * @param Request $request
+     * @return AnonymousResourceCollection
+     */
+    public function index(Request $request): AnonymousResourceCollection
     {
-
+        $invoices = Invoice::query()->latest()->paginate();
+        return InvoiceResource::collection($invoices);
     }
 
     public function store(InvoiceRequest $request, Invoice $invoice)
     {
+        $orderId = $request->input('order_id');
+        $invoiceType = $request->input('invoice_type');
+        $email = $request->input('email');
+        $remark = $request->input('remark');
+        $invoiceDate = $request->input('invoice_date');
+        $isFinish = $request->input('is_finish', 0);
+        $commission = $request->input('commission');
+        $taxRate = $request->input('tax_rate');
+        $taxAmount = $request->input('tax_amount');
+        $cnyInvoiceNo = $request->input('cny_invoice_no');
+        $usdInvoiceNo = $request->input('usd_invoice_no');
+        $cnyRemark = $request->input('cny_remark');
+        $usdRemark = $request->input('usd_remark');
+        $purchaseEntityId = $request->input('purchase_entity_id');
+        $purchaseUscCode = $request->input('purchase_usc_code');
+        $saleEntityId = $request->input('sale_entity_id');
+        $saleUscCode = $request->input('sale_usc_code');
 
+        // 如果单据完成 修改订单信息
+        if ((int)$isFinish === 1) {
+            Order::query()->where('id', $orderId)->update([
+                'is_finish' => 1,
+                'commission' => $commission,
+            ]);
+        }
+
+        $invoice->order_id = $orderId;
+        $invoice->invoice_type_id = $invoiceType;
+        $invoice->email = $email;
+        $invoice->remark = $remark;
+        $invoice->invoice_date = $invoiceDate;
+        $invoice->tax_rate = $taxRate;
+        $invoice->tax_amount = $taxAmount;
+        $invoice->cny_invoice_no = $cnyInvoiceNo;
+        $invoice->usd_invoice_no = $usdInvoiceNo;
+        $invoice->cny_remark = $cnyRemark;
+        $invoice->usd_remark = $usdRemark;
+        $invoice->purchase_entity_id = $purchaseEntityId;
+        $invoice->purchase_usc_code = $purchaseUscCode;
+        $invoice->sale_entity_id = $saleEntityId;
+        $invoice->sale_usc_code = $saleUscCode;
+        $invoice->save();
+
+        return new InvoiceInfoResource($invoice);
     }
 
     public function show(Invoice $invoice)

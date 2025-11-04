@@ -21,14 +21,18 @@ Route::get('/test', static function () {
 Route::get('/test2', static function () {
     $data = [
         [
-            'no' => '箱号1',
-            'container_type' => '柜型1',
-            'driver' => '司机1',
+            'currency' => 'cny',
+            'fee_type_id' => 1,
+            'unit' => '单位',
+            'quantity' => 1,
+            'amount' => 100,
         ],
         [
-            'no' => '箱号2',
-            'container_type' => '柜型2',
-            'driver' => '司机2',
+            'currency' => 'usd',
+            'fee_type_id' => 1,
+            'unit' => '单位',
+            'quantity' => 1,
+            'amount' => 100,
         ],
     ];
 
