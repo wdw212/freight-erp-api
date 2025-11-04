@@ -28,7 +28,7 @@ class InvoicesController extends Controller
     public function store(InvoiceRequest $request, Invoice $invoice)
     {
         $orderId = $request->input('order_id');
-        $invoiceType = $request->input('invoice_type');
+        $invoiceTypeId = $request->input('invoice_type_id');
         $email = $request->input('email');
         $remark = $request->input('remark');
         $invoiceDate = $request->input('invoice_date');
@@ -54,7 +54,7 @@ class InvoicesController extends Controller
         }
 
         $invoice->order_id = $orderId;
-        $invoice->invoice_type_id = $invoiceType;
+        $invoice->invoice_type_id = $invoiceTypeId;
         $invoice->email = $email;
         $invoice->remark = $remark;
         $invoice->invoice_date = $invoiceDate;
