@@ -5,6 +5,18 @@ namespace App\Http\Resources\InvoiceTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $id
+ * @property mixed $name
+ * @property mixed $email
+ * @property mixed $remark
+ * @property mixed $cny_remark
+ * @property mixed $usd_remark
+ * @property mixed $cny_invoice_items
+ * @property mixed $usd_invoice_items
+ * @property mixed $purchase_entity_id
+ * @property mixed $purchase_usc_code
+ */
 class InvoiceTemplateResource extends JsonResource
 {
     /**
@@ -14,6 +26,17 @@ class InvoiceTemplateResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'remark' => $this->remark,
+            'cny_remark' => $this->cny_remark,
+            'usd_remark' => $this->usd_remark,
+            'cny_invoice_items' => $this->cny_invoice_items,
+            'usd_invoice_items' => $this->usd_invoice_items,
+            'purchase_entity_id' => $this->purchase_entity_id,
+            'purchase_usc_code' => $this->purchase_usc_code
+        ];
     }
 }
