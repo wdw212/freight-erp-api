@@ -74,12 +74,12 @@ class OrderBillTemplatesController extends Controller
      */
     public function update(OrderBillTemplateRequest $request, OrderBillTemplate $orderBillTemplate): OrderBillTemplateInfoResource
     {
+        $data = $request->all();
         if (!empty($data['order_bill_items'])) {
             $data['order_bill_items'] = json_decode($data['order_bill_items'], true);
         } else {
             $data['order_bill_items'] = [];
         }
-
         $orderBillTemplate->fill($data);
         $orderBillTemplate->save();
         return new OrderBillTemplateInfoResource($orderBillTemplate);
