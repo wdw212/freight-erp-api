@@ -12,9 +12,13 @@ class InvoiceTemplate extends Model
 {
     protected $guarded = [];
 
+    /**
+     * @var string[]
+     */
     protected $casts = [
         'cny_invoice_items' => 'json',
         'usd_invoice_items' => 'json',
+        'purchase_entity' => 'json',
     ];
 
     /**

@@ -41,6 +41,7 @@ class InvoiceTemplatesController extends Controller
     public function store(InvoiceTemplateRequest $request, InvoiceTemplate $invoiceTemplate): InvoiceTemplateInfoResource
     {
         $adminUser = $request->user();
+
         $data = $request->all();
 
         if (!empty($data['cny_invoice_items'])) {
@@ -88,7 +89,7 @@ class InvoiceTemplatesController extends Controller
         }
 
         $invoiceTemplate->fill($data);
-        $invoiceTemplate->save();
+        $invoiceTemplate->update();
         return new InvoiceTemplateInfoResource($invoiceTemplate);
     }
 
