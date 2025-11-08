@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\DepartmentsController;
 use App\Http\Controllers\Api\FeeTypesController;
 use App\Http\Controllers\Api\FleetsController;
 use App\Http\Controllers\Api\InvoicesController;
+use App\Http\Controllers\Api\InvoiceTemplatesController;
 use App\Http\Controllers\Api\InvoiceTypesController;
 use App\Http\Controllers\Api\LoadingAddressesController;
 use App\Http\Controllers\Api\NoticesController;
@@ -665,5 +666,21 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 发票 - 删除
     Route::delete('invoices/{invoice}', [InvoicesController::class, 'destroy'])
         ->name('invoices.destroy')->where('invoice', '[0-9]+');
+
+    // 发票模版 - 列表
+    Route::get('invoice-templates', [InvoiceTemplatesController::class, 'index'])
+        ->name('invoice-templates.index');
+    // 发票模版 - 新增
+    Route::post('invoice-templates', [InvoiceTemplatesController::class, 'store'])
+        ->name('invoice-templates.store');
+    // 发票模版 - 详情
+    Route::get('invoice-templates/{invoiceTemplate}', [InvoiceTemplatesController::class, 'show'])
+        ->name('invoice-templates.show')->where('invoiceTemplate', '[0-9]+');
+    // 发票模版 - 编辑
+    Route::put('invoice-templates/{invoiceTemplate}', [InvoiceTemplatesController::class, 'update'])
+        ->name('invoice-templates.update')->where('invoiceTemplate', '[0-9]+');
+    // 发票模版 - 删除
+    Route::delete('invoice-templates/{invoiceTemplate}', [InvoiceTemplatesController::class, 'destroy'])
+        ->name('invoice-templates.destroy')->where('invoiceTemplate', '[0-9]+');
 });
 
