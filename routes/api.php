@@ -642,6 +642,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据账单模版 - 详情
     Route::get('order-bill-templates/{orderBillTemplate}', [OrderBillTemplatesController::class, 'show'])
         ->name('order-bill-templates.show')->where('orderBillTemplate', '[0-9]+');
+    // 单据账单模版 - 详情
+    Route::put('order-bill-templates/{orderBillTemplate}', [OrderBillTemplatesController::class, 'update'])
+        ->name('order-bill-templates.update')->where('orderBillTemplate', '[0-9]+');
     // 单据账单模版 - 删除
     Route::delete('order-bill-templates/{orderBillTemplate}', [OrderBillTemplatesController::class, 'destroy'])
         ->name('order-bill-templates.destroy')->where('orderBillTemplate', '[0-9]+');
