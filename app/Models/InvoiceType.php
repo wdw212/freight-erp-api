@@ -17,7 +17,8 @@ class InvoiceType extends Model
         'name',
         'sort',
         'tax_rate',
-        'remark,'
+        'remark',
+        'type'
     ];
 
     public $timestamps = false;

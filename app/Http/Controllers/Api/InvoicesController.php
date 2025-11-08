@@ -1,4 +1,7 @@
 <?php
+/**
+ * 发票
+ */
 
 namespace App\Http\Controllers\Api;
 
@@ -31,7 +34,13 @@ class InvoicesController extends Controller
         return InvoiceResource::collection($invoices);
     }
 
-    public function store(InvoiceRequest $request, Invoice $invoice)
+    /**
+     * 新增
+     * @param InvoiceRequest $request
+     * @param Invoice $invoice
+     * @return InvoiceInfoResource
+     */
+    public function store(InvoiceRequest $request, Invoice $invoice): InvoiceInfoResource
     {
         $orderId = $request->input('order_id');
         $invoiceTypeId = $request->input('invoice_type_id');

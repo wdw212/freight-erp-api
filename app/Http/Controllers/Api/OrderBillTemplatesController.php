@@ -67,6 +67,25 @@ class OrderBillTemplatesController extends Controller
     }
 
     /**
+     * 编辑
+     * @param OrderBillTemplateRequest $request
+     * @param OrderBillTemplate $orderBillTemplate
+     * @return OrderBillTemplateInfoResource
+     */
+    public function update(OrderBillTemplateRequest $request, OrderBillTemplate $orderBillTemplate): OrderBillTemplateInfoResource
+    {
+        if (!empty($data['order_bill_items'])) {
+            $data['order_bill_items'] = json_decode($data['order_bill_items'], true);
+        } else {
+            $data['order_bill_items'] = [];
+        }
+
+        $orderBillTemplate->fill($data);
+        $orderBillTemplate->save();
+        return new OrderBillTemplateInfoResource($orderBillTemplate);
+    }
+
+    /**
      * 删除
      * @param OrderBillTemplate $orderBillTemplate
      * @return Response
