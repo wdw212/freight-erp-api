@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('invoice_templates', static function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('admin_user_id')->comment('账号id');
+            $table->string('name')->comment('模版名称');
             $table->string('email', 30)->comment('邮箱')->nullable();
             $table->string('remark')->comment('备注')->nullable();
             $table->text('cny_remark')->comment('人民币备注')->nullable();
