@@ -15,6 +15,7 @@ class InvoiceTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'name' => 'required',
             'email' => 'required|email',
             'purchase_entity_id' => 'required',
             'purchase_usc_code' => 'required',
