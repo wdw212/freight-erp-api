@@ -24,7 +24,19 @@ class FeeTypesController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $feeTypes = FeeType::query()->orderByDesc('sort')->paginate();
+        $type = $request->input('type', 'all');
+        $isPaginate = $request->input('is_paginate', 1);
+        $builder = FeeType::query()->orderByDesc('sort');
+        if ($type !== 'all') {
+            $builder = $builder->where('type', $type);
+        }
+        if ($isPaginate) {
+            $feeTypes = $builder->paginate();
+        } else {
+            $feeTypes = $builder->get();
+            FeeTypeResource::wrap('data');
+        }
+
         return FeeTypeResource::collection($feeTypes);
     }
 

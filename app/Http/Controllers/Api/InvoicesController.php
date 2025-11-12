@@ -64,6 +64,9 @@ class InvoicesController extends Controller
 
         // 如果单据完成 修改订单信息
         if ((int)$isFinish === 1) {
+            if (empty($commission)) {
+                $commission = 0;
+            }
             Order::query()->where('id', $orderId)->update([
                 'is_finish' => 1,
                 'commission' => $commission,
