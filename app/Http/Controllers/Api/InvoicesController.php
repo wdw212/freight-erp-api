@@ -101,6 +101,8 @@ class InvoicesController extends Controller
 
         $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
 
+        dd($invoiceItems);
+
         $invoiceItemRelation = [];
         foreach ($invoiceItems as $item) {
             $invoiceItemRelation[] = new InvoiceItem($item);
