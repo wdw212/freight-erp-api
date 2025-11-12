@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('invoice_id')->comment('发票id');
             $table->string('currency', 20)->comment('货币: cny人民币 usd美金');
-            $table->unsignedBigInteger('fee_type_id')->comment('费用类型id');
+            $table->unsignedBigInteger('fee_type_id')->comment('费用类型id')->nullable();
             $table->unsignedBigInteger('unit')->comment('单位')->nullable();
             $table->integer('quantity')->comment('数量')->nullable();
             $table->decimal('amount', 10)->comment('金额')->default(0);
