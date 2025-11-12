@@ -64,9 +64,6 @@ class InvoicesController extends Controller
 
         // 如果单据完成 修改订单信息
         if ((int)$isFinish === 1) {
-            if (empty($commission)) {
-                $commission = 0;
-            }
             Order::query()->where('id', $orderId)->update([
                 'is_finish' => 1,
                 'commission' => $commission,
@@ -92,6 +89,16 @@ class InvoicesController extends Controller
 
         $cnyInvoiceItems = json_decode($cnyInvoiceItems, true);
         $usdInvoiceItems = json_decode($usdInvoiceItems, true);
+
+        $cnyInvoiceItems = collect($cnyInvoiceItems)->map(function ($item) {
+            $item['currency'] = 'cny';
+            return $item;
+        })->all();
+        $usdInvoiceItems = collect($usdInvoiceItems)->map(function ($item) {
+            $item['currency'] = 'usd';
+            return $item;
+        })->all();
+
         $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
 
         $invoiceItemRelation = [];
