@@ -649,8 +649,7 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据账单模版 - 删除
     Route::delete('order-bill-templates/{orderBillTemplate}', [OrderBillTemplatesController::class, 'destroy'])
         ->name('order-bill-templates.destroy')->where('orderBillTemplate', '[0-9]+');
-
-
+    
     // 发票 - 列表
     Route::get('invoices', [InvoicesController::class, 'index'])
         ->name('invoices.index');

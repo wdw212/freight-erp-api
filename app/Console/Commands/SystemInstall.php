@@ -26,6 +26,7 @@ class SystemInstall extends Command
     public function handle(): void
     {
         $this->info('--系统数据初始化开始--');
+        $this->call('migrate');
         $this->call('migrate:fresh');
         $this->call('db:seed');
         $this->call('storage:link');
