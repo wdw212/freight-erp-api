@@ -92,15 +92,21 @@ class InvoicesController extends Controller
 
         $cnyInvoiceItems = collect($cnyInvoiceItems)->map(function ($item) {
             $item['currency'] = 'cny';
+            if (empty($item['fee_type_id'])) {
+                $item['fee_type_id'] = null;
+            }
             return $item;
         })->all();
         $usdInvoiceItems = collect($usdInvoiceItems)->map(function ($item) {
             $item['currency'] = 'usd';
+            if (empty($item['fee_type_id'])) {
+                $item['fee_type_id'] = null;
+            }
             return $item;
         })->all();
 
         $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
-        
+
         $invoiceItemRelation = [];
         foreach ($invoiceItems as $item) {
             $invoiceItemRelation[] = new InvoiceItem($item);
