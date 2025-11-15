@@ -282,7 +282,6 @@ class OrdersController extends Controller
      */
     public function update(OrderRequest $request, Order $order): OrderInfoResource
     {
-        Log::info('---单据编辑操作---');
         $adminUser = $request->user();
         $data = $request->all();
 
@@ -291,7 +290,8 @@ class OrdersController extends Controller
         }
 
         // 事务处理
-        $order = DB::transaction(function () use ($data, $order, $adminUser) {
+        $order = DB::transaction(static function () use ($data, $order, $adminUser) {
+
             if (!empty($data['booking_info'])) {
                 $data['booking_info'] = json_decode($data['booking_info'], true);
             } else {
@@ -402,24 +402,18 @@ class OrdersController extends Controller
             // 单据委托抬头
             if (!empty($data['order_delegation_header'])) {
                 $temp = json_decode($data['order_delegation_header'], true);
-
                 if (!empty($temp['company_header_id'])) {
                     $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
-                    Log::info('打印公司抬头信息');
                     $temp['contact_person'] = $companyHeader->contact_person;
                     $temp['contact_phone'] = $companyHeader->contact_phone;
 
                 } else {
                     $temp['company_header_id'] = null;
                 }
-                Log::info('---打印测试----');
-                Log::info($temp);
-                Log::info(OrderDelegationHeader::query()->where('order_id', $order->id)->count());
                 $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
                 $orderDelegationHeader->fill($temp);
                 $orderDelegationHeader->order()->associate($order);
                 $orderDelegationHeader->save();
-
             }
 
             // 单据文件
@@ -458,8 +452,7 @@ class OrdersController extends Controller
                     } else {
                         $containerModel = new Container();
                     }
-                    Log::info('--调试数据--');
-                    Log::info($container['no_image']);
+
                     $container['no_image'] = $container['no_image']['path'] ?? '';
                     $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                     $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
@@ -470,8 +463,6 @@ class OrdersController extends Controller
                     $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
                     $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
                     $container['container_type_id'] = empty($container['container_type_id']) ? null : $container['container_type_id'];
-                    Log::info('--需要提交的数据--');
-                    Log::info($container);
                     $containerModel->fill($container);
                     $containerModel->order()->associate($order);
                     $containerModel->save();
@@ -586,7 +577,12 @@ class OrdersController extends Controller
             ])
             ->with('orderRemark', function ($query) use ($adminUser) {
                 return $query->where('admin_user_id', $adminUser->id);
-            })->latest();
+            })
+            ->latest();
+
+        if (!$adminUser->hasRole('超管')) {
+            $builder = $builder->where('commerce_user_id', $adminUser->id);
+        }
 
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
@@ -598,9 +594,11 @@ class OrdersController extends Controller
         if (!empty($startSailingDate) && !empty($endSailingDate)) {
             $builder = $builder->whereBetween('sailing_at', [$startSailingDate, $endSailingDate]);
         }
+        
         if (!empty($startArrivalDate) && !empty($endArrivalDate)) {
             $builder = $builder->whereBetween('arrival_at', [$startArrivalDate, $endArrivalDate]);
         }
+
         if (!empty($finishingDate)) {
             $startFinishingDate = Carbon::parse($finishingDate)->startOfMonth();
             $endFinishingDate = Carbon::parse($finishingDate)->endOfMonth();
@@ -619,7 +617,6 @@ class OrdersController extends Controller
         if (!empty($isDelivery)) {
             $builder = $builder->where('is_delivery', $isDelivery);
         }
-
         $orders = $builder->paginate($pageSize);
         return CommerceOrderResource::collection($orders);
     }
@@ -756,13 +753,10 @@ class OrdersController extends Controller
      */
     public function paymentFinish(Order $order): JsonResponse
     {
-        Log::info('打印参数:' . $order->payment_status);
         if ((int)$order->payment_status === 1) {
-            Log::info('逻辑1111');
             $order->payment_status = 0;
             $order->finish_at = null;
         } else {
-            Log::info('逻辑2222');
             $order->payment_status = 1;
             $order->finish_at = Carbon::now();
         }

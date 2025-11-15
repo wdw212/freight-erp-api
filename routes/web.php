@@ -5,8 +5,10 @@ use App\Models\Container;
 use App\Models\Order;
 use App\Models\OrderType;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Concurrency;
 
 Route::get('/', static function () {
+    ds('Home page accessed!');
     return view('welcome');
 });
 
