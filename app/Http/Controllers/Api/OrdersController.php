@@ -583,7 +583,6 @@ class OrdersController extends Controller
         if (!$adminUser->hasRole('超管')) {
             $builder = $builder->where('commerce_user_id', $adminUser->id);
         }
-
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
                 $query->where('job_no', 'like', '%' . $keyword . '%')
@@ -594,11 +593,9 @@ class OrdersController extends Controller
         if (!empty($startSailingDate) && !empty($endSailingDate)) {
             $builder = $builder->whereBetween('sailing_at', [$startSailingDate, $endSailingDate]);
         }
-        
         if (!empty($startArrivalDate) && !empty($endArrivalDate)) {
             $builder = $builder->whereBetween('arrival_at', [$startArrivalDate, $endArrivalDate]);
         }
-
         if (!empty($finishingDate)) {
             $startFinishingDate = Carbon::parse($finishingDate)->startOfMonth();
             $endFinishingDate = Carbon::parse($finishingDate)->endOfMonth();
@@ -613,7 +610,6 @@ class OrdersController extends Controller
         if (!empty($isClaimed)) {
             $builder = $builder->where('is_claimed', 1);
         }
-
         if (!empty($isDelivery)) {
             $builder = $builder->where('is_delivery', $isDelivery);
         }

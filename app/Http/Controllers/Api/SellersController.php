@@ -24,7 +24,13 @@ class SellersController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $isPaginate = $request->input('is_paginate', 1);
+        $keyword = $request->input('keyword', '');
         $builder = Seller::query()->latest();
+        
+        if (!empty($keyword)) {
+            $builder = $builder->where('name', 'like', '%' . $keyword . '%');
+        }
+
         if ($isPaginate) {
             $sellers = $builder->paginate();
         } else {
