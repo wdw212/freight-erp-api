@@ -583,6 +583,7 @@ class OrdersController extends Controller
         if (!$adminUser->hasRole('超管')) {
             $builder = $builder->where('commerce_user_id', $adminUser->id);
         }
+
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
                 $query->where('job_no', 'like', '%' . $keyword . '%')
@@ -605,7 +606,7 @@ class OrdersController extends Controller
             $builder = $builder->where('business_user_id', $businessUserId);
         }
         if (!empty($operationUserId)) {
-            $builder = $builder->where('operation_user_id', $operationUserId);
+            $builder = $builder->where('operate_user_id', $operationUserId);
         }
         if (!empty($isClaimed)) {
             $builder = $builder->where('is_claimed', 1);
