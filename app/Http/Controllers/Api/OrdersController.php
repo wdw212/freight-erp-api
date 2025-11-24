@@ -71,6 +71,13 @@ class OrdersController extends Controller
             ->with('orderRemark', function ($query) use ($adminUser) {
                 return $query->where('admin_user_id', $adminUser->id);
             })->latest();
+
+        if (!$adminUser->hasRole('超管')) {
+            if ($adminUser->hasRole('操作')) {
+                $builder = $builder->where('operation_user_id', $adminUser->id)->where('is_claimed', 1);
+            }
+        }
+
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
                 $query->where('job_no', 'like', '%' . $keyword . '%')
@@ -106,9 +113,7 @@ class OrdersController extends Controller
             $endFinishAt = Carbon::parse($finishAt)->endOfMonth();
             $builder = $builder->whereBetween('finished_at', [$startFinishAt, $endFinishAt]);
         }
-
         $orders = $builder->paginate($pageSize);
-
         return OrderResource::collection($orders);
     }
 
