@@ -301,6 +301,7 @@ class OrdersController extends Controller
             if ($adminUser->hasRole('操作')) {
                 Log::info('是操作');
                 $data['operate_user_id'] = $adminUser->id;
+                $data['is_claimed'] = 1;
             } else {
                 Log::info('不是操作');
             }
@@ -581,18 +582,13 @@ class OrdersController extends Controller
             ->latest();
 
         if (!$adminUser->hasRole('超管')) {
-            $builder = $builder->where(function ($query) use ($adminUser) {
-                $query->where('commerce_user_id', $adminUser->id)
-                    ->orWhere('operate_user_id', $adminUser->id);
-            });
+            if ($adminUser->hasRole('商务')) {
+                $builder = $builder->where('commerce_user_id', $adminUser->id);
+            }
+            if ($adminUser->hasRole('操作')) {
+                $builder = $builder->where('operate_user_id', $adminUser->id)->where('is_claimed', 0);
+            }
         }
-
-        // 如果是操作
-//        if ($adminUser->hasRole('操作')) {
-//            Log::info('---操作1111---');
-//            $builder = $builder->where('operate_user_id', $adminUser->id);
-//        }
-
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
                 $query->where('job_no', 'like', '%' . $keyword . '%')
