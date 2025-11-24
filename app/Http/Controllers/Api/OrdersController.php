@@ -558,7 +558,7 @@ class OrdersController extends Controller
         $endArrivalDate = $request->input('end_arrival_date');
         $finishingDate = $request->input('finishing_date');
         $businessUserId = $request->input('business_user_id');
-        $operationUserId = $request->input('operation_user_id');
+        $operateUserId = $request->input('operate_user_id');
         $isDelivery = $request->input('is_delivery');
         $paymentMethod = $request->input('payment_method');
         $sellerId = $request->input('seller_id');
@@ -584,6 +584,12 @@ class OrdersController extends Controller
             $builder = $builder->where('commerce_user_id', $adminUser->id);
         }
 
+        // 如果是操作
+        if ($adminUser->hasRole('操作')) {
+            Log::info('---操作1111---');
+            $builder = $builder->where('operate_user_id', $adminUser->id);
+        }
+
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
                 $query->where('job_no', 'like', '%' . $keyword . '%')
@@ -605,8 +611,8 @@ class OrdersController extends Controller
         if (!empty($businessUserId)) {
             $builder = $builder->where('business_user_id', $businessUserId);
         }
-        if (!empty($operationUserId)) {
-            $builder = $builder->where('operate_user_id', $operationUserId);
+        if (!empty($operateUserId)) {
+            $builder = $builder->where('operate_user_id', $operateUserId);
         }
         if (!empty($isClaimed)) {
             $builder = $builder->where('is_claimed', 1);
