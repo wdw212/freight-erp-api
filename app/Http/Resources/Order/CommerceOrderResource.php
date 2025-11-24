@@ -23,6 +23,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $booking_info
  * @property mixed $orderRemark
  * @property mixed $is_claimed
+ * @property mixed $operateUser
  */
 class CommerceOrderResource extends JsonResource
 {
@@ -45,7 +46,7 @@ class CommerceOrderResource extends JsonResource
             'sailing_at' => $this->sailing_at,
             'arrival_at' => $this->arrival_at,
             'finish_at' => $this->finish_at,
-            'operation_user' => $this->operationUser,
+            'operate_user' => $this->operateUser,
             'business_user' => $this->businessUser,
             'is_delivery' => $this->is_delivery,
             'booking_info' => $this->booking_info,

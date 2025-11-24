@@ -48,7 +48,6 @@ class CompanyHeadersController extends Controller
         }
 
         if (!empty($companyType)) {
-            Log::info('--搜索条件--222---' . $companyType);
             $companyType = json_decode($companyType, true);
             if (is_array($companyType)) {
                 $builder = $builder->where(function ($query) use ($companyType) {
