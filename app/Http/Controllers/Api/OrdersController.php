@@ -294,6 +294,10 @@ class OrdersController extends Controller
             throw new InvalidRequestException('工作编号重复,请重试！');
         }
 
+        if ((int)$order->is_claimed === 1 && $adminUser->hasRole('商务')) {
+            throw new InvalidRequestException('当前单据已被操作认领，禁止修改!');
+        }
+
         // 事务处理
         $order = DB::transaction(static function () use ($data, $order, $adminUser) {
 
