@@ -581,14 +581,17 @@ class OrdersController extends Controller
             ->latest();
 
         if (!$adminUser->hasRole('超管')) {
-            $builder = $builder->where('commerce_user_id', $adminUser->id);
+            $builder = $builder->where(function ($query) use ($adminUser) {
+                $query->where('commerce_user_id', $adminUser->id)
+                    ->orWhere('operate_user_id', $adminUser->id);
+            });
         }
 
         // 如果是操作
-        if ($adminUser->hasRole('操作')) {
-            Log::info('---操作1111---');
-            $builder = $builder->where('operate_user_id', $adminUser->id);
-        }
+//        if ($adminUser->hasRole('操作')) {
+//            Log::info('---操作1111---');
+//            $builder = $builder->where('operate_user_id', $adminUser->id);
+//        }
 
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
