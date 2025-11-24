@@ -74,7 +74,7 @@ class OrdersController extends Controller
 
         if (!$adminUser->hasRole('超管')) {
             if ($adminUser->hasRole('操作')) {
-                $builder = $builder->where('operation_user_id', $adminUser->id)->where('is_claimed', 1);
+                $builder = $builder->where('operate_user_id', $adminUser->id)->where('is_claimed', 1);
             }
         }
 
