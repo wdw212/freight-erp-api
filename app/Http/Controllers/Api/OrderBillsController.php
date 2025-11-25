@@ -64,8 +64,10 @@ class OrderBillsController extends Controller
             foreach ($orderBillItems as $orderBillItem) {
                 $orderBillItemRelation[] = new OrderBillItem($orderBillItem);
                 if ($orderBillItem['currency'] === 'cny') {
-                    $cnyAmount += $orderBillItem['price'] * $orderBillItem['quantity'];
-                } else {
+                    if (!empty($orderBillItem['price']) && !empty($orderBillItem['quantity'])) {
+                        $cnyAmount += $orderBillItem['price'] * $orderBillItem['quantity'];
+                    }
+                } else if (!empty($orderBillItem['price']) && !empty($orderBillItem['quantity'])) {
                     $usdAmount += $orderBillItem['price'] * $orderBillItem['quantity'];
                 }
             }
