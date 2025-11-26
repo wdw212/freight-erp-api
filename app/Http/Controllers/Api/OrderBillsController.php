@@ -119,9 +119,14 @@ class OrderBillsController extends Controller
             $orderBill->update($request->all());
             // 处理账单详情
             $orderBillItems = json_decode($orderBillItems, true);
+
+            // 处理需要删除的详情
+            $newOrderBillItemIds = collect($orderBillItems)->pluck('id')->toArray();
+            $oldOrderBillItemIds = $orderBill->orderBillItems()->pluck('id')->toArray();
+            $deleteOrderBillItemIds = array_diff($oldOrderBillItemIds, $newOrderBillItemIds);
+            OrderBillItem::destroy($deleteOrderBillItemIds);
             $cnyAmount = 0;
             $usdAmount = 0;
-
             foreach ($orderBillItems as $item) {
                 if (isset($item['id'])) {
                     $orderBillItem = OrderBillItem::query()->where('id', $item['id'])->first();
@@ -139,8 +144,14 @@ class OrderBillsController extends Controller
                 $orderBillItem->save();
             }
 
-            // 处理账单箱子
+            // 处理账单-箱子
             $orderBillContainers = json_decode($request->input('order_bill_containers'), true);
+            // 处理需要删除的账单-箱子
+            $newOrderBillContainerIds = collect($orderBillContainers)->pluck('id')->toArray();
+            $oldOrderBillContainerIds = $orderBill->orderBillContainers()->pluck('id')->toArray();
+            $deleteOrderBillContainerIds = array_diff($newOrderBillContainerIds, $oldOrderBillContainerIds);
+            OrderBillContainer::destroy($deleteOrderBillContainerIds);
+
             foreach ($orderBillContainers as $item) {
                 if (isset($item['id'])) {
                     $orderBillContainer = OrderBillContainer::query()->where('id', $item['id'])->first();
