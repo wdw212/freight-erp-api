@@ -146,6 +146,7 @@ class OrderBillsController extends Controller
                     $orderBillContainer = OrderBillContainer::query()->where('id', $item['id'])->first();
                 } else {
                     $orderBillContainer = new OrderBillContainer();
+                    $orderBillContainer->orderBill()->associate($orderBill);
                 }
                 $orderBillContainer->fill($item);
                 $orderBillContainer->save();
