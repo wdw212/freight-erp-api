@@ -156,6 +156,8 @@ class OrderBillsController extends Controller
                 'cny_amount' => $cnyAmount,
                 'usd_amount' => $usdAmount,
             ]);
+            
+            return $orderBill;
         });
 
         return new OrderBillInfoResource($orderBill->load(['orderBillItems', 'orderBillContainers']));
