@@ -142,7 +142,7 @@ class OrderBillsController extends Controller
             // 处理账单箱子
             $orderBillContainers = json_decode($request->input('order_bill_containers'), true);
             foreach ($orderBillContainers as $item) {
-                if (isset($orderBillContainer['id'])) {
+                if (isset($item['id'])) {
                     $orderBillContainer = OrderBillContainer::query()->where('id', $item['id'])->first();
                 } else {
                     $orderBillContainer = new OrderBillContainer();
@@ -156,7 +156,7 @@ class OrderBillsController extends Controller
                 'cny_amount' => $cnyAmount,
                 'usd_amount' => $usdAmount,
             ]);
-            
+
             return $orderBill;
         });
 
