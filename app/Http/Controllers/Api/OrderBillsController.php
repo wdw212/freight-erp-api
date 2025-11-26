@@ -57,7 +57,7 @@ class OrderBillsController extends Controller
             $orderBill->save();
 
             // 处理账单详情
-            $orderBillItems = json_decode($request->input('order_bill_items'), true);
+            $orderBillItems = json_decode($orderBillItems, true);
             $orderBillItemRelation = [];
             $cnyAmount = 0;
             $usdAmount = 0;
@@ -106,10 +106,57 @@ class OrderBillsController extends Controller
      * @param Request $request
      * @param OrderBill $orderBill
      * @return OrderBillInfoResource
+     * @throws Throwable
      */
     public function update(Request $request, OrderBill $orderBill): OrderBillInfoResource
     {
-        $orderBill->update($request->all());
+        $orderBill = DB::transaction(static function () use ($request, $orderBill) {
+            $orderBillItems = $request->input('order_bill_items');
+
+            if (!json_validate($orderBillItems)) {
+                throw new InvalidRequestException('账单详情格式错误');
+            }
+            $orderBill->update($request->all());
+            // 处理账单详情
+            $orderBillItems = json_decode($orderBillItems, true);
+            $cnyAmount = 0;
+            $usdAmount = 0;
+
+            foreach ($orderBillItems as $item) {
+                if (isset($item['id'])) {
+                    $orderBillItem = OrderBillItem::query()->where('id', $item['id'])->first();
+                } else {
+                    $orderBillItem = new OrderBillItem();
+                }
+                if ($item['currency'] === 'cny') {
+                    if (!empty($item['price']) && !empty($item['quantity'])) {
+                        $cnyAmount += $item['price'] * $item['quantity'];
+                    }
+                } else if (!empty($item['price']) && !empty($item['quantity'])) {
+                    $usdAmount += $item['price'] * $item['quantity'];
+                }
+                $orderBillItem->fill($item);
+                $orderBillItem->save();
+            }
+
+            // 处理账单箱子
+            $orderBillContainers = json_decode($request->input('order_bill_containers'), true);
+            foreach ($orderBillContainers as $item) {
+                if (isset($orderBillContainer['id'])) {
+                    $orderBillContainer = OrderBillContainer::query()->where('id', $item['id'])->first();
+                } else {
+                    $orderBillContainer = new OrderBillContainer();
+                }
+                $orderBillContainer->fill($item);
+                $orderBillContainer->save();
+            }
+
+            $orderBill->update([
+                'cny_amount' => $cnyAmount,
+                'usd_amount' => $usdAmount,
+            ]);
+        });
+
         return new OrderBillInfoResource($orderBill->load(['orderBillItems', 'orderBillContainers']));
     }
 
