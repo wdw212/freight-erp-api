@@ -40,6 +40,15 @@ class Invoice extends Model
     }
 
     /**
+     * 发票类型
+     * @return BelongsTo
+     */
+    public function invoiceType(): BelongsTo
+    {
+        return $this->belongsTo(InvoiceType::class);
+    }
+
+    /**
      * 发票详情
      * @return HasMany
      */

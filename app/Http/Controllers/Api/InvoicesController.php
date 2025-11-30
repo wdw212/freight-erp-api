@@ -1,6 +1,6 @@
 <?php
 /**
- * 发票
+ * 发票 Controller
  */
 
 namespace App\Http\Controllers\Api;
