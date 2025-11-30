@@ -32,6 +32,8 @@ class InvoicesController extends Controller
                 'invoiceType:id,name',
                 'order:id,job_no',
                 'order.orderDelegationHeader',
+                'order.orderDelegationHeader.seller',
+                'order.orderDelegationHeader.companyHeader',
             ])
             ->latest();
 
