@@ -31,7 +31,7 @@ class InvoicesController extends Controller
             ->with([
                 'invoiceType:id,name',
                 'order:id,job_no',
-                'order.orderDelegationHeader',
+                'order.orderDelegationHeader:id',
                 'order.orderDelegationHeader.seller:id,name',
                 'order.orderDelegationHeader.companyHeader:id,company_name',
             ])
