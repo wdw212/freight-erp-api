@@ -33,7 +33,6 @@ class InvoiceResource extends JsonResource
         return [
             'id' => $this->id,
             'order' => $this->order,
-            'orderDelegationHeader' => $this->order->orderDelegationHeader,
             'invoice_type' => $this->invoiceType,
             'email' => $this->email,
             'remark' => $this->remark,
