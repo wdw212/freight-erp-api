@@ -28,7 +28,7 @@ class InvoicesController extends Controller
         $orderId = $request->input('order_id');
 
         $builder = Invoice::query()
-            ->with(['invoiceType'])
+            ->with(['invoiceType', 'order'])
             ->latest();
 
         if (isset($orderId)) {
