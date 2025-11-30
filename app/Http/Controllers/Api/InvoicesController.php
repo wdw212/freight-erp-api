@@ -29,8 +29,9 @@ class InvoicesController extends Controller
 
         $builder = Invoice::query()
             ->with([
-                'invoiceType',
-                'order:id,job_no'
+                'invoiceType:id,name',
+                'order:id,job_no',
+                'order.orderDelegationHeader'
             ])
             ->latest();
 
