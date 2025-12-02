@@ -25,7 +25,6 @@ class NoticeInfoResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'adminUser' => new AdminUserInfoResource($this->adminUser),
             'title' => $this->title,
             'content' => $this->content,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),

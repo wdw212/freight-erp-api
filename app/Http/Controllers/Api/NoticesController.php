@@ -10,7 +10,6 @@ use App\Http\Requests\NoticeRequest;
 use App\Http\Resources\Notice\NoticeInfoResource;
 use App\Http\Resources\Notice\NoticeResource;
 use App\Models\Notice;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -69,7 +68,7 @@ class NoticesController extends Controller
      * @param Notice $notice
      * @return Response
      */
-    public function destroy(Notice $notice)
+    public function destroy(Notice $notice): Response
     {
         $notice->delete();
         return response()->noContent();
