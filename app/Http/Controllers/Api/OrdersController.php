@@ -540,14 +540,16 @@ class OrdersController extends Controller
 
     /**
      * 删除
+     * @param Request $request
      * @param Order $order
      * @return Response
      * @throws InvalidRequestException
      */
-    public function destroy(Order $order): Response
+    public function destroy(Request $request, Order $order): Response
     {
-        if ((int)$order->is_claimed === 1) {
-            throw new InvalidRequestException('当前订单已被认领,禁止删除!');
+        $adminUser = $request->user();
+        if ((int)$order->is_claimed === 1 && $adminUser->hasRole('商务')) {
+            throw new InvalidRequestException('当前单据已被操作认领，禁止修改!');
         }
         $order->delete();
         return response()->noContent();
