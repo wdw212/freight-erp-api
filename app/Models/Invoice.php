@@ -32,6 +32,11 @@ class Invoice extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'sale_entity' => 'json',
+        'purchase_entity' => 'json',
+    ];
+
     /**
      * 关联订单
      * @return BelongsTo
