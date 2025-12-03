@@ -30,7 +30,7 @@ class InvoicesController extends Controller
         $builder = Invoice::query()
             ->with([
                 'invoiceType:id,name',
-                'order:id,job_no',
+                'order:id,job_no,is_finish',
                 'order.orderDelegationHeader:id,order_id,seller_id,company_header_id',
                 'order.orderDelegationHeader.seller:id,name',
                 'order.orderDelegationHeader.companyHeader:id,company_name',

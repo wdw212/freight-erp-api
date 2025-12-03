@@ -13,7 +13,7 @@ use App\Http\Resources\AdminUserSalary\AdminUserSalaryResource;
 use App\Models\AdminUserSalary;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
- 
+
 class AdminUserSalariesController extends Controller
 {
     /**
@@ -30,7 +30,11 @@ class AdminUserSalariesController extends Controller
             throw new InvalidRequestException('请输入账号ID');
         }
 
-        $adminUserSalaries = AdminUserSalary::query()->where('admin_user_id', $adminUserId)->orderByDesc('id')->paginate();
+        $adminUserSalaries = AdminUserSalary::query()
+            ->where('admin_user_id', $adminUserId)
+            ->orderByDesc('id')
+            ->paginate();
+
         return AdminUserSalaryResource::collection($adminUserSalaries);
     }
 
@@ -82,6 +86,7 @@ class AdminUserSalariesController extends Controller
             ->where('admin_user_id', $request->input('admin_user_id'))
             ->where('month_code', $request->month_code)
             ->first();
+        
         if ($oldAdminUserSalary) {
             throw new InvalidRequestException('月份已存在，请重试！');
         }
