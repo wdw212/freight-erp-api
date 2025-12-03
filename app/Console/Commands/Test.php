@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Invoice;
 use App\Models\OrderFile;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -28,14 +29,20 @@ class Test extends Command
     public function handle()
     {
         $this->info('--测试--');
-        $this->info('hello world');
-        $orderFiles = OrderFile::query()->get();
-
-        foreach ($orderFiles as $orderFile) {
-            $size = Storage::fileSize($orderFile->file);
-            $this->info('文件:'.$orderFile->file.'大小:'.formatFileSize($size));
-            $orderFile->size = $size;
-            $orderFile->save();
+//        $this->info('hello world');
+//        $orderFiles = OrderFile::query()->get();
+//
+//        foreach ($orderFiles as $orderFile) {
+//            $size = Storage::fileSize($orderFile->file);
+//            $this->info('文件:'.$orderFile->file.'大小:'.formatFileSize($size));
+//            $orderFile->size = $size;
+//            $orderFile->save();
+//        }
+        $this->info('--开始执行--');
+        $invoices = Invoice::all();
+        foreach ($invoices as $invoice) {
+            $invoice->save();
         }
+        $this->info('--执行完成--');
     }
 }

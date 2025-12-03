@@ -23,6 +23,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $confirm_at
  * @property mixed $total_cny_amount
  * @property mixed $total_usd_amount
+ * @property mixed $sale_entity
  */
 class InvoiceResource extends JsonResource
 {
@@ -36,6 +37,8 @@ class InvoiceResource extends JsonResource
         return [
             'id' => $this->id,
             'order' => $this->order,
+            'purchase_entity' => $this->purchase_entity,
+            'sale_entity' => $this->sale_entity,
             'invoice_type' => $this->invoiceType,
             'tax_rate' => $this->tax_rate,
             'total_cny_amount' => $this->total_cny_amount,

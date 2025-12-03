@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property mixed $purchase_usc_code
  * @property mixed $sale_entity_id
  * @property mixed $sale_usc_code
+ * @property Seller|mixed|null $sale_entity
+ * @property mixed $purchase_entity
  */
 #[ObservedBy(InvoiceObserver::class)]
 class Invoice extends Model
