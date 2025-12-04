@@ -18,8 +18,6 @@ class OrderObserver
         } else if (empty($order->finish_at)) {
             $order->finish_at = Carbon::now();
         }
-
-
     }
 
     /**

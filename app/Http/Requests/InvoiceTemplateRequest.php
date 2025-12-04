@@ -16,7 +16,6 @@ class InvoiceTemplateRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email',
             'purchase_entity_id' => 'required',
             'purchase_usc_code' => 'required',
         ];
