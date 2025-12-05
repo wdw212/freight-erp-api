@@ -16,6 +16,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $usd_invoice_items
  * @property mixed $purchase_entity_id
  * @property mixed $purchase_usc_code
+ * @property mixed $invoice_type_id
  */
 class InvoiceTemplateInfoResource extends JsonResource
 {
@@ -28,6 +29,7 @@ class InvoiceTemplateInfoResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'invoice_type_id' => $this->invoice_type_id,
             'name' => $this->name,
             'email' => $this->email,
             'remark' => $this->remark,
