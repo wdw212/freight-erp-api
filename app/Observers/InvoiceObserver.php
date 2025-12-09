@@ -4,10 +4,25 @@ namespace App\Observers;
 
 use App\Models\CompanyHeader;
 use App\Models\Invoice;
+use App\Models\OrderReceipt;
 use App\Models\Seller;
+use Illuminate\Support\Facades\Log;
 
 class InvoiceObserver
 {
+    public function created(Invoice $invoice): void
+    {
+        Log::info('--发票创建成功--');
+
+        $orderReceipt = new OrderReceipt();
+        $orderReceipt->order_id = $invoice->order_id;
+        $orderReceipt->company_header_id = $invoice->purchase_entity_id;
+        $orderReceipt->cny_amount = $invoice->total_cny_amount;
+        $orderReceipt->usd_amount = $invoice->total_usd_amount;
+        $orderReceipt->save();
+        Log::info('--应收款创建成功--');
+    }
+
     /**
      * @param Invoice $invoice
      * @return void
@@ -26,7 +41,6 @@ class InvoiceObserver
             'name' => $purchaseEntity->company_name,
             'usc_code' => $invoice->purchase_usc_code,
         ];
-
     }
 
     /**
