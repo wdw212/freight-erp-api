@@ -62,7 +62,7 @@ class OrderBillsController extends Controller
             $orderBillItems = json_decode($orderBillItems, true);
             $orderBillItemRelation = [];
             foreach ($orderBillItems as $orderBillItem) {
-                $orderBillItem['fee_type_id'] = empty($orderBillItem['fee_type_id']) ? null : $orderBillItem['fee_type_id'];
+                $orderBillItem['fee_type_id'] = null;
                 $orderBillItemRelation[] = new OrderBillItem($orderBillItem);
                 if ($orderBillItem['currency'] === 'cny') {
                     if (!empty($orderBillItem['price']) && !empty($orderBillItem['quantity'])) {
