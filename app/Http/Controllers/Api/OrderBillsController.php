@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class OrderBillsController extends Controller
@@ -63,6 +64,8 @@ class OrderBillsController extends Controller
             $orderBillItemRelation = [];
             foreach ($orderBillItems as $orderBillItem) {
                 $orderBillItem['price'] = !empty($orderBillItem['price']) ? $orderBillItem['price'] : 0;
+                Log::info('--调试信息--');
+                Log::info($orderBillItem);
                 $orderBillItemRelation[] = new OrderBillItem($orderBillItem);
                 if ($orderBillItem['currency'] === 'cny') {
                     if (!empty($orderBillItem['price']) && !empty($orderBillItem['quantity'])) {
