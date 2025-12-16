@@ -65,7 +65,7 @@ class OrderBillsController extends Controller
             foreach ($orderBillItems as $orderBillItem) {
                 $orderBillItem['price'] = !empty($orderBillItem['price']) ? $orderBillItem['price'] : 0;
                 Log::info('--调试信息--');
-                Log::info($orderBillItem);
+                Log::info($orderBillItem['price']);
                 $orderBillItemRelation[] = new OrderBillItem($orderBillItem);
                 if ($orderBillItem['currency'] === 'cny') {
                     if (!empty($orderBillItem['price']) && !empty($orderBillItem['quantity'])) {
