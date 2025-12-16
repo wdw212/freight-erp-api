@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CompanyHeader extends Model
 {
-    protected $guarded = [];
+    protected $guarded = [
+        'generate_information'
+    ];
 
     /**
      * @var string[]
