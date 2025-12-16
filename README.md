@@ -45,3 +45,5 @@ https://mp.weixin.qq.com/s/fl7MNQLjD-YtROcMprFa1w
 
 然后被认领的单子进入到操作单据后，操作会在这里进行操作，并且同步到商务--商务列表的单据中
 
+ssh-copy-id root@124.222.232.138
+KxGPHA1fmA5LNJyiqbfm

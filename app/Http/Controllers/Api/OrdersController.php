@@ -64,7 +64,7 @@ class OrdersController extends Controller
                 'operateUser:id,name',
                 'documentUser:id,name',
                 'commerceUser:id,name',
-                'orderDelegationHeader',
+                'orderDelegationHeader:id,order_id,company_header_id',
                 'orderDelegationHeader.companyHeader:id,company_name',
             ])
             ->withCount('orderFiles')
@@ -383,7 +383,6 @@ class OrdersController extends Controller
                         OrderReceipt::query()->where('id', $orderReceipt['id'])->update([
                             'order_id' => $order->id,
                             'company_header_id' => $orderReceipt['company_header_id'],
-                            'no_invoice_remark' => $orderReceipt['no_invoice_remark'],
                             'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
                             'cny_invoice_number' => $orderReceipt['cny_invoice_number'],
                             'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
@@ -395,7 +394,6 @@ class OrdersController extends Controller
                     } else {
                         $orderReceiptRelations[] = new OrderReceipt([
                             'company_header_id' => $orderReceipt['company_header_id'],
-                            'no_invoice_remark' => $orderReceipt['no_invoice_remark'],
                             'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
                             'cny_invoice_number' => $orderReceipt['cny_invoice_number'],
                             'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
@@ -416,7 +414,6 @@ class OrdersController extends Controller
                     $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
                     $temp['contact_person'] = $companyHeader->contact_person;
                     $temp['contact_phone'] = $companyHeader->contact_phone;
-
                 } else {
                     $temp['company_header_id'] = null;
                 }

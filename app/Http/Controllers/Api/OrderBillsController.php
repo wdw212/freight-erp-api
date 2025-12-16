@@ -66,6 +66,8 @@ class OrderBillsController extends Controller
                 if ($orderBillItem['currency'] === 'cny') {
                     if (!empty($orderBillItem['price']) && !empty($orderBillItem['quantity'])) {
                         $cnyAmount += $orderBillItem['price'] * $orderBillItem['quantity'];
+                    } else {
+                        $orderBillItem['price'] = 0;
                     }
                 } else if (!empty($orderBillItem['price']) && !empty($orderBillItem['quantity'])) {
                     $usdAmount += $orderBillItem['price'] * $orderBillItem['quantity'];
