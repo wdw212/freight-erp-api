@@ -56,16 +56,13 @@ class OrderBillsController extends Controller
             // 保存账单信息
             $orderBill->fill($request->all());
             $orderBill->save();
-
             $cnyAmount = 0;
             $usdAmount = 0;
             // 处理账单详情
             $orderBillItems = json_decode($orderBillItems, true);
             $orderBillItemRelation = [];
             foreach ($orderBillItems as $orderBillItem) {
-                $orderBillItem['price'] = !empty($orderBillItem['price']) ? $orderBillItem['price'] : 0;
-                Log::info('--调试信息--');
-                Log::info($orderBillItem['price']);
+                $orderBillItem['fee_type_id'] = empty($orderBillItem['fee_type_id']) ? null : $orderBillItem['fee_type_id'];
                 $orderBillItemRelation[] = new OrderBillItem($orderBillItem);
                 if ($orderBillItem['currency'] === 'cny') {
                     if (!empty($orderBillItem['price']) && !empty($orderBillItem['quantity'])) {
