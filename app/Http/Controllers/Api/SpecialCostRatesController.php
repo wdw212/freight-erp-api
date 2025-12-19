@@ -8,6 +8,7 @@ use App\Http\Requests\SpecialCostRateRequest;
 use App\Http\Resources\SpecialCostRate\SpecialCostRateInfoResource;
 use App\Http\Resources\SpecialCostRate\SpecialCostRateResource;
 use App\Models\SpecialCostRate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -16,11 +17,19 @@ class SpecialCostRatesController extends Controller
 {
     /**
      * 列表
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $specialCostRates = SpecialCostRate::query()->orderByDesc('id')->paginate(15);
+        $monthCode = $request->input('month_code', '');
+        $builder = SpecialCostRate::query()
+            ->orderByDesc('id');
+        if (!empty($monthCode)) {
+            $monthCode = Carbon::parse($monthCode)->format('Y-m');
+            $builder = $builder->where('month_code', $monthCode);
+        }
+        $specialCostRates = $builder->paginate(15);
         return SpecialCostRateResource::collection($specialCostRates);
     }
 
