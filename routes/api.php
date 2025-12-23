@@ -10,8 +10,10 @@ use App\Http\Controllers\Api\CompanyHeadersController;
 use App\Http\Controllers\Api\CompanyTypesController;
 use App\Http\Controllers\Api\ContainerTypesController;
 use App\Http\Controllers\Api\DepartmentsController;
+use App\Http\Controllers\Api\DriversController;
 use App\Http\Controllers\Api\FeeTypesController;
 use App\Http\Controllers\Api\FleetsController;
+use App\Http\Controllers\Api\HarborsController;
 use App\Http\Controllers\Api\InvoicesController;
 use App\Http\Controllers\Api\InvoiceTemplatesController;
 use App\Http\Controllers\Api\InvoiceTypesController;
@@ -649,7 +651,7 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据账单模版 - 删除
     Route::delete('order-bill-templates/{orderBillTemplate}', [OrderBillTemplatesController::class, 'destroy'])
         ->name('order-bill-templates.destroy')->where('orderBillTemplate', '[0-9]+');
-    
+
     // 发票 - 列表
     Route::get('invoices', [InvoicesController::class, 'index'])
         ->name('invoices.index');
@@ -681,5 +683,37 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 发票模版 - 删除
     Route::delete('invoice-templates/{invoiceTemplate}', [InvoiceTemplatesController::class, 'destroy'])
         ->name('invoice-templates.destroy')->where('invoiceTemplate', '[0-9]+');
+
+    // 港口 - 列表
+    Route::get('harbors', [HarborsController::class, 'index'])
+        ->name('harbors.index');
+    // 港口 - 新增
+    Route::post('harbors', [HarborsController::class, 'store'])
+        ->name('harbors.store');
+    // 港口 - 详情
+    Route::get('harbors/{harbor}', [HarborsController::class, 'show'])
+        ->name('harbors.show')->where('harbor', '[0-9]+');
+    // 港口 - 编辑
+    Route::put('harbors/{harbor}', [HarborsController::class, 'update'])
+        ->name('harbors.update')->where('harbor', '[0-9]+');
+    // 港口 - 删除。
+    Route::delete('harbors/{harbor}', [HarborsController::class, 'destroy'])
+        ->name('harbors.destroy')->where('harbor', '[0-9]+');
+
+    // 司机 - 列表
+    Route::get('drivers', [DriversController::class, 'index'])
+        ->name('drivers.index');
+    // 司机 - 新增
+    Route::post('drivers', [DriversController::class, 'store'])
+        ->name('drivers.store');
+    // 司机 - 详情
+    Route::get('drivers/{driver}', [DriversController::class, 'show'])
+        ->name('drivers.show')->where('driver', '[0-9]+');
+    // 司机 - 编辑
+    Route::put('drivers/{driver}', [DriversController::class, 'update'])
+        ->name('drivers.update')->where('driver', '[0-9]+');
+    // 司机 - 删除
+    Route::delete('drivers/{driver}', [DriversController::class, 'destroy'])
+        ->name('drivers.destroy')->where('driver', '[0-9]+');
 });
 
