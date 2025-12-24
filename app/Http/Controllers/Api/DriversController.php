@@ -18,10 +18,11 @@ class DriversController extends Controller
 {
     /**
      * 列表
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
     #[QueryParameter('page', description: 'Number of items per page.', type: 'int', default: 10, example: 20)]
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
         $drivers = Driver::query()->latest()->paginate();
         return DriverResource::collection($drivers);
