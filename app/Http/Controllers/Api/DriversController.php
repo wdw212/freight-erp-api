@@ -17,12 +17,8 @@ class DriversController extends Controller
 {
     /**
      * 列表
-     * @bodyParam keyword string required 搜索关键词 Example: 手机壳
-     * @response 200 {"msg": "记录成功"}
-     * @response 422 {"message": "The keyword field is required."}
      * @return AnonymousResourceCollection
      */
-    #[BodyParam(name: 'keyword', type: 'string', description: '搜索关键词', required: true, example: '手机壳')]
     public function index(): AnonymousResourceCollection
     {
         $drivers = Driver::query()->latest()->paginate();
