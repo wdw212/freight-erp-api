@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "dedoc/scramble": "^0.12.31",
+        "dedoc/scramble": "^0.13.8",
         "laravel-lang/common": "^6.7.1",
         "laravel/framework": "^12.20.0",
         "laravel/horizon": "^5.33.1",

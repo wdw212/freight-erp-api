@@ -116,6 +116,12 @@ class OrderInfoResource extends JsonResource
             'bl_info' => $this->orderBlInfo,
             'is_claimed' => $this->is_claimed,
             'payment_status' => $this->payment_status,
+            'receipt_total_cny_amount' => $this->receipt_total_cny_amount,
+            'receipt_total_usd_amount' => $this->receipt_total_usd_amount,
+            'payment_cny_cashed_status' => $this->payment_cny_cashed_status,
+            'payment_usd_cashed_status' => $this->payment_usd_cashed_status,
+            'receipt_cny_cashed_status' => $this->receipt_cny_cashed_status,
+            'receipt_usd_cashed_status' => $this->receipt_usd_cashed_status,
         ];
     }
 }
