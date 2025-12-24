@@ -26,10 +26,6 @@ class DriverResource extends JsonResource
             'plate_number' => $this->plate_number,
             'name' => $this->name,
             'phone' => $this->phone,
-            /**
-             * The remark of todo item, truncated.
-             * @var string
-             */
             'remark' => $this->remark,
             'created_at' => $this->created_at->toDateTimeString(),
         ];

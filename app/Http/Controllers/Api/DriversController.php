@@ -10,6 +10,7 @@ use App\Http\Requests\Api\DriverRequest;
 use App\Http\Resources\Api\Driver\DriverInfoResource;
 use App\Http\Resources\Api\Driver\DriverResource;
 use App\Models\Driver;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -19,6 +20,7 @@ class DriversController extends Controller
      * 列表
      * @return AnonymousResourceCollection
      */
+    #[QueryParameter('page', description: 'Number of items per page.', type: 'int', default: 10, example: 20)]
     public function index(): AnonymousResourceCollection
     {
         $drivers = Driver::query()->latest()->paginate();
