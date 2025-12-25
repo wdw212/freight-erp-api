@@ -13,7 +13,7 @@ return [
      * Your API domain. By default, app domain is used. This is also a part of the default API routes
      * matcher, so when implementing your own, make sure you use this config if needed.
      */
-    'api_domain' => null,
+    'api_domain' => env('app_url', ''),
 
     /*
      * The path where your OpenAPI specification will be exported.
@@ -89,10 +89,7 @@ return [
      * ],
      * ```
      */
-    'servers' => [
-        'Live' => 'api',
-        'Prod' => 'https://scramble.dedoc.co/api',
-    ],
+    'servers' => null,
 
     /**
      * Determines how Scramble stores the descriptions of enum cases.
