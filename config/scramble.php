@@ -13,7 +13,7 @@ return [
      * Your API domain. By default, app domain is used. This is also a part of the default API routes
      * matcher, so when implementing your own, make sure you use this config if needed.
      */
-    'api_domain' => 'http://124.222.232.138:82',
+    'api_domain' => env('app_url', 'http://124.222.232.138:82'),
 
     /*
      * The path where your OpenAPI specification will be exported.
