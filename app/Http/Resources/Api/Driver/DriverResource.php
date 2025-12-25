@@ -23,13 +23,15 @@ class DriverResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            /**
-             * 车牌号
-             */
+            /** 车牌号 */
             'plate_number' => $this->plate_number,
+            /** 司机名称 */
             'name' => $this->name,
+            /** 电话 */
             'phone' => $this->phone,
+            /** 备注 */
             'remark' => $this->remark,
+            /** 创建时间 */
             'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
