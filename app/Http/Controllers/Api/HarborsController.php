@@ -6,14 +6,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Exceptions\InvalidRequestException;
+use App\Exports\HarborImportTemplate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\HarborRequest;
 use App\Http\Resources\Api\Harbor\HarborInfoResource;
 use App\Http\Resources\Api\Harbor\HarborResource;
+use App\Imports\HarborImport;
 use App\Models\Harbor;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
+use function Pest\Laravel\get;
 
 class HarborsController extends Controller
 {
@@ -24,7 +31,27 @@ class HarborsController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $harbors = Harbor::query()->latest()->paginate();
+        $keyword = $request->get('keyword', '');
+        $isPaginate = $request->get('is_paginate', 1);
+        $builder = Harbor::query()->latest();
+        if (!empty($keyword)) {
+            $builder = $builder->where(function ($query) use ($keyword) {
+                $query->whereLike('name', '%' . $keyword . '%')
+                    ->orWhereLike('code', '%' . $keyword . '%')
+                    ->orWhereLike('en_name', '%' . $keyword . '%')
+                    ->orWhereLike('country', '%' . $keyword . '%')
+                    ->orWhereLike('en_country', '%' . $keyword . '%')
+                    ->orWhereLike('route', '%' . $keyword . '%')
+                    ->orWhereLike('remark', '%' . $keyword . '%');
+            });
+        }
+        if ($isPaginate) {
+            $harbors = $builder->paginate();
+        } else {
+            $harbors = $builder->get();
+            HarborResource::wrap('data');
+        }
+
         return HarborResource::collection($harbors);
     }
 
@@ -82,5 +109,34 @@ class HarborsController extends Controller
     {
         $harbor->delete();
         return response()->noContent();
+    }
+
+    /**
+     * 导入模版
+     * @return JsonResponse
+     * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function importTemplate(): JsonResponse
+    {
+        $fileName = Str::random(12) . time() . '.xlsx';
+        Excel::store(new HarborImportTemplate(), $fileName);
+        return response()->json([
+            'url' => formatUrl($fileName)
+        ]);
+    }
+
+    /**
+     * 批量导入
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function batchImport(Request $request): JsonResponse
+    {
+        $file = $request->input('file');
+        Excel::import(new HarborImport(), getUrlPath($file));
+        return response()->json([
+            'message' => '导入成功'
+        ]);
     }
 }

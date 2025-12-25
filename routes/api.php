@@ -699,6 +699,12 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 港口 - 删除。
     Route::delete('harbors/{harbor}', [HarborsController::class, 'destroy'])
         ->name('harbors.destroy')->where('harbor', '[0-9]+');
+    // 港口 - 导入模版
+    Route::get('harbors/import-template', [HarborsController::class, 'importTemplate'])
+        ->name('harbors.import-template');
+    // 港口 - 批量导入
+    Route::post('harbors/batch-import', [HarborsController::class, 'batchImport'])
+        ->name('harbors.batch-import');
 
     // 司机 - 列表
     Route::get('drivers', [DriversController::class, 'index'])

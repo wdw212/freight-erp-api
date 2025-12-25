@@ -11,6 +11,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $name
  * @property mixed $country
  * @property mixed $route
+ * @property mixed $en_name
+ * @property mixed $en_country
+ * @property mixed $remark
  */
 class HarborInfoResource extends JsonResource
 {
@@ -25,8 +28,11 @@ class HarborInfoResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'name' => $this->name,
+            'en_name' => $this->en_name,
             'country' => $this->country,
+            'en_country' => $this->en_country,
             'route' => $this->route,
+            'remark' => $this->remark,
         ];
     }
 }

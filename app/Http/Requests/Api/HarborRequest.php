@@ -15,9 +15,11 @@ class HarborRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
             'code' => 'required|string',
+            'name' => 'required|string',
+            'en_name' => 'required|string',
             'country' => 'required',
+            'en_country' => 'required|string',
             'route' => 'required',
         ];
     }
@@ -28,9 +30,11 @@ class HarborRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => '港口名称',
-            'code' => '港口代码',
-            'country' => '所在国家',
+            'code' => '代码',
+            'name' => '港口（中文）',
+            'en_name' => '港口（英文）',
+            'country' => '国家（中文）',
+            'en_country' => '国家（英文）',
             'route' => '航线'
         ];
     }

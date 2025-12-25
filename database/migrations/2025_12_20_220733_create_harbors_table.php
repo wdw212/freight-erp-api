@@ -14,8 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->string('code')->comment('代码');
             $table->string('name')->comment('名称');
+            $table->string('en_name')->comment('名称 （英文）');
             $table->string('country')->comment('国家');
+            $table->string('en_country')->comment('国家（英文）');
             $table->string('route')->comment('航线');
+            $table->text('remark')->comment('备注')->nullable();
             $table->timestamps();
             $table->comment('港口表');
         });

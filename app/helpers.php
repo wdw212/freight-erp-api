@@ -77,3 +77,15 @@ function formatFileSize($bytes): string
     }
     return number_format($bytes, 2) . ' ' . $units[$unitIndex];
 }
+
+/**
+ * 获取url path
+ * @param string $url
+ * @return string
+ */
+function getUrlPath(string $url): string
+{
+    $url = str_starts_with($url, '//') ? "http:$url" : $url;
+    $parsedUrl = parse_url($url);
+    return $parsedUrl['path'] ?? '';
+}
