@@ -55,6 +55,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderBlInfo
  * @property mixed $payment_status
  * @property mixed $is_claimed
+ * @property mixed $receipt_total_cny_amount
+ * @property mixed $receipt_total_usd_amount
+ * @property mixed $payment_cny_cashed_status
+ * @property mixed $payment_usd_cashed_status
+ * @property mixed $receipt_cny_cashed_status
+ * @property mixed $receipt_usd_cashed_status
  */
 class OrderInfoResource extends JsonResource
 {

@@ -93,7 +93,7 @@ class HarborsController extends Controller
     public function update(HarborRequest $request, Harbor $harbor): HarborInfoResource
     {
         $data = $request->validated();
-        if (Harbor::query()->where('id', $harbor->id)->where('code', $data['code'])->exists()) {
+        if (Harbor::query()->whereNot('id', $harbor->id)->where('code', $data['code'])->exists()) {
             throw new InvalidRequestException('港口已存在，请重试！');
         }
         $harbor->update($data);

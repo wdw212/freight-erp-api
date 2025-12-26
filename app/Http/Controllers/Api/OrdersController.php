@@ -174,8 +174,9 @@ class OrdersController extends Controller
             if (!empty($data['order_delegation_header'])) {
                 $temp = json_decode($data['order_delegation_header'], true);
                 if (!empty($temp['company_header_id'])) {
-                    $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
-                    Log::info('打印公司抬头信息');
+                    $companyHeader = CompanyHeader::query()
+                        ->where('id', $temp['company_header_id'])
+                        ->first();
                     $temp['contact_person'] = $companyHeader->contact_person;
                     $temp['contact_phone'] = $companyHeader->contact_phone;
                 } else {
@@ -235,7 +236,6 @@ class OrdersController extends Controller
                             $containerLoadingAddress->save();
                         }
                     }
-
                 }
             }
 
@@ -300,13 +300,11 @@ class OrdersController extends Controller
 
         // 事务处理
         $order = DB::transaction(static function () use ($data, $order, $adminUser) {
-
             if (!empty($data['booking_info'])) {
                 $data['booking_info'] = json_decode($data['booking_info'], true);
             } else {
                 $data['booking_info'] = [];
             }
-
             if ($adminUser->hasRole('操作')) {
                 Log::info('是操作');
                 $data['operate_user_id'] = $adminUser->id;
