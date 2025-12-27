@@ -22,11 +22,28 @@ class DriversController extends Controller
      * @param Request $request
      * @return AnonymousResourceCollection
      */
-    #[QueryParameter('page', description: '页码',)]
-    #[BodyParameter('plate_number', description: '车牌号')]
     public function index(Request $request): AnonymousResourceCollection
     {
-        $drivers = Driver::query()->latest()->paginate();
+        $keyword = $request->input('keyword', '');
+        $isPaginate = $request->input('is_paginate', 1);
+
+        $builder = Driver::query()->latest();
+
+        if (!empty($keyword)) {
+            $builder = $builder->where(function ($query) use ($keyword) {
+                $query->whereLike('name', "%{$keyword}%")
+                    ->orWhereLike('phone', "%{$keyword}%")
+                    ->orWhereLike('remark', "%{$keyword}%");
+            });
+        }
+
+        if ($isPaginate) {
+            $drivers = $builder->paginate();
+        } else {
+            $drivers = $builder->get();
+            DriverResource::wrap('data');
+        }
+
         return DriverResource::collection($drivers);
     }
 
