@@ -134,11 +134,11 @@ class OrderBillsController extends Controller
             $cnyAmount = 0;
             $usdAmount = 0;
             foreach ($orderBillItems as $item) {
-                if (empty($orderBillItem['fee_type_id'])) {
-                    unset($orderBillItem['fee_type_id']);
+                if (empty($item['fee_type_id'])) {
+                    unset($item['fee_type_id']);
                 }
-                if (empty($orderBillItem['price'])) {
-                    unset($orderBillItem['price']);
+                if (empty($item['price'])) {
+                    unset($item['price']);
                 }
                 if (isset($item['id'])) {
                     $orderBillItem = OrderBillItem::query()->where('id', $item['id'])->first();

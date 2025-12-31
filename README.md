@@ -27,10 +27,6 @@ https://www.kdocs.cn/l/cugZmeE4Azjj
 * rm -f /usr/bin/php
 * ln -sf /www/server/php/72/bin/php /usr/bin/php
 
-### TODO
-
-https://mp.weixin.qq.com/s/fl7MNQLjD-YtROcMprFa1w
-
 ### 计算公式
 
 应收人民币-特殊费用人民币-应付人民币=毛利人民币
@@ -45,5 +41,17 @@ https://mp.weixin.qq.com/s/fl7MNQLjD-YtROcMprFa1w
 
 然后被认领的单子进入到操作单据后，操作会在这里进行操作，并且同步到商务--商务列表的单据中
 
+### 自动化部署
+
 ssh-copy-id root@124.222.232.138
 KxGPHA1fmA5LNJyiqbfm
+
+### TODO 待办
+
+- 单据 - 起运港、目的港字段对接 ❌
+- 特殊费用调整为佣金，佣金兑付状态，佣金已兑付之后 佣金禁用修改（最高权限可以）❌
+- 归属时间:归属时间 和 操作-商务归属时间 ❌
+- 单据增加一个结算状态，冗余记录汇率，结算按当月汇率计算 ❌
+- 修改当月汇率之后，批量修改当前所有单据汇率，重新结算 ❌
+- 开票状态 - 发票已开 - 生成单据应收 ❌
+- 业务系统 - 账单列表 - 选择模版 - 保存失败 ❌
