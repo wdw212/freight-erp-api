@@ -61,6 +61,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $payment_usd_cashed_status
  * @property mixed $receipt_cny_cashed_status
  * @property mixed $receipt_usd_cashed_status
+ * @property mixed $special_fee
  */
 class OrderInfoResource extends JsonResource
 {
@@ -128,6 +129,8 @@ class OrderInfoResource extends JsonResource
             'payment_usd_cashed_status' => $this->payment_usd_cashed_status,
             'receipt_cny_cashed_status' => $this->receipt_cny_cashed_status,
             'receipt_usd_cashed_status' => $this->receipt_usd_cashed_status,
+            'special_fee' => $this->special_fee,
+            'special_fee_cashed_status' => 0,
         ];
     }
 }
