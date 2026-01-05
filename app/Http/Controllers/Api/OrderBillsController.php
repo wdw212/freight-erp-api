@@ -52,12 +52,12 @@ class OrderBillsController extends Controller
             if (!json_validate($orderBillItems)) {
                 throw new InvalidRequestException('账单详情格式错误');
             }
-
             // 保存账单信息
             $orderBill->fill($request->all());
             $orderBill->save();
             $cnyAmount = 0;
             $usdAmount = 0;
+            
             // 处理账单详情
             $orderBillItems = json_decode($orderBillItems, true);
             $orderBillItemRelation = [];

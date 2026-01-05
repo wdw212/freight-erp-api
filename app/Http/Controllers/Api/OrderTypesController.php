@@ -68,7 +68,7 @@ class OrderTypesController extends Controller
      * @param OrderType $orderType
      * @return OrderTypeInfoResource
      */
-    public function show(OrderType $orderType)
+    public function show(OrderType $orderType): OrderTypeInfoResource
     {
         return new OrderTypeInfoResource($orderType);
     }
