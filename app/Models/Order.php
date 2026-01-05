@@ -19,6 +19,10 @@ use Illuminate\Support\Carbon;
  * @property mixed $orderBlInfo
  * @property int|mixed $payment_status
  * @property Carbon|mixed $finish_at
+ * @property mixed $origin_harbor
+ * @property mixed $destination_harbor
+ * @property mixed $originHarbor
+ * @property mixed $destinationHarbor
  */
 #[ObservedBy(OrderObserver::class)]
 class Order extends Model
@@ -141,6 +145,24 @@ class Order extends Model
      */
     public function orderBlInfo(): HasOne
     {
-        return $this->hasOne(OrderBlInfo::class,'order_id','id');
+        return $this->hasOne(OrderBlInfo::class, 'order_id', 'id');
+    }
+
+    /**
+     * 始发港
+     * @return BelongsTo
+     */
+    public function originHarbor(): BelongsTo
+    {
+        return $this->belongsTo(Harbor::class, 'origin_harbor_id');
+    }
+
+    /**
+     * 目的港
+     * @return BelongsTo
+     */
+    public function destinationHarbor(): BelongsTo
+    {
+        return $this->belongsTo(Harbor::class, 'destination_harbor_id');
     }
 }

@@ -1,10 +1,12 @@
 <?php
+/**
+ * 单据观察器 Observer
+ */
 
 namespace App\Observers;
 
 use App\Models\Order;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class OrderObserver
 {
@@ -18,16 +20,9 @@ class OrderObserver
         } else if (empty($order->finish_at)) {
             $order->finish_at = Carbon::now();
         }
+        $order->origin_harbor = $order->originHarbor;
+        $order->destination_harbor = $order->destinationHarbor;
     }
-
-    /**
-     * Handle the Order "updated" event.
-     */
-    public function updated(Order $order): void
-    {
-        //
-    }
-
 
     /**
      * Handle the Order "deleted" event.

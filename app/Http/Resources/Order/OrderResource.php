@@ -42,6 +42,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $orderFilesCount
  * @property mixed $is_claimed
  * @property mixed $order_files_count
+ * @property mixed $origin_harbor
+ * @property mixed $destination_harbor
  */
 class OrderResource extends JsonResource
 {
@@ -66,6 +68,10 @@ class OrderResource extends JsonResource
             'bl_no' => $this->bl_no,
             'origin_port' => $this->origin_port,
             'destination_port' => $this->destination_port,
+
+            'origin_harbor' => $this->origin_harbor,
+            'destination_harbor' => $this->destination_harbor,
+
             'ship_name' => $this->ship_name,
             'ship_no' => $this->ship_no,
             'container_type' => $this->container_type,
