@@ -4,7 +4,7 @@
 
 ### 目标管理后台
 
-http://47.98.190.163:86/admin/index
+http://124.222.232.138/admin/login
 zhangqi
 51985198
 

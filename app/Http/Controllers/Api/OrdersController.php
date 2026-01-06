@@ -702,19 +702,20 @@ class OrdersController extends Controller
      */
     public function financeStatistics(Request $request): JsonResponse
     {
+        $builder = Order::query();
         $data = [
-            'receipt_total_cny_amount' => 0,
-            'payment_total_cny_amount' => 0,
-            'total_cny_gross_profit' => 0,
-            'total_special_amount' => 0,
-            'uncashed_amount' => 0,
-            'cashed_amount' => 0,
-            'receipt_total_usd_amount' => 0,
-            'payment_total_usd_amount' => 0,
-            'total_usd_gross_profit' => 0,
-            'total_gross_profit' => 0
+            'receipt_total_cny_amount' => $builder->clone()->sum('receipt_total_cny_amount'),
+            'payment_total_cny_amount' => $builder->clone()->sum('payment_total_cny_amount'),
+            'total_cny_gross_profit' => $builder->clone()->sum('total_cny_gross_profit'),
+            'total_special_amount' => $builder->clone()->sum('total_special_amount'),
+            'uncashed_amount' => $builder->clone()->sum('uncashed_amount'),
+            'cashed_amount' => $builder->clone()->sum('cashed_amount'),
+            'receipt_total_usd_amount' => $builder->clone()->sum('receipt_total_usd_amount'),
+            'payment_total_usd_amount' => $builder->clone()->sum('payment_total_usd_amount'),
+            'total_usd_gross_profit' => $builder->clone()->sum('total_usd_gross_profit'),
+            'total_gross_profit' => $builder->clone()->sum('total_gross_profit')
         ];
-        return response()->json($data);
+        return response()->json(compact('data'));
     }
 
     /**
