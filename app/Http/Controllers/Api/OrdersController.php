@@ -713,7 +713,7 @@ class OrdersController extends Controller
             'receipt_total_usd_amount' => $builder->clone()->sum('receipt_total_usd_amount'),
             'payment_total_usd_amount' => $builder->clone()->sum('payment_total_usd_amount'),
             'total_usd_gross_profit' => $builder->clone()->sum('total_usd_gross_profit'),
-            'total_gross_profit' => $builder->clone()->sum('total_gross_profit')
+            'total_gross_profit' => '',
         ];
         return response()->json($data);
     }
