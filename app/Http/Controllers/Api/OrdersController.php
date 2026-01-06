@@ -715,7 +715,7 @@ class OrdersController extends Controller
             'total_usd_gross_profit' => $builder->clone()->sum('total_usd_gross_profit'),
             'total_gross_profit' => $builder->clone()->sum('total_gross_profit')
         ];
-        return response()->json(compact('data'));
+        return response()->json($data);
     }
 
     /**
