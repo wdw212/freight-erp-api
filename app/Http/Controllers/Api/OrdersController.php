@@ -706,14 +706,14 @@ class OrdersController extends Controller
         $data = [
             'receipt_total_cny_amount' => $builder->clone()->sum('receipt_total_cny_amount'),
             'payment_total_cny_amount' => $builder->clone()->sum('payment_total_cny_amount'),
-            'total_cny_gross_profit' => $builder->clone()->sum('total_cny_gross_profit'),
+            'total_cny_gross_profit' => 0,
             'total_special_amount' => $builder->clone()->sum('total_special_amount'),
             'uncashed_amount' => $builder->clone()->sum('uncashed_amount'),
             'cashed_amount' => $builder->clone()->sum('cashed_amount'),
             'receipt_total_usd_amount' => $builder->clone()->sum('receipt_total_usd_amount'),
             'payment_total_usd_amount' => $builder->clone()->sum('payment_total_usd_amount'),
             'total_usd_gross_profit' => $builder->clone()->sum('total_usd_gross_profit'),
-            'total_gross_profit' => '',
+            'total_gross_profit' => 0,
         ];
         return response()->json($data);
     }
