@@ -71,9 +71,7 @@ class WechatController extends Controller
                             Log::info('上传成功');
                         }
                         break;
-
                 }
-
                 return $next($message);
             })
             ->with(function ($message, \Closure $next) {
@@ -84,8 +82,6 @@ class WechatController extends Controller
                 // 你的自定义逻辑3
                 return $next($message);
             });
-
-
         return $server->serve();
     }
 }

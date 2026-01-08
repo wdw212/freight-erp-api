@@ -97,7 +97,6 @@ class InvoicesController extends Controller
 
         $cnyInvoiceItems = json_decode($cnyInvoiceItems, true);
         $usdInvoiceItems = json_decode($usdInvoiceItems, true);
-
         $cnyInvoiceItems = collect($cnyInvoiceItems)->map(function ($item) {
             $item['currency'] = 'cny';
             if (empty($item['fee_type_id'])) {
@@ -112,9 +111,7 @@ class InvoicesController extends Controller
             }
             return $item;
         })->all();
-
         $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
-
         $invoiceItemRelation = [];
         foreach ($invoiceItems as $item) {
             $invoiceItemRelation[] = new InvoiceItem($item);
@@ -229,5 +226,10 @@ class InvoicesController extends Controller
     {
         $invoice->delete();
         return response()->noContent();
+    }
+
+    public function stat(Request $request)
+    {
+        dd('开票统计');
     }
 }

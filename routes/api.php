@@ -667,6 +667,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 发票 - 删除
     Route::delete('invoices/{invoice}', [InvoicesController::class, 'destroy'])
         ->name('invoices.destroy')->where('invoice', '[0-9]+');
+    // 发票 - 统计
+    Route::get('stat', [InvoicesController::class, 'stat'])
+        ->name('invoices.stat');
 
     // 发票模版 - 列表
     Route::get('invoice-templates', [InvoiceTemplatesController::class, 'index'])

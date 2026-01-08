@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property mixed $order
+ * @property mixed $no_image
  */
 #[ObservedBy(ContainerObserver::class)]
 class Container extends Model
