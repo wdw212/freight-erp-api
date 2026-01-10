@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SocialSecurityRequest;
 use App\Http\Resources\SocialSecurity\SocialSecurityInfoResource;
@@ -38,9 +39,18 @@ class SocialSecuritiesController extends Controller
      * @param SocialSecurityRequest $request
      * @param SocialSecurity $socialSecurity
      * @return SocialSecurityInfoResource
+     * @throws InvalidRequestException
      */
     public function store(SocialSecurityRequest $request, SocialSecurity $socialSecurity): SocialSecurityInfoResource
     {
+        $data = $request->all();
+        $old = SocialSecurity::query()
+            ->where('id_card', $data['id_card'])
+            ->whereNot('id', $socialSecurity->id)
+            ->first();
+        if ($old) {
+            throw new InvalidRequestException('当前用户已存在，请检查后重试');
+        }
         $socialSecurity->fill($request->all());
         $socialSecurity->save();
         return new SocialSecurityInfoResource($socialSecurity);
@@ -61,9 +71,18 @@ class SocialSecuritiesController extends Controller
      * @param Request $request
      * @param SocialSecurity $socialSecurity
      * @return SocialSecurityInfoResource
+     * @throws InvalidRequestException
      */
     public function update(Request $request, SocialSecurity $socialSecurity): SocialSecurityInfoResource
     {
+        $data = $request->all();
+        $old = SocialSecurity::query()
+            ->where('id_card', $data['id_card'])
+            ->whereNot('id', $socialSecurity->id)
+            ->first();
+        if ($old) {
+            throw new InvalidRequestException('当前用户已存在，请检查后重试');
+        }
         $socialSecurity->fill($request->all());
         $socialSecurity->update();
         return new SocialSecurityInfoResource($socialSecurity);

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property mixed $total_social_security
+ * @property mixed $id
  */
 #[ObservedBy(SocialSecurityObserver::class)]
 class SocialSecurity extends Model
