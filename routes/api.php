@@ -36,6 +36,7 @@ use App\Http\Controllers\Api\SelectOptionsController;
 use App\Http\Controllers\Api\SellersController;
 use App\Http\Controllers\Api\SftRecordsController;
 use App\Http\Controllers\Api\ShippingCompaniesController;
+use App\Http\Controllers\Api\SocialSecuritiesController;
 use App\Http\Controllers\Api\SpecialCostRatesController;
 use App\Http\Controllers\Api\SpecialTaxRatesController;
 use App\Http\Controllers\Api\TodosController;
@@ -724,5 +725,21 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 司机 - 删除
     Route::delete('drivers/{driver}', [DriversController::class, 'destroy'])
         ->name('drivers.destroy')->where('driver', '[0-9]+');
+
+    // 社保 - 列表
+    Route::get('social-securities', [SocialSecuritiesController::class, 'index'])
+        ->name('social-securities.index');
+    // 社保 - 新增
+    Route::post('social-securities', [SocialSecuritiesController::class, 'store'])
+        ->name('social-securities.store');
+    // 社保 - 详情
+    Route::get('social-securities/{socialSecurity}', [SocialSecuritiesController::class, 'show'])
+        ->name('social-securities.show')->where('socialSecurity', '[0-9]+');
+    // 社保 - 编辑
+    Route::put('social-securities/{socialSecurity}', [SocialSecuritiesController::class, 'update'])
+        ->name('social-securities.update')->where('socialSecurity', '[0-9]+');
+    // 社保 - 删除
+    Route::delete('social-securities/{socialSecurity}', [SocialSecuritiesController::class, 'destroy'])
+        ->name('social-securities.destroy')->where('socialSecurity', '[0-9]+');
 });
 

@@ -21,7 +21,10 @@ class NoticesController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $notices = Notice::query()->with('adminUser:id,name')->orderByDesc('created_at')->paginate();
+        $notices = Notice::query()
+            ->with('adminUser:id,name')
+            ->orderByDesc('created_at')
+            ->paginate();
         return NoticeResource::collection($notices);
     }
 

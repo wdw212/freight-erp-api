@@ -9,6 +9,7 @@ use App\Http\Resources\SocialSecurity\SocialSecurityResource;
 use App\Models\SocialSecurity;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class SocialSecuritiesController extends Controller
 {
@@ -71,9 +72,9 @@ class SocialSecuritiesController extends Controller
     /**
      * 删除
      * @param SocialSecurity $socialSecurity
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function destroy(SocialSecurity $socialSecurity)
+    public function destroy(SocialSecurity $socialSecurity): Response
     {
         $socialSecurity->delete();
         return response()->noContent();

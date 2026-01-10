@@ -15,7 +15,21 @@ class SocialSecurityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'id_card' => 'required',
+            'phone' => 'required',
+        ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => '姓名',
+            'id_card' => '身份证号',
+            'phone' => '手机号'
         ];
     }
 }
