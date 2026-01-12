@@ -367,6 +367,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 认领
     Route::put('orders/{order}/claimed', [OrdersController::class, 'claimed'])
         ->name('orders.claimed')->where('order', '[0-9]+');
+    // 单据 - 筛选条件
+    Route::get('orders/filter', [OrdersController::class, 'filter'])
+        ->name('orders.filter');
 
     // 地区 - 列表
     Route::get('regions', [RegionsController::class, 'index'])

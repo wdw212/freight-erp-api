@@ -8,11 +8,15 @@ namespace App\Http\Controllers\Api;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
+use App\Http\Resources\AdminUser\AdminUserResource;
+use App\Http\Resources\CompanyHeader\CompanyHeaderResource;
 use App\Http\Resources\Order\BusinessOrderResource;
 use App\Http\Resources\Order\CommerceOrderResource;
 use App\Http\Resources\Order\FinanceOrderResource;
 use App\Http\Resources\Order\OrderInfoResource;
 use App\Http\Resources\Order\OrderResource;
+use App\Http\Resources\OrderType\OrderTypeResource;
+use App\Models\AdminUser;
 use App\Models\CompanyHeader;
 use App\Models\Container;
 use App\Models\ContainerItem;
@@ -24,6 +28,8 @@ use App\Models\OrderFile;
 use App\Models\OrderPayment;
 use App\Models\OrderReceipt;
 use App\Models\OrderRemark;
+use App\Models\OrderType;
+use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -776,5 +782,40 @@ class OrdersController extends Controller
         return response()->json([
             'finish_at' => $finishAt
         ]);
+    }
+
+
+    /**
+     * 筛选条件
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function filter(Request $request): JsonResponse
+    {
+        // 公司抬头
+        $companyHeaders = CompanyHeader::query()->get();
+        // 订单类型
+        $orderTypes = OrderType::query()->get();
+        // 业务员
+        $role = Role::query()->where('code', 'BUSINESS')->first();
+        $businessUsers = AdminUser::query()
+            ->withWhereHas('roles', function ($query) use ($role) {
+                $query->where('id', $role->id);
+            })
+            ->get();
+        // 操作员
+        $role = Role::query()->where('code', 'OPERATE')->first();
+        $operateUsers = AdminUser::query()
+            ->withWhereHas('roles', function ($query) use ($role) {
+                $query->where('id', $role->id);
+            })
+            ->get();
+        $data = [
+            'company_header' => CompanyHeaderResource::collection($companyHeaders),
+            'order_types' => OrderTypeResource::collection($orderTypes),
+            'business_admin_users' => AdminUserResource::collection($businessUsers),
+            'operate_users' => $operateUsers
+        ];
+        return response()->json($data);
     }
 }
