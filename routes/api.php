@@ -40,6 +40,7 @@ use App\Http\Controllers\Api\SocialSecuritiesController;
 use App\Http\Controllers\Api\SpecialCostRatesController;
 use App\Http\Controllers\Api\SpecialTaxRatesController;
 use App\Http\Controllers\Api\TodosController;
+use App\Http\Controllers\Api\TransactionsController;
 use App\Http\Controllers\Api\UploadsController;
 use App\Http\Controllers\Api\UsdExchangeRatesController;
 use App\Http\Controllers\Api\WechatController;
@@ -744,5 +745,24 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 社保 - 删除
     Route::delete('social-securities/{socialSecurity}', [SocialSecuritiesController::class, 'destroy'])
         ->name('social-securities.destroy')->where('socialSecurity', '[0-9]+');
+
+    // 收支记录 - 列表
+    Route::get('transactions', [TransactionsController::class, 'index'])
+        ->name('transactions.index');
+    // 收支记录 - 新增
+    Route::post('transactions', [TransactionsController::class, 'store'])
+        ->name('transactions.store');
+    // 收支记录 - 详情
+    Route::get('transactions/{transaction}', [TransactionsController::class, 'show'])
+        ->name('transactions.show')->where('transaction', '[0-9]+');
+    // 收支记录 - 编辑
+    Route::put('transactions/{transaction}', [TransactionsController::class, 'update'])
+        ->name('transactions.update')->where('transaction', '[0-9]+');
+    // 收支记录 - 删除
+    Route::delete('transactions/{transaction}', [TransactionsController::class, 'destroy'])
+        ->name('transactions.destroy')->where('transaction', '[0-9]+');
+    // 收支记录 - 用途分类
+    Route::get('transactions/category', [TransactionsController::class, 'category'])
+        ->name('transactions.category');
 });
 
