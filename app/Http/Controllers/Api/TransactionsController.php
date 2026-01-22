@@ -86,4 +86,24 @@ class TransactionsController extends Controller
         $transaction->delete();
         return response()->noContent();
     }
+
+    /**
+     * 公帐
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function publicAccount(Request $request): JsonResponse
+    {
+
+    }
+
+    /**
+     * 私账
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function privateAccount(Request $request): JsonResponse
+    {
+
+    }
 }
