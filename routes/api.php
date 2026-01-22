@@ -371,6 +371,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据 - 筛选条件
     Route::get('orders/filter', [OrdersController::class, 'filter'])
         ->name('orders.filter');
+    // 单据 - 完结
+    Route::put('orders/{order}/finish', [OrdersController::class, 'finish'])
+        ->name('orders.finish')->where('order', '[0-9]+');
 
     // 地区 - 列表
     Route::get('regions', [RegionsController::class, 'index'])
@@ -764,5 +767,11 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 收支记录 - 用途分类
     Route::get('transactions/category', [TransactionsController::class, 'category'])
         ->name('transactions.category');
+    // 收支记录 - 公账
+    Route::get('transactions/public-account', [TransactionsController::class, 'publicAccount'])
+        ->name('transactions.public-account');
+    // 收支记录 - 私账
+    Route::get('transactions/private-account', [TransactionsController::class, 'privateAccount'])
+        ->name('transactions.private-account');
 });
 

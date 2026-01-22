@@ -5,6 +5,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\OrderFinishEvent;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
@@ -715,7 +716,7 @@ class OrdersController extends Controller
             'total_cny_gross_profit' => 0,
             'total_special_amount' => 0,
             'uncashed_amount' => 0,
-            'cashed_amount' => $builder->clone()->sum('cashed_amount'),
+            'cashed_amount' => 0,
             'receipt_total_usd_amount' => $builder->clone()->sum('receipt_total_usd_amount'),
             'payment_total_usd_amount' => $builder->clone()->sum('payment_total_usd_amount'),
             'total_usd_gross_profit' => $builder->clone()->sum('total_usd_gross_profit'),
@@ -804,7 +805,9 @@ class OrdersController extends Controller
             })
             ->get();
         // 操作员
-        $role = Role::query()->where('code', 'OPERATE')->first();
+        $role = Role::query()
+            ->where('code', 'OPERATE')
+            ->first();
         $operateUsers = AdminUser::query()
             ->withWhereHas('roles', function ($query) use ($role) {
                 $query->where('id', $role->id);
@@ -817,5 +820,19 @@ class OrdersController extends Controller
             'operate_users' => $operateUsers
         ];
         return response()->json($data);
+    }
+
+    /**
+     * 完成
+     * @param Request $request
+     * @param Order $order
+     * @return Response
+     */
+    public function finish(Request $request, Order $order): Response
+    {
+        $order->is_finish = 1;
+        $order->save();
+        event(new OrderFinishEvent());
+        return response()->noContent();
     }
 }

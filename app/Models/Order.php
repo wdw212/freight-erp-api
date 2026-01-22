@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property mixed $destination_harbor
  * @property mixed $originHarbor
  * @property mixed $destinationHarbor
+ * @property int|mixed $is_finish
  */
 #[ObservedBy(OrderObserver::class)]
 class Order extends Model

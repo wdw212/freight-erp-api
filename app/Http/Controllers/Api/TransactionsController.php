@@ -94,7 +94,21 @@ class TransactionsController extends Controller
      */
     public function publicAccount(Request $request): JsonResponse
     {
-
+        $data = [
+            'cny' => [
+                'total_amount' => 0,
+                'cut_off_amount' => 0,
+                'cut_off_income_amount' => 0,
+                'cut_off_expense_amount' => 0,
+            ],
+            'usd' => [
+                'total_amount' => 0,
+                'cut_off_amount' => 0,
+                'cut_off_income_amount' => 0,
+                'cut_off_expense_amount' => 0,
+            ]
+        ];
+        return response()->json($data);
     }
 
     /**
@@ -104,6 +118,20 @@ class TransactionsController extends Controller
      */
     public function privateAccount(Request $request): JsonResponse
     {
-
+        $data = [
+            'cny' => [
+                'total_amount' => 0,
+                'cut_off_amount' => 0,
+                'cut_off_income_amount' => 0,
+                'cut_off_expense_amount' => 0,
+            ],
+            'usd' => [
+                'total_amount' => 0,
+                'cut_off_amount' => 0,
+                'cut_off_income_amount' => 0,
+                'cut_off_expense_amount' => 0,
+            ]
+        ];
+        return response()->json($data);
     }
 }
