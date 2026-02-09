@@ -94,19 +94,31 @@ class TransactionsController extends Controller
      */
     public function publicAccount(Request $request): JsonResponse
     {
+        $builder = Transaction::query()->where('type', 'public');
+        $incomeCnyAmount = $builder->clone()->sum('income_cny');
+        $expenseCnyAmount = $builder->clone()->sum('expense_cny');
+        $totalCnyAmount = $incomeCnyAmount - $expenseCnyAmount;
+
+        $incomeUsdAmount = $builder->clone()->sum('income_usd');
+        $expenseUsdAmount = $builder->clone()->sum('expense_usd');
+        $totalUsdAmount = $incomeUsdAmount - $expenseUsdAmount;
         $data = [
             'cny' => [
-                'total_amount' => 0,
+                'total_amount' => $totalCnyAmount,
                 'cut_off_amount' => 0,
-                'cut_off_income_amount' => 0,
-                'cut_off_expense_amount' => 0,
+                'cut_off_income_amount' => $incomeCnyAmount,
+                'cut_off_expense_amount' => $expenseCnyAmount,
             ],
             'usd' => [
-                'total_amount' => 0,
+                'total_amount' => $totalUsdAmount,
                 'cut_off_amount' => 0,
-                'cut_off_income_amount' => 0,
-                'cut_off_expense_amount' => 0,
-            ]
+                'cut_off_income_amount' => $incomeUsdAmount,
+                'cut_off_expense_amount' => $expenseUsdAmount,
+            ],
+            'income_cny_amount' => $incomeCnyAmount,
+            'expense_cny_amount' => $expenseCnyAmount,
+            'income_usd_amount' => $incomeUsdAmount,
+            'expense_usd_amount' => $expenseUsdAmount,
         ];
         return response()->json($data);
     }
@@ -118,18 +130,25 @@ class TransactionsController extends Controller
      */
     public function privateAccount(Request $request): JsonResponse
     {
+        $builder = Transaction::query()->where('type', 'private');
+        $incomeCnyAmount = $builder->clone()->sum('income_cny');
+        $expenseCnyAmount = $builder->clone()->sum('expense_cny');
+        $totalCnyAmount = $incomeCnyAmount - $expenseCnyAmount;
+        $incomeUsdAmount = $builder->clone()->sum('income_usd');
+        $expenseUsdAmount = $builder->clone()->sum('expense_usd');
+        $totalUsdAmount = $incomeUsdAmount - $expenseUsdAmount;
         $data = [
             'cny' => [
-                'total_amount' => 0,
+                'total_amount' => $totalCnyAmount,
                 'cut_off_amount' => 0,
-                'cut_off_income_amount' => 0,
-                'cut_off_expense_amount' => 0,
+                'cut_off_income_amount' => $incomeCnyAmount,
+                'cut_off_expense_amount' => $expenseCnyAmount,
             ],
             'usd' => [
-                'total_amount' => 0,
+                'total_amount' => $totalUsdAmount,
                 'cut_off_amount' => 0,
-                'cut_off_income_amount' => 0,
-                'cut_off_expense_amount' => 0,
+                'cut_off_income_amount' => $incomeUsdAmount,
+                'cut_off_expense_amount' => $expenseUsdAmount,
             ]
         ];
         return response()->json($data);

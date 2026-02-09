@@ -794,30 +794,30 @@ class OrdersController extends Controller
     public function filter(Request $request): JsonResponse
     {
         // 公司抬头
-        $companyHeaders = CompanyHeader::query()->get();
+        $companyHeaders = CompanyHeader::query()->select(['id', 'company_name'])->get()->toArray();
         // 订单类型
         $orderTypes = OrderType::query()->get();
         // 业务员
         $role = Role::query()->where('code', 'BUSINESS')->first();
-        $businessUsers = AdminUser::query()
-            ->withWhereHas('roles', function ($query) use ($role) {
-                $query->where('id', $role->id);
-            })
-            ->get();
+//        $businessUsers = AdminUser::query()
+//            ->withWhereHas('roles', function ($query) use ($role) {
+//                $query->where('id', $role->id);
+//            })
+//            ->get();
         // 操作员
-        $role = Role::query()
-            ->where('code', 'OPERATE')
-            ->first();
-        $operateUsers = AdminUser::query()
-            ->withWhereHas('roles', function ($query) use ($role) {
-                $query->where('id', $role->id);
-            })
-            ->get();
+//        $role = Role::query()
+//            ->where('code', 'OPERATE')
+//            ->first();
+//        $operateUsers = AdminUser::query()
+//            ->withWhereHas('roles', function ($query) use ($role) {
+//                $query->where('id', $role->id);
+//            })
+//            ->get();
         $data = [
-            'company_header' => CompanyHeaderResource::collection($companyHeaders),
-            'order_types' => OrderTypeResource::collection($orderTypes),
-            'business_admin_users' => AdminUserResource::collection($businessUsers),
-            'operate_users' => $operateUsers
+            'company_header' => $companyHeaders,
+            'order_types' => $orderTypes,
+//            'business_admin_users' => AdminUserResource::collection($businessUsers),
+//            'operate_users' => $operateUsers
         ];
         return response()->json($data);
     }
