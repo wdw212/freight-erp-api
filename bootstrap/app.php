@@ -28,8 +28,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('telescope:prune')->daily();
         // 处理订单
         $schedule->command('app:handle-order')->everyFiveSeconds();
-        // 处理订单汇率
-        $schedule->command('app:handle-order-exchange-rate')->everyFiveSeconds();
+        // 处理订单汇率 (十分钟处理一次)
+        $schedule->command('app:handle-order-exchange-rate')->everyTwoMinutes();
         // 每月最后一天 00:00 执行
         $schedule->command('app:handle-usd-exchange-rate')->monthly();
     })
