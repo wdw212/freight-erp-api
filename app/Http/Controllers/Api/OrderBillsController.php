@@ -123,6 +123,7 @@ class OrderBillsController extends Controller
                 throw new InvalidRequestException('账单详情格式错误');
             }
             $orderBill->update($request->all());
+            
             // 处理账单详情
             $orderBillItems = json_decode($orderBillItems, true);
 
@@ -131,6 +132,7 @@ class OrderBillsController extends Controller
             $oldOrderBillItemIds = $orderBill->orderBillItems()->pluck('id')->toArray();
             $deleteOrderBillItemIds = array_diff($oldOrderBillItemIds, $newOrderBillItemIds);
             OrderBillItem::destroy($deleteOrderBillItemIds);
+
             $cnyAmount = 0;
             $usdAmount = 0;
             foreach ($orderBillItems as $item) {

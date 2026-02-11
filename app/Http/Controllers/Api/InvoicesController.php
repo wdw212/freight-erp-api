@@ -185,7 +185,6 @@ class InvoicesController extends Controller
 
         $cnyInvoiceItems = json_decode($cnyInvoiceItems, true);
         $usdInvoiceItems = json_decode($usdInvoiceItems, true);
-
         $cnyInvoiceItems = collect($cnyInvoiceItems)->map(function ($item) {
             $item['currency'] = 'cny';
             if (empty($item['fee_type_id'])) {
@@ -193,6 +192,7 @@ class InvoicesController extends Controller
             }
             return $item;
         })->all();
+
         $usdInvoiceItems = collect($usdInvoiceItems)->map(function ($item) {
             $item['currency'] = 'usd';
             if (empty($item['fee_type_id'])) {
@@ -203,6 +203,11 @@ class InvoicesController extends Controller
 
         $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
 
+        $oldInvoiceItemIds = InvoiceItem::query()->where('invoice_id', $invoice->id)->pluck('id')->toArray();
+        $newInvoiceItemIds = collect($invoiceItems)->pluck('id')->toArray();
+        $deleteInvoiceItemIds = array_diff($oldInvoiceItemIds, $newInvoiceItemIds);
+        InvoiceItem::destroy($deleteInvoiceItemIds);
+        
         $invoiceItemRelation = [];
         foreach ($invoiceItems as $item) {
             if (isset($item['id'])) {
