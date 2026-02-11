@@ -15,6 +15,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class InvoicesController extends Controller
 {
@@ -135,90 +137,94 @@ class InvoicesController extends Controller
      * @param InvoiceRequest $request
      * @param Invoice $invoice
      * @return InvoiceInfoResource
+     * @throws Throwable
      */
     public function update(InvoiceRequest $request, Invoice $invoice): InvoiceInfoResource
     {
-        $orderId = $request->input('order_id');
-        $invoiceTypeId = $request->input('invoice_type_id');
-        $email = $request->input('email');
-        $remark = $request->input('remark');
-        $invoiceDate = $request->input('invoice_date');
-        $isFinish = $request->input('is_finish', 0);
-        $commission = $request->input('commission');
-        $taxRate = $request->input('tax_rate');
-        $taxAmount = $request->input('tax_amount');
-        $cnyInvoiceNo = $request->input('cny_invoice_no');
-        $usdInvoiceNo = $request->input('usd_invoice_no');
-        $cnyRemark = $request->input('cny_remark');
-        $usdRemark = $request->input('usd_remark');
-        $purchaseEntityId = $request->input('purchase_entity_id');
-        $purchaseUscCode = $request->input('purchase_usc_code');
-        $saleEntityId = $request->input('sale_entity_id');
-        $saleUscCode = $request->input('sale_usc_code');
-        $cnyInvoiceItems = $request->input('cny_invoice_items');
-        $usdInvoiceItems = $request->input('usd_invoice_items');
+        $invoice = DB::transaction(static function () use ($request, $invoice) {
+            $orderId = $request->input('order_id');
+            $invoiceTypeId = $request->input('invoice_type_id');
+            $email = $request->input('email');
+            $remark = $request->input('remark');
+            $invoiceDate = $request->input('invoice_date');
+            $isFinish = $request->input('is_finish', 0);
+            $commission = $request->input('commission');
+            $taxRate = $request->input('tax_rate');
+            $taxAmount = $request->input('tax_amount');
+            $cnyInvoiceNo = $request->input('cny_invoice_no');
+            $usdInvoiceNo = $request->input('usd_invoice_no');
+            $cnyRemark = $request->input('cny_remark');
+            $usdRemark = $request->input('usd_remark');
+            $purchaseEntityId = $request->input('purchase_entity_id');
+            $purchaseUscCode = $request->input('purchase_usc_code');
+            $saleEntityId = $request->input('sale_entity_id');
+            $saleUscCode = $request->input('sale_usc_code');
+            $cnyInvoiceItems = $request->input('cny_invoice_items');
+            $usdInvoiceItems = $request->input('usd_invoice_items');
 
-        // 如果单据完成 修改订单信息
-        if ((int)$isFinish === 1) {
-            Order::query()->where('id', $orderId)->update([
-                'is_finish' => 1,
-                'commission' => $commission,
-            ]);
-        }
-
-        $invoice->order_id = $orderId;
-        $invoice->invoice_type_id = $invoiceTypeId;
-        $invoice->email = $email;
-        $invoice->remark = $remark;
-        $invoice->invoice_date = $invoiceDate;
-        $invoice->tax_rate = $taxRate;
-        $invoice->tax_amount = $taxAmount;
-        $invoice->cny_invoice_no = $cnyInvoiceNo;
-        $invoice->usd_invoice_no = $usdInvoiceNo;
-        $invoice->cny_remark = $cnyRemark;
-        $invoice->usd_remark = $usdRemark;
-        $invoice->purchase_entity_id = $purchaseEntityId;
-        $invoice->purchase_usc_code = $purchaseUscCode;
-        $invoice->sale_entity_id = $saleEntityId;
-        $invoice->sale_usc_code = $saleUscCode;
-        $invoice->update();
-
-        $cnyInvoiceItems = json_decode($cnyInvoiceItems, true);
-        $usdInvoiceItems = json_decode($usdInvoiceItems, true);
-        $cnyInvoiceItems = collect($cnyInvoiceItems)->map(function ($item) {
-            $item['currency'] = 'cny';
-            if (empty($item['fee_type_id'])) {
-                $item['fee_type_id'] = null;
+            // 如果单据完成 修改订单信息
+            if ((int)$isFinish === 1) {
+                Order::query()->where('id', $orderId)->update([
+                    'is_finish' => 1,
+                    'commission' => $commission,
+                ]);
             }
-            return $item;
-        })->all();
 
-        $usdInvoiceItems = collect($usdInvoiceItems)->map(function ($item) {
-            $item['currency'] = 'usd';
-            if (empty($item['fee_type_id'])) {
-                $item['fee_type_id'] = null;
+            $invoice->order_id = $orderId;
+            $invoice->invoice_type_id = $invoiceTypeId;
+            $invoice->email = $email;
+            $invoice->remark = $remark;
+            $invoice->invoice_date = $invoiceDate;
+            $invoice->tax_rate = $taxRate;
+            $invoice->tax_amount = $taxAmount;
+            $invoice->cny_invoice_no = $cnyInvoiceNo;
+            $invoice->usd_invoice_no = $usdInvoiceNo;
+            $invoice->cny_remark = $cnyRemark;
+            $invoice->usd_remark = $usdRemark;
+            $invoice->purchase_entity_id = $purchaseEntityId;
+            $invoice->purchase_usc_code = $purchaseUscCode;
+            $invoice->sale_entity_id = $saleEntityId;
+            $invoice->sale_usc_code = $saleUscCode;
+            $invoice->update();
+
+            $cnyInvoiceItems = json_decode($cnyInvoiceItems, true);
+            $usdInvoiceItems = json_decode($usdInvoiceItems, true);
+            $cnyInvoiceItems = collect($cnyInvoiceItems)->map(function ($item) {
+                $item['currency'] = 'cny';
+                if (empty($item['fee_type_id'])) {
+                    $item['fee_type_id'] = null;
+                }
+                return $item;
+            })->all();
+
+            $usdInvoiceItems = collect($usdInvoiceItems)->map(function ($item) {
+                $item['currency'] = 'usd';
+                if (empty($item['fee_type_id'])) {
+                    $item['fee_type_id'] = null;
+                }
+                return $item;
+            })->all();
+
+            $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
+
+            $oldInvoiceItemIds = InvoiceItem::query()->where('invoice_id', $invoice->id)->pluck('id')->toArray();
+            $newInvoiceItemIds = collect($invoiceItems)->pluck('id')->toArray();
+            $deleteInvoiceItemIds = array_diff($oldInvoiceItemIds, $newInvoiceItemIds);
+            InvoiceItem::destroy($deleteInvoiceItemIds);
+
+            $invoiceItemRelation = [];
+            foreach ($invoiceItems as $item) {
+                if (isset($item['id'])) {
+                    $invoiceItem = InvoiceItem::query()->where('id', $item['id'])->first();
+                    $invoiceItem->fill($item);
+                    $invoiceItem->update();
+                } else {
+                    $invoiceItemRelation[] = new InvoiceItem($item);
+                }
             }
-            return $item;
-        })->all();
-
-        $invoiceItems = array_merge($cnyInvoiceItems, $usdInvoiceItems);
-
-        $oldInvoiceItemIds = InvoiceItem::query()->where('invoice_id', $invoice->id)->pluck('id')->toArray();
-        $newInvoiceItemIds = collect($invoiceItems)->pluck('id')->toArray();
-        $deleteInvoiceItemIds = array_diff($oldInvoiceItemIds, $newInvoiceItemIds);
-        InvoiceItem::destroy($deleteInvoiceItemIds);
-        
-        $invoiceItemRelation = [];
-        foreach ($invoiceItems as $item) {
-            if (isset($item['id'])) {
-                $invoiceItem = InvoiceItem::query()->where('id', $item['id'])->first();
-                $invoiceItem->fill($item);
-                $invoiceItem->update();
-            } else {
-                $invoiceItemRelation[] = new InvoiceItem($item);
-            }
-        }
-        $invoice->invoiceItems()->saveMany($invoiceItemRelation);
+            $invoice->invoiceItems()->saveMany($invoiceItemRelation);
+            return $invoice;
+        });
         return new InvoiceInfoResource($invoice->load(['cnyInvoiceItems', 'usdInvoiceItems']));
     }
 
