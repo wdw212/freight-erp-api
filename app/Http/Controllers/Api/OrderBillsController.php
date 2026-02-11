@@ -57,7 +57,7 @@ class OrderBillsController extends Controller
             $orderBill->save();
             $cnyAmount = 0;
             $usdAmount = 0;
-            
+
             // 处理账单详情
             $orderBillItems = json_decode($orderBillItems, true);
             $orderBillItemRelation = [];
@@ -144,7 +144,9 @@ class OrderBillsController extends Controller
                     $orderBillItem = OrderBillItem::query()->where('id', $item['id'])->first();
                 } else {
                     $orderBillItem = new OrderBillItem();
+                    $orderBillItem->orderBill()->associate($orderBill);
                 }
+
                 if ($item['currency'] === 'cny') {
                     if (!empty($item['price']) && !empty($item['quantity'])) {
                         $cnyAmount += $item['price'] * $item['quantity'];
@@ -152,6 +154,7 @@ class OrderBillsController extends Controller
                 } else if (!empty($item['price']) && !empty($item['quantity'])) {
                     $usdAmount += $item['price'] * $item['quantity'];
                 }
+
                 $orderBillItem->fill($item);
                 $orderBillItem->save();
             }
