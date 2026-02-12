@@ -367,6 +367,12 @@ class OrdersController extends Controller
                     }
                 }
                 $order->orderPayments()->saveMany($orderPaymentRelations);
+
+                // 计算应付款金额
+                $cnyAmount = $order->orderPayments()->sum('cny_amount');
+                $usdAmount = $order->orderPayments()->sum('usd_amount');
+                $order->payment_total_cny_amount = $cnyAmount;
+                $order->payment_total_usd_amount = $usdAmount;
             }
 
             // 处理应收款
@@ -416,9 +422,6 @@ class OrdersController extends Controller
                 $usdAmount = $order->orderReceipts()->sum('usd_amount');
                 $order->receipt_total_cny_amount = $cnyAmount;
                 $order->receipt_total_usd_amount = $usdAmount;
-                Log::info('处理应收款金额');
-                Log::info('人民币金额:' . $cnyAmount);
-                Log::info('美金金额:' . $usdAmount);
             }
 
             // 单据委托抬头
