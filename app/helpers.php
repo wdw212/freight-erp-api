@@ -115,3 +115,28 @@ function calculateTaxAmount(float|int|string $totalAmount, float|int $taxRate, i
     // 保留指定小数位并格式化（符合财务展示规范）
     return number_format($taxAmount, $decimal);
 }
+
+/**
+ * 人民币（CNY）兑换美金（USD）
+ * @param float|int|string $cnyAmount 人民币金额（支持数字/字符串）
+ * @param float|int $exchangeRate 汇率（1CNY可兑换的USD数，默认参考实时汇率≈0.138）
+ * @param int $decimal 保留小数位数（默认2位，符合美金展示规范）
+ * @return string 兑换后的美金金额（格式化字符串，空值/非法值返回''）
+ */
+function cnyToUsd(float|int|string $cnyAmount, float|int $exchangeRate = 0.138, int $decimal = 2): string
+{
+    // 空值/非法值校验
+    if (empty($cnyAmount) || $cnyAmount < 0 || $exchangeRate <= 0) {
+        return '';
+    }
+
+    // 类型转换，确保数值格式正确
+    $cnyAmount = floatval($cnyAmount);
+    $exchangeRate = floatval($exchangeRate);
+
+    // 核心计算逻辑：美金金额 = 人民币金额 × 汇率
+    $usdAmount = $cnyAmount * $exchangeRate;
+
+    // 保留指定小数位并格式化
+    return number_format($usdAmount, $decimal);
+}
