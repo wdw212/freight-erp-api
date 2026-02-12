@@ -26,7 +26,8 @@ class OrderObserver
 
         // 计算毛利人民币
         Log::info('毛利人民币');
-        Log::info($order->gross_profit_cny);
+        $grossProfitCny = bcsub($order->receipt_total_cny_amount, $order->payment_total_cny_amount, 2);
+        Log::info($grossProfitCny);
 
         // 计算毛利美金
     }
