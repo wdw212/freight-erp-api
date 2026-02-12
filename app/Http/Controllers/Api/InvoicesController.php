@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class InvoicesController extends Controller
@@ -213,7 +214,17 @@ class InvoicesController extends Controller
             InvoiceItem::destroy($deleteInvoiceItemIds);
 
             $invoiceItemRelation = [];
+
+            $totalCnyAmount = 0;
+            $totalUsdAmount = 0;
+
             foreach ($invoiceItems as $item) {
+                if ($item['currency'] === 'cny') {
+                    $totalCnyAmount += $item['amount'];
+                }
+                if ($item['currency'] === 'usd') {
+                    $totalUsdAmount += $item['amount'];
+                }
                 if (isset($item['id'])) {
                     $invoiceItem = InvoiceItem::query()->where('id', $item['id'])->first();
                     $invoiceItem->fill($item);
@@ -223,6 +234,12 @@ class InvoicesController extends Controller
                 }
             }
             $invoice->invoiceItems()->saveMany($invoiceItemRelation);
+            Log::info('发票人民币金额:' . $totalCnyAmount);
+            Log::info('发票美金金额:' . $totalUsdAmount);
+            $invoice->update([
+                'total_cny_amount' => $totalCnyAmount,
+                'total_usd_amount' => $totalUsdAmount,
+            ]);
             return $invoice;
         });
         return new InvoiceInfoResource($invoice->load(['cnyInvoiceItems', 'usdInvoiceItems']));
@@ -238,6 +255,7 @@ class InvoicesController extends Controller
         $invoice->delete();
         return response()->noContent();
     }
+
 
     public function stat(Request $request)
     {
