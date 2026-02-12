@@ -70,6 +70,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $gross_profit_cny
  * @property mixed $gross_profit_usd
  * @property mixed $gross_profit
+ * @property mixed $total_profit
  */
 class OrderInfoResource extends JsonResource
 {
@@ -143,7 +144,7 @@ class OrderInfoResource extends JsonResource
             'payment_usd_cashed_status' => $this->payment_usd_cashed_status,
             'gross_profit_cny' => $this->gross_profit_cny,
             'gross_profit_usd' => $this->gross_profit_usd,
-            'gross_profit' => $this->gross_profit,
+            'total_profit' => $this->total_profit,
             'special_fee' => $this->special_fee,
             'special_fee_cashed_status' => 0,
             'usd_exchange_rate' => $this->usd_exchange_rate,

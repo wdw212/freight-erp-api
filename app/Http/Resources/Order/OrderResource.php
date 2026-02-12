@@ -68,10 +68,8 @@ class OrderResource extends JsonResource
             'bl_no' => $this->bl_no,
             'origin_port' => $this->origin_port,
             'destination_port' => $this->destination_port,
-
             'origin_harbor' => $this->origin_harbor,
             'destination_harbor' => $this->destination_harbor,
-
             'ship_name' => $this->ship_name,
             'ship_no' => $this->ship_no,
             'container_type' => $this->container_type,

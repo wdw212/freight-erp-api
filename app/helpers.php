@@ -106,8 +106,8 @@ function calculateTaxAmount($totalAmount, $taxRate, int $decimal = 2): string
     }
 
     // 类型转换，确保数值格式正确
-    $totalAmount = floatval($totalAmount);
-    $taxRate = floatval($taxRate);
+    $totalAmount = (float)$totalAmount;
+    $taxRate = (float)$taxRate;
 
     // 核心计算逻辑
     $taxAmount = $totalAmount - ($totalAmount / (1 + $taxRate / 100));
@@ -123,7 +123,7 @@ function calculateTaxAmount($totalAmount, $taxRate, int $decimal = 2): string
  * @param int $decimal 保留小数位数（默认2位，符合美金展示规范）
  * @return string 兑换后的美金金额（无千分位逗号，空值/非法值返回''）
  */
-function cnyToUsd($cnyAmount, $exchangeRate = 0.138, int $decimal = 2): string
+function cnyToUsd(float|int|string $cnyAmount, float|int $exchangeRate = 0.138, int $decimal = 2): string
 {
     // 空值/非法值校验
     if (empty($cnyAmount) || $cnyAmount < 0 || $exchangeRate <= 0) {
@@ -131,8 +131,8 @@ function cnyToUsd($cnyAmount, $exchangeRate = 0.138, int $decimal = 2): string
     }
 
     // 类型转换，确保数值格式正确
-    $cnyAmount = floatval($cnyAmount);
-    $exchangeRate = floatval($exchangeRate);
+    $cnyAmount = (float)$cnyAmount;
+    $exchangeRate = (float)$exchangeRate;
 
     // 核心计算逻辑：美金金额 = 人民币金额 × 汇率
     $usdAmount = $cnyAmount * $exchangeRate;
