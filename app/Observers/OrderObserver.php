@@ -31,6 +31,8 @@ class OrderObserver
         $grossProfitUsd = cnyToUsd($grossProfitCny, $order->usd_exchange_rate);
         Log::info('毛利美金');
         Log::info($grossProfitUsd);
+        $order->gross_profit_cny = $grossProfitCny;
+        $order->gross_profit_usd = $grossProfitUsd;
         // 计算毛利美金
     }
 

@@ -27,6 +27,8 @@ use Illuminate\Support\Carbon;
  * @property int|mixed $receipt_total_cny_amount
  * @property int|mixed $receipt_total_usd_amount
  * @property mixed $gross_profit_cny
+ * @property mixed $usd_exchange_rate
+ * @property mixed|string $gross_profit_usd
  */
 #[ObservedBy(OrderObserver::class)]
 class Order extends Model
