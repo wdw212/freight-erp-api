@@ -41,6 +41,9 @@ class InvoiceObserver
             'name' => $purchaseEntity->company_name,
             'usc_code' => $invoice->purchase_usc_code,
         ];
+
+        // 计算税额
+        $invoice->tax_amount = calculateTaxAmount($invoice->total_cny_amount, $invoice->tax_rate);
     }
 
     /**

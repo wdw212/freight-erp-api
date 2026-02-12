@@ -89,3 +89,29 @@ function getUrlPath(string $url): string
     $parsedUrl = parse_url($url);
     return $parsedUrl['path'] ?? '';
 }
+
+/**
+ * 计算税额
+ * 公式：税额 = 总金额 - 总金额 / (1 + 税率)
+ * @param float|int|string $totalAmount 总金额（支持数字/字符串）
+ * @param float|int $taxRate 税率（如13%传13，1%传1，需大于0）
+ * @param int $decimal 保留小数位数（默认2位）
+ * @return string 计算后的税额（格式化字符串，空值返回''）
+ */
+function calculateTaxAmount(float|int|string $totalAmount, float|int $taxRate, int $decimal = 2): string
+{
+    // 空值校验（贴合现有助手函数的空值返回逻辑）
+    if (empty($totalAmount) || empty($taxRate) || $taxRate <= 0) {
+        return '';
+    }
+
+    // 类型转换，确保数值格式正确
+    $totalAmount = floatval($totalAmount);
+    $taxRate = floatval($taxRate);
+
+    // 核心计算逻辑
+    $taxAmount = $totalAmount - ($totalAmount / (1 + $taxRate / 100));
+
+    // 保留指定小数位并格式化（符合财务展示规范）
+    return number_format($taxAmount, $decimal);
+}
