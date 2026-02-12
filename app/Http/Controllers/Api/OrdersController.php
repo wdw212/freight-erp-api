@@ -417,6 +417,8 @@ class OrdersController extends Controller
                 $order->receipt_total_cny_amount = $cnyAmount;
                 $order->receipt_total_usd_amount = $usdAmount;
                 Log::info('处理应收款金额');
+                Log::info('人民币金额:' . $cnyAmount);
+                Log::info('美金金额:' . $usdAmount);
             }
 
             // 单据委托抬头
@@ -542,6 +544,7 @@ class OrdersController extends Controller
                 $orderBlInfo->save();
             }
 
+            $order->save();
             return $order;
         });
         return new OrderInfoResource($order->load('orderBlInfo'));
