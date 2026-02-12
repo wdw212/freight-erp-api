@@ -65,6 +65,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $origin_harbor_id
  * @property mixed $destination_harbor_id
  * @property mixed $usd_exchange_rate
+ * @property mixed $payment_total_cny_amount
+ * @property mixed $payment_total_usd_amount
+ * @property mixed $gross_profit_cny
+ * @property mixed $gross_profit_usd
+ * @property mixed $gross_profit
  */
 class OrderInfoResource extends JsonResource
 {
@@ -130,10 +135,15 @@ class OrderInfoResource extends JsonResource
             'payment_status' => $this->payment_status,
             'receipt_total_cny_amount' => $this->receipt_total_cny_amount,
             'receipt_total_usd_amount' => $this->receipt_total_usd_amount,
-            'payment_cny_cashed_status' => $this->payment_cny_cashed_status,
-            'payment_usd_cashed_status' => $this->payment_usd_cashed_status,
             'receipt_cny_cashed_status' => $this->receipt_cny_cashed_status,
             'receipt_usd_cashed_status' => $this->receipt_usd_cashed_status,
+            'payment_total_cny_amount' => $this->payment_total_cny_amount,
+            'payment_total_usd_amount' => $this->payment_total_usd_amount,
+            'payment_cny_cashed_status' => $this->payment_cny_cashed_status,
+            'payment_usd_cashed_status' => $this->payment_usd_cashed_status,
+            'gross_profit_cny' => $this->gross_profit_cny,
+            'gross_profit_usd' => $this->gross_profit_usd,
+            'gross_profit' => $this->gross_profit,
             'special_fee' => $this->special_fee,
             'special_fee_cashed_status' => 0,
             'usd_exchange_rate' => $this->usd_exchange_rate,

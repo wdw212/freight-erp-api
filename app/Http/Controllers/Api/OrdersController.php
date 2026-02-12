@@ -410,6 +410,13 @@ class OrdersController extends Controller
                     }
                 }
                 $order->orderReceipts()->saveMany($orderReceiptRelations);
+
+                // 计算应收款金额
+                $cnyAmount = $order->orderReceipts()->sum('cny_amount');
+                $usdAmount = $order->orderReceipts()->sum('usd_amount');
+                $order->receipt_total_cny_amount = $cnyAmount;
+                $order->receipt_total_usd_amount = $usdAmount;
+                Log::info('处理应收款金额');
             }
 
             // 单据委托抬头
