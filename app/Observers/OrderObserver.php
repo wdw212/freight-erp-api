@@ -7,6 +7,7 @@ namespace App\Observers;
 
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class OrderObserver
 {
@@ -22,6 +23,11 @@ class OrderObserver
         }
         $order->origin_harbor = $order->originHarbor;
         $order->destination_harbor = $order->destinationHarbor;
+
+        // 计算毛利人民币
+        Log::info($order);
+
+        // 计算毛利美金
     }
 
     /**
