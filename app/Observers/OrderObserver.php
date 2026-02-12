@@ -25,7 +25,8 @@ class OrderObserver
         $order->destination_harbor = $order->destinationHarbor;
 
         // 计算毛利人民币
-        Log::info($order);
+        Log::info('毛利人民币');
+        Log::info($order->gross_profit_cny);
 
         // 计算毛利美金
     }
