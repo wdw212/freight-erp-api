@@ -41,6 +41,7 @@ class InvoiceResource extends JsonResource
             'sale_entity' => $this->sale_entity,
             'invoice_type' => $this->invoiceType,
             'tax_rate' => $this->tax_rate,
+            'tax_amount' => $this->tax_amount,
             'total_cny_amount' => $this->total_cny_amount,
             'cny_invoice_no' => $this->cny_invoice_no,
             'total_usd_amount' => $this->total_usd_amount,
