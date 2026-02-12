@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property mixed $usd_exchange_rate
  * @property mixed|string $gross_profit_usd
  * @property mixed|string $total_profit
+ * @property mixed $special_fee
  */
 #[ObservedBy(OrderObserver::class)]
 class Order extends Model
