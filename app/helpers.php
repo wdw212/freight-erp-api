@@ -96,9 +96,9 @@ function getUrlPath(string $url): string
  * @param float|int|string $totalAmount 总金额（支持数字/字符串）
  * @param float|int $taxRate 税率（如13%传13，1%传1，需大于0）
  * @param int $decimal 保留小数位数（默认2位）
- * @return string 计算后的税额（格式化字符串，空值返回''）
+ * @return string 计算后的税额（无千分位逗号，空值返回''）
  */
-function calculateTaxAmount(float|int|string $totalAmount, float|int $taxRate, int $decimal = 2): string
+function calculateTaxAmount($totalAmount, $taxRate, int $decimal = 2): string
 {
     // 空值校验（贴合现有助手函数的空值返回逻辑）
     if (empty($totalAmount) || empty($taxRate) || $taxRate <= 0) {
@@ -112,8 +112,8 @@ function calculateTaxAmount(float|int|string $totalAmount, float|int $taxRate, i
     // 核心计算逻辑
     $taxAmount = $totalAmount - ($totalAmount / (1 + $taxRate / 100));
 
-    // 保留指定小数位并格式化（符合财务展示规范）
-    return number_format($taxAmount, $decimal);
+    // 保留指定小数位，去掉千分位逗号（关键修改：第四个参数为空字符串）
+    return number_format($taxAmount, $decimal, '.', '');
 }
 
 /**
@@ -121,9 +121,9 @@ function calculateTaxAmount(float|int|string $totalAmount, float|int $taxRate, i
  * @param float|int|string $cnyAmount 人民币金额（支持数字/字符串）
  * @param float|int $exchangeRate 汇率（1CNY可兑换的USD数，默认参考实时汇率≈0.138）
  * @param int $decimal 保留小数位数（默认2位，符合美金展示规范）
- * @return string 兑换后的美金金额（格式化字符串，空值/非法值返回''）
+ * @return string 兑换后的美金金额（无千分位逗号，空值/非法值返回''）
  */
-function cnyToUsd(float|int|string $cnyAmount, float|int $exchangeRate = 0.138, int $decimal = 2): string
+function cnyToUsd($cnyAmount, $exchangeRate = 0.138, int $decimal = 2): string
 {
     // 空值/非法值校验
     if (empty($cnyAmount) || $cnyAmount < 0 || $exchangeRate <= 0) {
@@ -137,6 +137,6 @@ function cnyToUsd(float|int|string $cnyAmount, float|int $exchangeRate = 0.138, 
     // 核心计算逻辑：美金金额 = 人民币金额 × 汇率
     $usdAmount = $cnyAmount * $exchangeRate;
 
-    // 保留指定小数位并格式化
-    return number_format($usdAmount, $decimal);
+    // 保留指定小数位，去掉千分位逗号（关键修改：第四个参数为空字符串）
+    return number_format($usdAmount, $decimal, '.', '');
 }
