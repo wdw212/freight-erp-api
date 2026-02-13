@@ -9,15 +9,11 @@ use App\Events\OrderFinishEvent;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
-use App\Http\Resources\AdminUser\AdminUserResource;
-use App\Http\Resources\CompanyHeader\CompanyHeaderResource;
 use App\Http\Resources\Order\BusinessOrderResource;
 use App\Http\Resources\Order\CommerceOrderResource;
 use App\Http\Resources\Order\FinanceOrderResource;
 use App\Http\Resources\Order\OrderInfoResource;
 use App\Http\Resources\Order\OrderResource;
-use App\Http\Resources\OrderType\OrderTypeResource;
-use App\Models\AdminUser;
 use App\Models\CompanyHeader;
 use App\Models\Container;
 use App\Models\ContainerItem;
@@ -80,6 +76,7 @@ class OrdersController extends Controller
             })->latest();
 
         if (!$adminUser->hasRole('超管')) {
+            Log::info('---不是超管---');
             if ($adminUser->hasRole('操作')) {
                 $builder = $builder->where('operate_user_id', $adminUser->id)->where('is_claimed', 1);
             }
