@@ -843,7 +843,12 @@ class OrdersController extends Controller
      */
     public function finish(Request $request, Order $order): Response
     {
-        $order->is_finish = (int)$order->is_finish === 1 ? 0 : 1;
+        if ((int)$order->is_finish === 1) {
+            $isFinish = 0;
+        } else {
+            $isFinish = 1;
+        }
+        $order->is_finish = $isFinish;
         $order->save();
         event(new OrderFinishEvent());
         return response()->noContent();
