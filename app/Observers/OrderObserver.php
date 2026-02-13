@@ -30,7 +30,7 @@ class OrderObserver
         $grossProfitCny = bcsub($grossProfitCny, $order->special_fee, 2);
 
         Log::info($grossProfitCny);
-        $grossProfitUsd = bcdiv($grossProfitCny, $order->usd_exchange_rate, 2);
+        $grossProfitUsd = bcmul(bcsub($order->receipt_total_usd_amount, $order->payment_total_usd_amount, 2), $order->usd_exchange_rate, 2);
         Log::info('毛利美金');
         Log::info($grossProfitUsd);
         $totalProfit = bcsub($grossProfitCny, $order->special_fee, 2);
