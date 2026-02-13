@@ -80,6 +80,9 @@ class OrdersController extends Controller
             if ($adminUser->hasRole('操作')) {
                 $builder = $builder->where('operate_user_id', $adminUser->id)->where('is_claimed', 1);
             }
+            if ($adminUser->hasRole('业务')) {
+                $builder = $builder->where('business_user_id', $adminUser->id);
+            }
         }
 
         if (!empty($keyword)) {
