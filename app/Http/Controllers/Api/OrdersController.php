@@ -690,6 +690,7 @@ class OrdersController extends Controller
      */
     public function businessIndex(Request $request): AnonymousResourceCollection
     {
+        $adminUser = $request->user();
         $keyword = $request->input('keyword');
         // 财务单据
         $builder = Order::query()
@@ -704,6 +705,11 @@ class OrdersController extends Controller
             ])
             ->withCount('orderFiles')
             ->latest();
+
+        if (!$adminUser->hasRole('超管') && $adminUser->hasRole('业务')) {
+            $builder = $builder->where('business_user_id', $adminUser->id);
+        }
+
         if (!empty($keyword)) {
             $builder = $builder->where(function ($query) use ($keyword) {
                 $query->where('job_no', 'like', '%' . $keyword . '%')

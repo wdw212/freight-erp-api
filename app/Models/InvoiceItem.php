@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Validation\Rules\In;
-use voku\helper\ASCII;
 
 class InvoiceItem extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'invoice_id',
+        'currency',
+        'fee_type_id',
+        'unit',
+        'quantity',
+        'amount',
+    ];
 
     public $timestamps = false;
 
