@@ -16,17 +16,11 @@ class ContainerObserver
         // 更新订单 柜子类型
         $containerTypeStats = Container::query()
             ->where('order_id', $container->order->id)
-            ->with('containerType')
-            ->groupBy('container_type_id')
-            ->selectRaw('container_type_id, count(*) as count')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'type_id' => $item->container_type_id,
-                    'type_name' => $item->containerType->name ?? null,
-                    'count' => $item->count,
-                ];
-            });
+            ->whereNotNull('container_type_name')
+            ->where('container_type_name', '<>', '')
+            ->groupBy('container_type_name')
+            ->selectRaw('container_type_name as type_name, count(*) as count')
+            ->get();
         $containerType = '';
         foreach ($containerTypeStats as $containerTypeStat) {
             if (empty($containerTypeStat['type_name'])) {

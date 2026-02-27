@@ -70,8 +70,7 @@ class OrdersController extends Controller
                 'operateUser:id,name',
                 'documentUser:id,name',
                 'commerceUser:id,name',
-                'orderDelegationHeader:id,order_id,company_header_id',
-                'orderDelegationHeader.companyHeader:id,company_name',
+                'orderDelegationHeader:id,order_id,company_header_id,company_header_name',
             ])
             ->withCount('orderFiles')
             ->with('orderRemark', function ($query) use ($adminUser) {
@@ -153,6 +152,8 @@ class OrdersController extends Controller
             if (!empty($data['shipping_company_id'])) {
                 $shippingCompany = ShippingCompany::query()->find($data['shipping_company_id']);
                 $data['shipping_company_name'] = $shippingCompany?->name ?? '';
+            } else {
+                $data['shipping_company_name'] = '';
             }
             $order->fill($data);
             $order->save();
@@ -321,6 +322,9 @@ class OrdersController extends Controller
 
         // 事务处理
         $order = DB::transaction(static function () use ($data, $order, $adminUser) {
+            $originalShippingCompanyId = (int)($order->shipping_company_id ?? 0);
+            $originalShippingCompanyName = (string)($order->shipping_company_name ?? '');
+
             if (!empty($data['booking_info'])) {
                 $data['booking_info'] = json_decode($data['booking_info'], true);
             } else {
@@ -334,9 +338,22 @@ class OrdersController extends Controller
                 Log::info('不是操作');
             }
 
-            if (!empty($data['shipping_company_id'])) {
-                $shippingCompany = ShippingCompany::query()->find($data['shipping_company_id']);
-                $data['shipping_company_name'] = $shippingCompany?->name ?? '';
+            if (array_key_exists('shipping_company_id', $data)) {
+                $data['shipping_company_id'] = empty($data['shipping_company_id'])
+                    ? null
+                    : (int)$data['shipping_company_id'];
+
+                if (!empty($data['shipping_company_id'])) {
+                    $shippingCompanyIdChanged = (int)$data['shipping_company_id'] !== $originalShippingCompanyId;
+                    if ($shippingCompanyIdChanged || empty($originalShippingCompanyName)) {
+                        $shippingCompany = ShippingCompany::query()->find($data['shipping_company_id']);
+                        $data['shipping_company_name'] = $shippingCompany?->name ?? '';
+                    } else {
+                        $data['shipping_company_name'] = $originalShippingCompanyName;
+                    }
+                } else {
+                    $data['shipping_company_name'] = '';
+                }
             }
 
             $order->fill($data);
@@ -446,17 +463,35 @@ class OrdersController extends Controller
             // 单据委托抬头
             if (!empty($data['order_delegation_header'])) {
                 $temp = json_decode($data['order_delegation_header'], true);
+                $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
+                if (!$orderDelegationHeader) {
+                    $orderDelegationHeader = new OrderDelegationHeader();
+                    $orderDelegationHeader->order()->associate($order);
+                }
+
+                $originalCompanyHeaderId = (int)($orderDelegationHeader->company_header_id ?? 0);
+                $originalCompanyHeaderName = (string)($orderDelegationHeader->company_header_name ?? '');
+                $originalContactPerson = $orderDelegationHeader->contact_person;
+                $originalContactPhone = $orderDelegationHeader->contact_phone;
+
                 if (!empty($temp['company_header_id'])) {
-                    $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
-                    $temp['contact_person'] = $companyHeader->contact_person;
-                    $temp['contact_phone'] = $companyHeader->contact_phone;
-                    $temp['company_header_name'] = $companyHeader->company_name;
+                    $temp['company_header_id'] = (int)$temp['company_header_id'];
+                    $companyHeaderIdChanged = $temp['company_header_id'] !== $originalCompanyHeaderId;
+                    if ($companyHeaderIdChanged || empty($originalCompanyHeaderName)) {
+                        $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
+                        $temp['contact_person'] = $companyHeader->contact_person;
+                        $temp['contact_phone'] = $companyHeader->contact_phone;
+                        $temp['company_header_name'] = $companyHeader->company_name;
+                    } else {
+                        $temp['contact_person'] = $originalContactPerson;
+                        $temp['contact_phone'] = $originalContactPhone;
+                        $temp['company_header_name'] = $originalCompanyHeaderName;
+                    }
                 } else {
                     $temp['company_header_id'] = null;
+                    $temp['company_header_name'] = '';
                 }
-                $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
                 $orderDelegationHeader->fill($temp);
-                $orderDelegationHeader->order()->associate($order);
                 $orderDelegationHeader->save();
             }
 
@@ -493,9 +528,17 @@ class OrdersController extends Controller
                         $containerModel = Container::query()
                             ->where('id', $container['id'])
                             ->first();
+                        if (!$containerModel) {
+                            $containerModel = new Container();
+                        }
                     } else {
                         $containerModel = new Container();
                     }
+
+                    $originalContainerTypeId = (int)($containerModel->container_type_id ?? 0);
+                    $originalContainerTypeName = (string)($containerModel->container_type_name ?? '');
+                    $originalFleetId = (int)($containerModel->fleet_id ?? 0);
+                    $originalFleetName = (string)($containerModel->fleet_name ?? '');
 
                     $container['no_image'] = $container['no_image']['path'] ?? '';
                     $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
@@ -507,12 +550,30 @@ class OrdersController extends Controller
                     $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
                     $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
                     $container['container_type_id'] = empty($container['container_type_id']) ? null : $container['container_type_id'];
-                    $container['container_type_name'] = $container['container_type_id']
-                        ? (ContainerType::query()->find($container['container_type_id'])?->name ?? '')
-                        : '';
-                    $container['fleet_name'] = $container['fleet_id']
-                        ? (Fleet::query()->find($container['fleet_id'])?->name ?? '')
-                        : '';
+
+                    if (!empty($container['container_type_id'])) {
+                        $containerTypeIdChanged = (int)$container['container_type_id'] !== $originalContainerTypeId;
+                        if ($containerTypeIdChanged || empty($originalContainerTypeName)) {
+                            $container['container_type_name'] = ContainerType::query()
+                                ->find($container['container_type_id'])?->name ?? '';
+                        } else {
+                            $container['container_type_name'] = $originalContainerTypeName;
+                        }
+                    } else {
+                        $container['container_type_name'] = '';
+                    }
+
+                    if (!empty($container['fleet_id'])) {
+                        $fleetIdChanged = (int)$container['fleet_id'] !== $originalFleetId;
+                        if ($fleetIdChanged || empty($originalFleetName)) {
+                            $container['fleet_name'] = Fleet::query()->find($container['fleet_id'])?->name ?? '';
+                        } else {
+                            $container['fleet_name'] = $originalFleetName;
+                        }
+                    } else {
+                        $container['fleet_name'] = '';
+                    }
+
                     $containerModel->fill($container);
                     $containerModel->order()->associate($order);
                     $containerModel->save();
@@ -626,7 +687,6 @@ class OrdersController extends Controller
                 'documentUser:id,name',
                 'commerceUser:id,name',
                 'orderDelegationHeader',
-                'orderDelegationHeader.companyHeader:id,company_name',
             ])
             ->with('orderRemark', function ($query) use ($adminUser) {
                 return $query->where('admin_user_id', $adminUser->id);
@@ -693,7 +753,6 @@ class OrdersController extends Controller
                 'documentUser:id,name',
                 'commerceUser:id,name',
                 'orderDelegationHeader',
-                'orderDelegationHeader.companyHeader:id,company_name',
             ])
             ->latest();
 
@@ -726,8 +785,7 @@ class OrdersController extends Controller
                 'operateUser:id,name',
                 'documentUser:id,name',
                 'commerceUser:id,name',
-                'orderDelegationHeader:id,company_header_id',
-                'orderDelegationHeader.companyHeader:id,company_name',
+                'orderDelegationHeader:id,order_id,company_header_id,company_header_name',
             ])
             ->withCount('orderFiles')
             ->latest();

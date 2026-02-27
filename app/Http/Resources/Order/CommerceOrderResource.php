@@ -7,10 +7,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @property mixed $id
+ * @property mixed $shipping_company_id
+ * @property mixed $shipping_company_name
  * @property mixed $job_no
  * @property mixed $origin_port
  * @property mixed $destination_port
- * @property mixed $shippingCompany
  * @property mixed $bl_no
  * @property mixed $container_type
  * @property mixed $sailing_schedule
@@ -39,7 +40,12 @@ class CommerceOrderResource extends JsonResource
             'job_no' => $this->job_no,
             'origin_port' => $this->origin_port,
             'destination_port' => $this->destination_port,
-            'shipping_company' => $this->shippingCompany,
+            'shipping_company_id' => $this->shipping_company_id,
+            'shipping_company_name' => $this->shipping_company_name,
+            'shipping_company' => [
+                'id' => $this->shipping_company_id,
+                'name' => $this->shipping_company_name,
+            ],
             'bl_no' => $this->bl_no,
             'container_type' => $this->container_type,
             'sailing_schedule' => $this->sailing_schedule,

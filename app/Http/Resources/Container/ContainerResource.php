@@ -12,10 +12,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $containerItems
  * @property mixed $containerLoadingAddresses
  * @property mixed $container_type_id
+ * @property mixed $container_type_name
  * @property mixed $driver
  * @property mixed $entered_port_info
  * @property mixed $drop_off_wharf_id
  * @property mixed $fleet_id
+ * @property mixed $fleet_name
  * @property mixed $freight_remark
  * @property mixed $freight_status
  * @property mixed $is_entered_port
@@ -45,10 +47,12 @@ class ContainerResource extends JsonResource
             'container_items' => $this->containerItems,
             'container_loading_addresses' => $this->containerLoadingAddresses,
             'container_type_id' => $this->container_type_id,
+            'container_type_name' => $this->container_type_name,
             'driver' => $this->driver,
             'drop_off_wharf_id' => $this->drop_off_wharf_id,
             'entered_port_info' => $this->entered_port_info,
             'fleet_id' => $this->fleet_id,
+            'fleet_name' => $this->fleet_name,
             'freight_remark' => $this->freight_remark,
             'freight_status' => $this->freight_status,
             'is_entered_port' => $this->is_entered_port,
