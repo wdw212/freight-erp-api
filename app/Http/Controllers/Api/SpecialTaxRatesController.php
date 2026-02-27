@@ -8,6 +8,8 @@ use App\Http\Requests\SpecialTaxRateRequest;
 use App\Http\Resources\SpecialTaxRate\SpecialTaxRateInfoResource;
 use App\Http\Resources\SpecialTaxRate\SpecialTaxRateResource;
 use App\Models\SpecialTaxRate;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -62,5 +64,36 @@ class SpecialTaxRatesController extends Controller
         $specialTaxRate->fill($request->all());
         $specialTaxRate->update();
         return new SpecialTaxRateInfoResource($specialTaxRate);
+    }
+
+    /**
+     * 获取当月参数（若无记录则自动从最近月份复制延用）
+     * @param Request $request
+     * @return SpecialTaxRateInfoResource|JsonResponse
+     */
+    public function getCurrentMonth(Request $request): SpecialTaxRateInfoResource|JsonResponse
+    {
+        $monthCode = $request->input('month_code')
+            ? Carbon::parse($request->input('month_code'))->format('Y-m')
+            : Carbon::now()->format('Y-m');
+
+        $record = SpecialTaxRate::query()->where('month_code', $monthCode)->first();
+
+        if (!$record) {
+            $prevRecord = SpecialTaxRate::query()
+                ->where('month_code', '<', $monthCode)
+                ->orderByDesc('month_code')
+                ->first();
+
+            if (!$prevRecord) {
+                return response()->json(['data' => null, 'message' => '暂无历史参数可延用']);
+            }
+
+            $record = $prevRecord->replicate();
+            $record->month_code = $monthCode;
+            $record->save();
+        }
+
+        return new SpecialTaxRateInfoResource($record);
     }
 }

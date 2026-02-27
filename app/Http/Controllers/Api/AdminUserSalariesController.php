@@ -11,6 +11,8 @@ use App\Http\Requests\AdminUserSalaryRequest;
 use App\Http\Resources\AdminUserSalary\AdminUserSalaryInfoResource;
 use App\Http\Resources\AdminUserSalary\AdminUserSalaryResource;
 use App\Models\AdminUserSalary;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -94,5 +96,46 @@ class AdminUserSalariesController extends Controller
         $adminUserSalary->fill($request->all());
         $adminUserSalary->update();
         return new AdminUserSalaryInfoResource($adminUserSalary);
+    }
+
+    /**
+     * 获取当月工资参数（若无记录则自动从最近月份复制延用）
+     * @param Request $request
+     * @return AdminUserSalaryInfoResource|JsonResponse
+     * @throws InvalidRequestException
+     */
+    public function getCurrentMonth(Request $request): AdminUserSalaryInfoResource|JsonResponse
+    {
+        $adminUserId = $request->input('admin_user_id');
+        if (!$adminUserId) {
+            throw new InvalidRequestException('请输入账号ID');
+        }
+
+        $monthCode = $request->input('month_code')
+            ? Carbon::parse($request->input('month_code'))->format('Y-m')
+            : Carbon::now()->format('Y-m');
+
+        $record = AdminUserSalary::query()
+            ->where('admin_user_id', $adminUserId)
+            ->where('month_code', $monthCode)
+            ->first();
+
+        if (!$record) {
+            $prevRecord = AdminUserSalary::query()
+                ->where('admin_user_id', $adminUserId)
+                ->where('month_code', '<', $monthCode)
+                ->orderByDesc('month_code')
+                ->first();
+
+            if (!$prevRecord) {
+                return response()->json(['data' => null, 'message' => '暂无历史工资参数可延用']);
+            }
+
+            $record = $prevRecord->replicate();
+            $record->month_code = $monthCode;
+            $record->save();
+        }
+
+        return new AdminUserSalaryInfoResource($record);
     }
 }

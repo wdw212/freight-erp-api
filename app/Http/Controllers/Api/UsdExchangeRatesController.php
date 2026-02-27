@@ -8,6 +8,8 @@ use App\Http\Requests\UsdExchangeRateRequest;
 use App\Http\Resources\UsdExchangeRate\UsdExchangeRateInfoResource;
 use App\Http\Resources\UsdExchangeRate\UsdExchangeRateResource;
 use App\Models\UsdExchangeRate;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -67,5 +69,36 @@ class UsdExchangeRatesController extends Controller
         $usdExchangeRate->fill($request->all());
         $usdExchangeRate->update();
         return new UsdExchangeRateInfoResource($usdExchangeRate);
+    }
+
+    /**
+     * 获取当月汇率（若无记录则自动从最近月份复制延用）
+     * @param Request $request
+     * @return UsdExchangeRateInfoResource|JsonResponse
+     */
+    public function getCurrentMonth(Request $request): UsdExchangeRateInfoResource|JsonResponse
+    {
+        $monthCode = $request->input('month_code')
+            ? Carbon::parse($request->input('month_code'))->format('Y-m')
+            : Carbon::now()->format('Y-m');
+
+        $record = UsdExchangeRate::query()->where('month_code', $monthCode)->first();
+
+        if (!$record) {
+            $prevRecord = UsdExchangeRate::query()
+                ->where('month_code', '<', $monthCode)
+                ->orderByDesc('month_code')
+                ->first();
+
+            if (!$prevRecord) {
+                return response()->json(['data' => null, 'message' => '暂无历史汇率可延用']);
+            }
+
+            $record = $prevRecord->replicate();
+            $record->month_code = $monthCode;
+            $record->save();
+        }
+
+        return new UsdExchangeRateInfoResource($record);
     }
 }

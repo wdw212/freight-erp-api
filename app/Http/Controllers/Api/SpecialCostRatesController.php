@@ -9,6 +9,7 @@ use App\Http\Resources\SpecialCostRate\SpecialCostRateInfoResource;
 use App\Http\Resources\SpecialCostRate\SpecialCostRateResource;
 use App\Models\SpecialCostRate;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -83,5 +84,36 @@ class SpecialCostRatesController extends Controller
     {
         $specialCostRate->delete();
         return response()->noContent();
+    }
+
+    /**
+     * 获取当月参数（若无记录则自动从最近月份复制延用）
+     * @param Request $request
+     * @return SpecialCostRateInfoResource|JsonResponse
+     */
+    public function getCurrentMonth(Request $request): SpecialCostRateInfoResource|JsonResponse
+    {
+        $monthCode = $request->input('month_code')
+            ? Carbon::parse($request->input('month_code'))->format('Y-m')
+            : Carbon::now()->format('Y-m');
+
+        $record = SpecialCostRate::query()->where('month_code', $monthCode)->first();
+
+        if (!$record) {
+            $prevRecord = SpecialCostRate::query()
+                ->where('month_code', '<', $monthCode)
+                ->orderByDesc('month_code')
+                ->first();
+
+            if (!$prevRecord) {
+                return response()->json(['data' => null, 'message' => '暂无历史参数可延用']);
+            }
+
+            $record = $prevRecord->replicate();
+            $record->month_code = $monthCode;
+            $record->save();
+        }
+
+        return new SpecialCostRateInfoResource($record);
     }
 }

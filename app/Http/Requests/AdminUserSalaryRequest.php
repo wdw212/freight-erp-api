@@ -16,6 +16,7 @@ class AdminUserSalaryRequest extends FormRequest
     {
         return [
             'admin_user_id' => 'required|exists:admin_users,id',
+            'job_type'      => 'nullable|string|max:50',
         ];
     }
 }

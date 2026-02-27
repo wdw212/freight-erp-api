@@ -18,7 +18,10 @@ use App\Models\CompanyHeader;
 use App\Models\Container;
 use App\Models\ContainerItem;
 use App\Models\ContainerLoadingAddress;
+use App\Models\ContainerType;
+use App\Models\Fleet;
 use App\Models\Order;
+use App\Models\ShippingCompany;
 use App\Models\OrderBlInfo;
 use App\Models\OrderDelegationHeader;
 use App\Models\OrderFile;
@@ -147,6 +150,10 @@ class OrdersController extends Controller
             if ($adminUser->hasRole('操作')) {
                 $data['operate_user_id'] = $adminUser->id;
             }
+            if (!empty($data['shipping_company_id'])) {
+                $shippingCompany = ShippingCompany::query()->find($data['shipping_company_id']);
+                $data['shipping_company_name'] = $shippingCompany?->name ?? '';
+            }
             $order->fill($data);
             $order->save();
 
@@ -186,6 +193,7 @@ class OrdersController extends Controller
                         ->first();
                     $temp['contact_person'] = $companyHeader->contact_person;
                     $temp['contact_phone'] = $companyHeader->contact_phone;
+                    $temp['company_header_name'] = $companyHeader->company_name;
                 } else {
                     $temp['company_header_id'] = null;
                 }
@@ -221,6 +229,12 @@ class OrdersController extends Controller
                     $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
                     $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
                     $container['container_type_id'] = empty($container['container_type_id']) ? null : $container['container_type_id'];
+                    $container['container_type_name'] = $container['container_type_id']
+                        ? (ContainerType::query()->find($container['container_type_id'])?->name ?? '')
+                        : '';
+                    $container['fleet_name'] = $container['fleet_id']
+                        ? (Fleet::query()->find($container['fleet_id'])?->name ?? '')
+                        : '';
                     $containerModel = new Container();
                     $containerModel->fill($container);
                     $containerModel->order()->associate($order);
@@ -318,6 +332,11 @@ class OrdersController extends Controller
                 $data['is_claimed'] = 1;
             } else {
                 Log::info('不是操作');
+            }
+
+            if (!empty($data['shipping_company_id'])) {
+                $shippingCompany = ShippingCompany::query()->find($data['shipping_company_id']);
+                $data['shipping_company_name'] = $shippingCompany?->name ?? '';
             }
 
             $order->fill($data);
@@ -431,6 +450,7 @@ class OrdersController extends Controller
                     $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
                     $temp['contact_person'] = $companyHeader->contact_person;
                     $temp['contact_phone'] = $companyHeader->contact_phone;
+                    $temp['company_header_name'] = $companyHeader->company_name;
                 } else {
                     $temp['company_header_id'] = null;
                 }
@@ -487,6 +507,12 @@ class OrdersController extends Controller
                     $container['wharf_id'] = empty($container['wharf_id']) ? null : $container['wharf_id'];
                     $container['pre_pull_wharf_id'] = empty($container['pre_pull_wharf_id']) ? null : $container['pre_pull_wharf_id'];
                     $container['container_type_id'] = empty($container['container_type_id']) ? null : $container['container_type_id'];
+                    $container['container_type_name'] = $container['container_type_id']
+                        ? (ContainerType::query()->find($container['container_type_id'])?->name ?? '')
+                        : '';
+                    $container['fleet_name'] = $container['fleet_id']
+                        ? (Fleet::query()->find($container['fleet_id'])?->name ?? '')
+                        : '';
                     $containerModel->fill($container);
                     $containerModel->order()->associate($order);
                     $containerModel->save();

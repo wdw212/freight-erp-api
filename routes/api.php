@@ -264,6 +264,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 特殊费用比例 - 新增
     Route::post('special-cost-rates', [SpecialCostRatesController::class, 'store'])
         ->name('special-cost-rates.store');
+    // 特殊费用比例 - 当月参数（自动延用上月）
+    Route::get('special-cost-rates/get-current-month', [SpecialCostRatesController::class, 'getCurrentMonth'])
+        ->name('special-cost-rates.get-current-month');
     // 特殊费用比例 - 详情
     Route::put('special-cost-rates/{specialCostRate}', [SpecialCostRatesController::class, 'update'])
         ->name('special-cost-rates.update');
@@ -280,6 +283,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 特殊费用税点 - 新增
     Route::post('special-tax-rates', [SpecialTaxRatesController::class, 'store'])
         ->name('special-tax-rates.store');
+    // 特殊费用税点 - 当月参数（自动延用上月）
+    Route::get('special-tax-rates/get-current-month', [SpecialTaxRatesController::class, 'getCurrentMonth'])
+        ->name('special-tax-rates.get-current-month');
     // 特殊费用税点 - 详情
     Route::get('special-tax-rates/{specialTaxRate}', [SpecialTaxRatesController::class, 'show'])
         ->name('special-tax-rates.show');
@@ -293,6 +299,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 每月美金汇率 - 新增
     Route::post('usd-exchange-rates', [UsdExchangeRatesController::class, 'store'])
         ->name('usd-exchange-rates.store');
+    // 每月美金汇率 - 当月汇率（自动延用上月）
+    Route::get('usd-exchange-rates/get-current-month', [UsdExchangeRatesController::class, 'getCurrentMonth'])
+        ->name('usd-exchange-rates.get-current-month');
     // 每月美金汇率 - 详情
     Route::get('usd-exchange-rates/{usdExchangeRate}', [UsdExchangeRatesController::class, 'show'])
         ->name('usd-exchange-rates.show');
@@ -452,6 +461,9 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 账号工资 - 新增
     Route::post('admin-user-salaries', [AdminUserSalariesController::class, 'store'])
         ->name('admin-user-salaries.store');
+    // 账号工资 - 当月工资参数（自动延用上月）
+    Route::get('admin-user-salaries/get-current-month', [AdminUserSalariesController::class, 'getCurrentMonth'])
+        ->name('admin-user-salaries.get-current-month');
     // 账号工资 - 详情
     Route::get('admin-user-salaries/{adminUserSalary}', [AdminUserSalariesController::class, 'show'])
         ->name('admin-user-salaries.show');
@@ -634,6 +646,8 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     // 单据账单 - 新增
     Route::post('order-bills', [OrderBillsController::class, 'store'])
         ->name('order-bills.store');
+    Route::post('order-bills/{orderBill}/copy-to-order', [OrderBillsController::class, 'copyToOrder'])
+        ->name('order-bills.copy-to-order')->where('orderBill', '[0-9]+');
     // 单据账单 - 详情
     Route::get('order-bills/{orderBill}', [OrderBillsController::class, 'show'])
         ->name('order-bills.show')->where('orderBill', '[0-9]+');

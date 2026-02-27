@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @property mixed $id
  * @property mixed $month_code
+ * @property mixed $job_type
  * @property mixed $basic_salary
  * @property mixed $base_rate
  * @property mixed $higher_rate
@@ -27,6 +28,7 @@ class AdminUserSalaryResource extends JsonResource
         return [
             'id' => $this->id,
             'month_code' => $this->month_code,
+            'job_type' => $this->job_type,
             'basic_salary' => $this->basic_salary,
             'base_rate' => $this->base_rate,
             'higher_rate' => $this->higher_rate,
