@@ -301,6 +301,13 @@ class Order extends Model
                 if ($name !== '') {
                     return $name;
                 }
+            } elseif (str_starts_with($raw, '"')) {
+                // MySQL JSON 列读取时返回带外层引号的 JSON 字符串，需解码
+                $decoded = json_decode($raw, true);
+                if (is_string($decoded) && $decoded !== '') {
+                    return $decoded;
+                }
+                return $raw;
             } else {
                 return $raw;
             }
