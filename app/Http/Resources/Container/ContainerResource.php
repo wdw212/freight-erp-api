@@ -40,27 +40,61 @@ class ContainerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $containerTypeDetail = $this->container_type_display;
+        $fleetDetail = $this->fleet_display;
+        $prePullWharfDetail = $this->pre_pull_wharf_display;
+        $wharfDetail = $this->wharf_display;
+        $dropOffWharfDetail = $this->drop_off_wharf_display;
+        $containerLoadingAddresses = collect($this->containerLoadingAddresses)->map(static function ($item) {
+            $loadingAddressDetail = $item->loading_address_display;
+            $loadingAddressName = $loadingAddressDetail['name'] ?? '';
+            return [
+                'id' => $item->id,
+                'loading_address_id' => $loadingAddressDetail['id'],
+                'loading_address_name' => $loadingAddressName,
+                'loading_address' => $loadingAddressName,
+                'loading_address_detail' => $loadingAddressDetail,
+                'address' => $item->address,
+                'contact_name' => $item->contact_name,
+                'phone' => $item->phone,
+                'remark' => $item->remark,
+            ];
+        })->values();
+
         return [
             'id' => $this->id,
             'no' => $this->no,
             'cargo_weight' => $this->cargo_weight,
             'container_items' => $this->containerItems,
-            'container_loading_addresses' => $this->containerLoadingAddresses,
-            'container_type_id' => $this->container_type_id,
-            'container_type_name' => $this->container_type_name,
+            'container_loading_addresses' => $containerLoadingAddresses,
+            'container_type_id' => $containerTypeDetail['id'],
+            'container_type_name' => $containerTypeDetail['name'],
+            'container_type' => $containerTypeDetail['name'],
+            'container_type_detail' => $containerTypeDetail,
             'driver' => $this->driver,
-            'drop_off_wharf_id' => $this->drop_off_wharf_id,
+            'drop_off_wharf_id' => $dropOffWharfDetail['id'],
+            'drop_off_wharf_name' => $dropOffWharfDetail['name'],
+            'drop_off_wharf' => $dropOffWharfDetail['name'],
+            'drop_off_wharf_detail' => $dropOffWharfDetail,
             'entered_port_info' => $this->entered_port_info,
-            'fleet_id' => $this->fleet_id,
-            'fleet_name' => $this->fleet_name,
+            'fleet_id' => $fleetDetail['id'],
+            'fleet_name' => $fleetDetail['name'],
+            'fleet' => $fleetDetail['name'],
+            'fleet_detail' => $fleetDetail,
             'freight_remark' => $this->freight_remark,
             'freight_status' => $this->freight_status,
             'is_entered_port' => $this->is_entered_port,
             'loading_at' => $this->loading_at,
-            'pre_pull_wharf_id' => $this->pre_pull_wharf_id,
+            'pre_pull_wharf_id' => $prePullWharfDetail['id'],
+            'pre_pull_wharf_name' => $prePullWharfDetail['name'],
+            'pre_pull_wharf' => $prePullWharfDetail['name'],
+            'pre_pull_wharf_detail' => $prePullWharfDetail,
             'seal_number' => $this->seal_number,
             'serial_number' => $this->serial_number,
-            'wharf_id' => $this->wharf_id,
+            'wharf_id' => $wharfDetail['id'],
+            'wharf_name' => $wharfDetail['name'],
+            'wharf' => $wharfDetail['name'],
+            'wharf_detail' => $wharfDetail,
             'no_image' => formatFullUrl($this->no_image),
             'entered_port_record_image' => formatFullUrl($this->entered_port_record_image),
             'seal_number_image' => formatFullUrl($this->seal_number_image),

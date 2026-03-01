@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @property mixed $id
+ * @property mixed $shipping_company_id
+ * @property mixed $shipping_company_name
  * @property mixed $job_no
  * @property mixed $orderType
  * @property mixed $bl_no
@@ -37,9 +39,16 @@ class FinanceOrderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $shippingCompanyDetail = $this->shipping_company_display;
+        $shippingCompanyName = $shippingCompanyDetail['name'] ?? '';
+
         return [
             'id' => $this->id,
             'job_no' => $this->job_no,
+            'shipping_company_id' => $shippingCompanyDetail['id'],
+            'shipping_company_name' => $shippingCompanyName,
+            'shipping_company' => $shippingCompanyName,
+            'shipping_company_detail' => $shippingCompanyDetail,
             'order_type' => $this->orderType,
             'bl_no' => $this->bl_no,
             'operation_user' => $this->operationUser,

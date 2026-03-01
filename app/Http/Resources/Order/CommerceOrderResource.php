@@ -35,17 +35,20 @@ class CommerceOrderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $shippingCompanyDetail = $this->shipping_company_display;
+        $shippingCompanyName = $shippingCompanyDetail['name'] ?? '';
+
         return [
             'id' => $this->id,
             'job_no' => $this->job_no,
             'origin_port' => $this->origin_port,
             'destination_port' => $this->destination_port,
-            'shipping_company_id' => $this->shipping_company_id,
-            'shipping_company_name' => $this->shipping_company_name,
-            'shipping_company' => [
-                'id' => $this->shipping_company_id,
-                'name' => $this->shipping_company_name,
-            ],
+            'shipping_company_id' => $shippingCompanyDetail['id'],
+            'shipping_company_name' => $shippingCompanyName,
+            // 兼容旧前端列表列渲染，避免显示 [object Object]
+            'shipping_company' => $shippingCompanyName,
+            // 新结构保留给需要对象信息的调用方
+            'shipping_company_detail' => $shippingCompanyDetail,
             'bl_no' => $this->bl_no,
             'container_type' => $this->container_type,
             'sailing_schedule' => $this->sailing_schedule,

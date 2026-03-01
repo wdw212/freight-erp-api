@@ -22,20 +22,28 @@ class AdminUserSalariesController extends Controller
      * 列表
      * @param Request $request
      * @return AnonymousResourceCollection
-     * @throws InvalidRequestException
      */
     public function index(Request $request): AnonymousResourceCollection
     {
         $adminUserId = $request->input('admin_user_id');
+        $jobType = $request->input('job_type');
+        $monthCode = $request->input('month_code');
+        $pageSize = (int)$request->input('pageSize', $request->input('page_size', 15));
+        $pageSize = max(1, min($pageSize, 100));
 
-        if (!$adminUserId) {
-            throw new InvalidRequestException('请输入账号ID');
+        $builder = AdminUserSalary::query()->orderByDesc('id');
+
+        if (!empty($adminUserId)) {
+            $builder->where('admin_user_id', $adminUserId);
+        }
+        if (!empty($jobType)) {
+            $builder->where('job_type', $jobType);
+        }
+        if (!empty($monthCode)) {
+            $builder->where('month_code', Carbon::parse($monthCode)->format('Y-m'));
         }
 
-        $adminUserSalaries = AdminUserSalary::query()
-            ->where('admin_user_id', $adminUserId)
-            ->orderByDesc('id')
-            ->paginate();
+        $adminUserSalaries = $builder->paginate($pageSize);
 
         return AdminUserSalaryResource::collection($adminUserSalaries);
     }

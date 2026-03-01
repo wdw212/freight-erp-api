@@ -14,6 +14,22 @@ class InvoiceInfoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $data = parent::toArray($request);
+        $invoiceTypeDetail = $this->invoice_type_display;
+        $invoiceTypeName = $invoiceTypeDetail['name'] ?? '';
+        $invoiceType = [
+            'id' => $invoiceTypeDetail['id'],
+            'name' => $invoiceTypeName,
+            'type' => $this->invoiceType?->type ?? null,
+            'tax_rate' => $this->invoiceType?->tax_rate ?? null,
+            'remark' => $this->invoiceType?->remark ?? null,
+        ];
+
+        $data['invoice_type_id'] = $invoiceTypeDetail['id'];
+        $data['invoice_type_name'] = $invoiceTypeName;
+        $data['invoice_type'] = $invoiceType;
+        $data['invoice_type_detail'] = $invoiceType;
+
+        return $data;
     }
 }

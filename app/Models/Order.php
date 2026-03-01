@@ -173,4 +173,103 @@ class Order extends Model
     {
         return $this->belongsTo(Harbor::class, 'destination_harbor_id');
     }
+
+    /**
+     * 进港码头
+     * @return BelongsTo
+     */
+    public function enteredPortWharf(): BelongsTo
+    {
+        return $this->belongsTo(Wharf::class, 'entered_port_wharf_id');
+    }
+
+    /**
+     * 船公司
+     * @return BelongsTo
+     */
+    public function shippingCompany(): BelongsTo
+    {
+        return $this->belongsTo(ShippingCompany::class, 'shipping_company_id');
+    }
+
+    /**
+     * 统一船公司展示名称（快照优先）
+     * 规则：快照名 > 关联名（已预加载时）> ID字符串
+     * @return string
+     */
+    public function getShippingCompanyDisplayNameAttribute(): string
+    {
+        $snapshotName = trim((string)($this->shipping_company_name ?? ''));
+        $shippingCompanyId = empty($this->shipping_company_id) ? null : (int)$this->shipping_company_id;
+        $snapshotLooksLikeId = $snapshotName !== ''
+            && ctype_digit($snapshotName)
+            && !empty($shippingCompanyId)
+            && (int)$snapshotName === $shippingCompanyId;
+
+        if ($snapshotName !== '' && !$snapshotLooksLikeId) {
+            return $snapshotName;
+        }
+
+        if ($this->relationLoaded('shippingCompany')) {
+            $relationName = trim((string)($this->shippingCompany?->name ?? ''));
+            if ($relationName !== '') {
+                return $relationName;
+            }
+        }
+
+        // 兜底查询：避免关系未预加载或历史快照异常时前端回退显示为ID
+        if (!empty($shippingCompanyId)) {
+            $resolvedName = trim((string)(ShippingCompany::query()->find($shippingCompanyId)?->name ?? ''));
+            if ($resolvedName !== '') {
+                return $resolvedName;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * 统一船公司展示结构
+     * @return array{id: int|null, name: string}
+     */
+    public function getShippingCompanyDisplayAttribute(): array
+    {
+        return [
+            'id' => empty($this->shipping_company_id) ? null : (int)$this->shipping_company_id,
+            'name' => $this->shipping_company_display_name,
+        ];
+    }
+
+    /**
+     * 进港码头展示名称（快照优先）
+     * @return string
+     */
+    public function getEnteredPortWharfDisplayNameAttribute(): string
+    {
+        $snapshotName = trim((string)($this->entered_port_wharf_name ?? ''));
+        if ($snapshotName !== '') {
+            return $snapshotName;
+        }
+
+        if ($this->relationLoaded('enteredPortWharf')) {
+            $relationName = trim((string)($this->enteredPortWharf?->name ?? ''));
+            if ($relationName !== '') {
+                return $relationName;
+            }
+        }
+
+        return empty($this->entered_port_wharf_id) ? '' : (string)$this->entered_port_wharf_id;
+    }
+
+    /**
+     * 进港码头展示结构
+     * @return array{id: int|null, name: string}
+     */
+    public function getEnteredPortWharfDisplayAttribute(): array
+    {
+        return [
+            'id' => empty($this->entered_port_wharf_id) ? null : (int)$this->entered_port_wharf_id,
+            'name' => $this->entered_port_wharf_display_name,
+        ];
+    }
 }

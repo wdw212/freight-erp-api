@@ -17,6 +17,7 @@ class InvoiceObserver
         $orderReceipt = new OrderReceipt();
         $orderReceipt->order_id = $invoice->order_id;
         $orderReceipt->company_header_id = $invoice->purchase_entity_id;
+        $orderReceipt->company_header_name = CompanyHeader::query()->find($invoice->purchase_entity_id)?->company_name ?? '';
         $orderReceipt->cny_amount = $invoice->total_cny_amount;
         $orderReceipt->usd_amount = $invoice->total_usd_amount;
         $orderReceipt->save();
@@ -42,8 +43,9 @@ class InvoiceObserver
             'usc_code' => $invoice->purchase_usc_code,
         ];
 
-        // 计算税额
-        $invoice->tax_amount = calculateTaxAmount($invoice->total_cny_amount, $invoice->tax_rate);
+        // 计算税额：避免把空字符串写入 decimal 字段
+        $taxAmount = calculateTaxAmount($invoice->total_cny_amount, $invoice->tax_rate);
+        $invoice->tax_amount = $taxAmount === '' ? '0' : $taxAmount;
     }
 
     /**

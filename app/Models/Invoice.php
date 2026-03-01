@@ -83,4 +83,37 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceItem::class)->where('currency', 'usd');
     }
+
+    /**
+     * 发票类型展示名称（快照优先）
+     * @return string
+     */
+    public function getInvoiceTypeDisplayNameAttribute(): string
+    {
+        $snapshotName = trim((string)($this->invoice_type_name ?? ''));
+        if ($snapshotName !== '') {
+            return $snapshotName;
+        }
+
+        if ($this->relationLoaded('invoiceType')) {
+            $relationName = trim((string)($this->invoiceType?->name ?? ''));
+            if ($relationName !== '') {
+                return $relationName;
+            }
+        }
+
+        return empty($this->invoice_type_id) ? '' : (string)$this->invoice_type_id;
+    }
+
+    /**
+     * 发票类型展示结构
+     * @return array{id: int|null, name: string}
+     */
+    public function getInvoiceTypeDisplayAttribute(): array
+    {
+        return [
+            'id' => empty($this->invoice_type_id) ? null : (int)$this->invoice_type_id,
+            'name' => $this->invoice_type_display_name,
+        ];
+    }
 }

@@ -21,8 +21,20 @@ class OrderObserver
         } else if (empty($order->finish_at)) {
             $order->finish_at = Carbon::now();
         }
-        $order->origin_harbor = $order->originHarbor;
-        $order->destination_harbor = $order->destinationHarbor;
+        // 港口快照：仅在港口ID变化或快照为空时刷新，避免历史数据被主数据改名“追改”
+        $originHarborId = empty($order->origin_harbor_id) ? null : (int)$order->origin_harbor_id;
+        if (empty($originHarborId)) {
+            $order->origin_harbor = null;
+        } else if ($order->isDirty('origin_harbor_id') || empty($order->origin_harbor)) {
+            $order->origin_harbor = $order->originHarbor;
+        }
+
+        $destinationHarborId = empty($order->destination_harbor_id) ? null : (int)$order->destination_harbor_id;
+        if (empty($destinationHarborId)) {
+            $order->destination_harbor = null;
+        } else if ($order->isDirty('destination_harbor_id') || empty($order->destination_harbor)) {
+            $order->destination_harbor = $order->destinationHarbor;
+        }
 
         // 计算毛利人民币
         Log::info('毛利人民币');
