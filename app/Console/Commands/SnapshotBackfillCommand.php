@@ -35,6 +35,8 @@ class SnapshotBackfillCommand extends Command
 
         $this->backfillOrdersShippingCompany();
         $this->backfillOrdersEnteredPortWharf();
+        $this->backfillOrdersOriginHarbor();
+        $this->backfillOrdersDestinationHarbor();
         $this->backfillOrderDelegationHeaders();
         $this->backfillContainerTypes();
         $this->backfillContainerFleets();
@@ -104,6 +106,60 @@ class SnapshotBackfillCommand extends Command
             });
 
         $this->printResult('orders.entered_port_wharf_name', $count);
+    }
+
+    private function backfillOrdersOriginHarbor(): void
+    {
+        $this->line('→ orders.origin_harbor ...');
+        $count = 0;
+
+        DB::table('orders')
+            ->whereNotNull('origin_harbor_id')
+            ->where(function ($q) {
+                $q->whereNull('origin_harbor')
+                    ->orWhere('origin_harbor', '');
+            })
+            ->orderBy('id')
+            ->chunk(200, function ($rows) use (&$count) {
+                foreach ($rows as $row) {
+                    $name = DB::table('harbors')->where('id', $row->origin_harbor_id)->value('name');
+                    if ($name !== null) {
+                        $count++;
+                        if (!$this->dryRun) {
+                            DB::table('orders')->where('id', $row->id)->update(['origin_harbor' => $name]);
+                        }
+                    }
+                }
+            });
+
+        $this->printResult('orders.origin_harbor', $count);
+    }
+
+    private function backfillOrdersDestinationHarbor(): void
+    {
+        $this->line('→ orders.destination_harbor ...');
+        $count = 0;
+
+        DB::table('orders')
+            ->whereNotNull('destination_harbor_id')
+            ->where(function ($q) {
+                $q->whereNull('destination_harbor')
+                    ->orWhere('destination_harbor', '');
+            })
+            ->orderBy('id')
+            ->chunk(200, function ($rows) use (&$count) {
+                foreach ($rows as $row) {
+                    $name = DB::table('harbors')->where('id', $row->destination_harbor_id)->value('name');
+                    if ($name !== null) {
+                        $count++;
+                        if (!$this->dryRun) {
+                            DB::table('orders')->where('id', $row->id)->update(['destination_harbor' => $name]);
+                        }
+                    }
+                }
+            });
+
+        $this->printResult('orders.destination_harbor', $count);
     }
 
     private function backfillOrderDelegationHeaders(): void

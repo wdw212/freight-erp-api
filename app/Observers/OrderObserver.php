@@ -26,14 +26,14 @@ class OrderObserver
         if (empty($originHarborId)) {
             $order->origin_harbor = null;
         } else if ($order->isDirty('origin_harbor_id') || empty($order->origin_harbor)) {
-            $order->origin_harbor = $order->originHarbor;
+            $order->origin_harbor = $order->originHarbor?->name;
         }
 
         $destinationHarborId = empty($order->destination_harbor_id) ? null : (int)$order->destination_harbor_id;
         if (empty($destinationHarborId)) {
             $order->destination_harbor = null;
         } else if ($order->isDirty('destination_harbor_id') || empty($order->destination_harbor)) {
-            $order->destination_harbor = $order->destinationHarbor;
+            $order->destination_harbor = $order->destinationHarbor?->name;
         }
 
         // 计算毛利人民币

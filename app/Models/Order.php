@@ -241,6 +241,82 @@ class Order extends Model
     }
 
     /**
+     * 始发港展示名称（快照优先）
+     * 兼容旧数据（JSON 对象）和新数据（纯字符串名称）
+     * @return string
+     */
+    public function getOriginHarborDisplayNameAttribute(): string
+    {
+        return $this->resolveHarborSnapshotName($this->origin_harbor, $this->origin_harbor_id, 'originHarbor');
+    }
+
+    /**
+     * 始发港展示结构
+     * @return array{id: int|null, name: string}
+     */
+    public function getOriginHarborDisplayAttribute(): array
+    {
+        return [
+            'id' => empty($this->origin_harbor_id) ? null : (int)$this->origin_harbor_id,
+            'name' => $this->origin_harbor_display_name,
+        ];
+    }
+
+    /**
+     * 目的港展示名称（快照优先）
+     * @return string
+     */
+    public function getDestinationHarborDisplayNameAttribute(): string
+    {
+        return $this->resolveHarborSnapshotName($this->destination_harbor, $this->destination_harbor_id, 'destinationHarbor');
+    }
+
+    /**
+     * 目的港展示结构
+     * @return array{id: int|null, name: string}
+     */
+    public function getDestinationHarborDisplayAttribute(): array
+    {
+        return [
+            'id' => empty($this->destination_harbor_id) ? null : (int)$this->destination_harbor_id,
+            'name' => $this->destination_harbor_display_name,
+        ];
+    }
+
+    /**
+     * 解析港口快照名称（兼容旧 JSON 格式）
+     * @param mixed $snapshot
+     * @param mixed $harborId
+     * @param string $relation
+     * @return string
+     */
+    private function resolveHarborSnapshotName(mixed $snapshot, mixed $harborId, string $relation): string
+    {
+        $raw = trim((string)($snapshot ?? ''));
+        if ($raw !== '') {
+            // 兼容旧格式：快照为 JSON 字符串（整个 Harbor 模型）
+            if (str_starts_with($raw, '{')) {
+                $decoded = json_decode($raw, true);
+                $name = trim((string)($decoded['name'] ?? ''));
+                if ($name !== '') {
+                    return $name;
+                }
+            } else {
+                return $raw;
+            }
+        }
+
+        if ($this->relationLoaded($relation)) {
+            $relationName = trim((string)($this->{$relation}?->name ?? ''));
+            if ($relationName !== '') {
+                return $relationName;
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * 进港码头展示名称（快照优先）
      * @return string
      */
