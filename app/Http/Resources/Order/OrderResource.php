@@ -55,16 +55,24 @@ class OrderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $shippingCompanyDetail = $this->shipping_company_display;
+        $shippingCompanyName = $shippingCompanyDetail['name'] ?? '';
+
         return [
             'id' => $this->id,
             'order_type' => $this->orderType,
-            'shipping_company_id' => $this->shipping_company_id,
-            'shipping_company_name' => $this->shipping_company_name,
+            'shipping_company_id' => $shippingCompanyDetail['id'],
+            'shipping_company_name' => $shippingCompanyName,
+            'shipping_company' => $shippingCompanyName,
+            'shipping_company_detail' => $shippingCompanyDetail,
             'business_user' => $this->businessUser,
             'operate_user' => $this->operateUser,
             'document_user' => $this->documentUser,
             'commerce_user' => $this->commerceUser,
-            'orderDelegationHeader' => $this->orderDelegationHeader,
+            'orderDelegationHeader' => $this->orderDelegationHeader ? array_merge(
+                $this->orderDelegationHeader->toArray(),
+                ['company_header_name' => $this->orderDelegationHeader->company_header_display_name]
+            ) : null,
             'job_no' => $this->job_no,
             'contract_no' => $this->contract_no,
             'bl_no' => $this->bl_no,

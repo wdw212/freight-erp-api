@@ -8,6 +8,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @property mixed $id
+ * @property mixed $shipping_company_id
+ * @property mixed $shipping_company_name
  * @property mixed $job_no
  * @property mixed $orderDelegationHeader
  * @property mixed $orderType
@@ -34,10 +36,20 @@ class BusinessOrderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $shippingCompanyDetail = $this->shipping_company_display;
+        $shippingCompanyName = $shippingCompanyDetail['name'] ?? '';
+
         return [
             'id' => $this->id,
             'job_no' => $this->job_no,
-            'order_delegation_header' => $this->orderDelegationHeader,
+            'shipping_company_id' => $shippingCompanyDetail['id'],
+            'shipping_company_name' => $shippingCompanyName,
+            'shipping_company' => $shippingCompanyName,
+            'shipping_company_detail' => $shippingCompanyDetail,
+            'order_delegation_header' => $this->orderDelegationHeader ? array_merge(
+                $this->orderDelegationHeader->toArray(),
+                ['company_header_name' => $this->orderDelegationHeader->company_header_display_name]
+            ) : null,
             'order_type' => $this->orderType,
             'bl_no' => $this->bl_no,
             'destination_port' => $this->destination_port,
