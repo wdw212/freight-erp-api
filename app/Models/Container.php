@@ -35,6 +35,7 @@ class Container extends Model
         'drop_off_wharf_name',
         'is_entered_port',
         'driver',
+        'driver_name',
         'fleet_id',
         'fleet_name',
         'cargo_weight',
@@ -78,7 +79,7 @@ class Container extends Model
      */
     public function prePullWharf(): BelongsTo
     {
-        return $this->belongsTo(Wharf::class, 'pre_pull_wharf_id');
+        return $this->belongsTo(YardWharf::class, 'pre_pull_wharf_id');
     }
 
     /**
@@ -94,7 +95,7 @@ class Container extends Model
      */
     public function dropOffWharf(): BelongsTo
     {
-        return $this->belongsTo(Wharf::class, 'drop_off_wharf_id');
+        return $this->belongsTo(YardWharf::class, 'drop_off_wharf_id');
     }
 
     /**
@@ -204,6 +205,28 @@ class Container extends Model
             'id' => empty($this->fleet_id) ? null : (int)$this->fleet_id,
             'name' => $this->fleet_display_name,
         ];
+    }
+
+    /**
+     * 司机展示名称（快照优先）
+     * @return string
+     */
+    public function getDriverDisplayNameAttribute(): string
+    {
+        $snapshotName = trim((string)($this->driver_name ?? ''));
+        if ($snapshotName !== '') {
+            return $snapshotName;
+        }
+
+        return trim((string)($this->driver ?? ''));
+    }
+
+    /**
+     * @return string
+     */
+    public function getDriverDisplayAttribute(): string
+    {
+        return $this->driver_display_name;
     }
 
     /**

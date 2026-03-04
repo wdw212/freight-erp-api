@@ -25,6 +25,7 @@ use App\Models\Order;
 use App\Models\ShippingCompany;
 use App\Models\SftRecord;
 use App\Models\Wharf;
+use App\Models\YardWharf;
 use App\Models\OrderBlInfo;
 use App\Models\OrderDelegationHeader;
 use App\Models\OrderFile;
@@ -232,13 +233,13 @@ class OrdersController extends Controller
                     ? (Fleet::query()->find($container['fleet_id'])?->name ?? '')
                     : '';
                 $container['pre_pull_wharf_name'] = $container['pre_pull_wharf_id']
-                    ? (Wharf::query()->find($container['pre_pull_wharf_id'])?->name ?? '')
+                    ? (YardWharf::query()->find($container['pre_pull_wharf_id'])?->name ?? '')
                     : '';
                 $container['wharf_name'] = $container['wharf_id']
                     ? (Wharf::query()->find($container['wharf_id'])?->name ?? '')
                     : '';
                 $container['drop_off_wharf_name'] = $container['drop_off_wharf_id']
-                    ? (Wharf::query()->find($container['drop_off_wharf_id'])?->name ?? '')
+                    ? (YardWharf::query()->find($container['drop_off_wharf_id'])?->name ?? '')
                     : '';
                 $containerModel = new Container();
                 $containerModel->fill($container);
@@ -622,12 +623,20 @@ class OrdersController extends Controller
                 $originalContainerTypeName = (string)($containerModel->container_type_name ?? '');
                 $originalFleetId = (int)($containerModel->fleet_id ?? 0);
                 $originalFleetName = (string)($containerModel->fleet_name ?? '');
+                $originalDriver = (string)($containerModel->driver ?? '');
+                $originalDriverName = (string)($containerModel->driver_name ?? '');
                 $originalPrePullWharfId = (int)($containerModel->pre_pull_wharf_id ?? 0);
                 $originalPrePullWharfName = (string)($containerModel->pre_pull_wharf_name ?? '');
                 $originalWharfId = (int)($containerModel->wharf_id ?? 0);
                 $originalWharfName = (string)($containerModel->wharf_name ?? '');
                 $originalDropOffWharfId = (int)($containerModel->drop_off_wharf_id ?? 0);
                 $originalDropOffWharfName = (string)($containerModel->drop_off_wharf_name ?? '');
+                $forceRefreshContainerTypeSnapshot = !empty($container['container_type_snapshot_refresh']);
+                $forceRefreshFleetSnapshot = !empty($container['fleet_snapshot_refresh']);
+                $forceRefreshDriverSnapshot = !empty($container['driver_snapshot_refresh']);
+                $forceRefreshContainerWharfSnapshotInContainer = !empty($container['container_wharf_snapshot_refresh']);
+                $forceRefreshContainerWharfSnapshotCurrent = $forceRefreshContainerWharfSnapshot || $forceRefreshContainerWharfSnapshotInContainer;
+                unset($container['container_type_snapshot_refresh'], $container['fleet_snapshot_refresh'], $container['driver_snapshot_refresh'], $container['container_wharf_snapshot_refresh']);
 
                 $container['no_image'] = $container['no_image']['path'] ?? '';
                 $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
@@ -642,7 +651,7 @@ class OrdersController extends Controller
 
                 if (!empty($container['container_type_id'])) {
                     $containerTypeIdChanged = (int)$container['container_type_id'] !== $originalContainerTypeId;
-                    if ($containerTypeIdChanged || empty($originalContainerTypeName)) {
+                    if ($containerTypeIdChanged || empty($originalContainerTypeName) || $forceRefreshContainerTypeSnapshot) {
                         $container['container_type_name'] = ContainerType::query()->find($container['container_type_id'])?->name ?? '';
                     } else {
                         $container['container_type_name'] = $originalContainerTypeName;
@@ -653,7 +662,7 @@ class OrdersController extends Controller
 
                 if (!empty($container['fleet_id'])) {
                     $fleetIdChanged = (int)$container['fleet_id'] !== $originalFleetId;
-                    if ($fleetIdChanged || empty($originalFleetName)) {
+                    if ($fleetIdChanged || empty($originalFleetName) || $forceRefreshFleetSnapshot) {
                         $container['fleet_name'] = Fleet::query()->find($container['fleet_id'])?->name ?? '';
                     } else {
                         $container['fleet_name'] = $originalFleetName;
@@ -662,10 +671,22 @@ class OrdersController extends Controller
                     $container['fleet_name'] = '';
                 }
 
+                $currentDriver = trim((string)($container['driver'] ?? ''));
+                if ($currentDriver !== '') {
+                    $driverChanged = $currentDriver !== $originalDriver;
+                    if ($driverChanged || empty($originalDriverName) || $forceRefreshDriverSnapshot) {
+                        $container['driver_name'] = $currentDriver;
+                    } else {
+                        $container['driver_name'] = $originalDriverName;
+                    }
+                } else {
+                    $container['driver_name'] = '';
+                }
+
                 if (!empty($container['pre_pull_wharf_id'])) {
                     $prePullWharfIdChanged = (int)$container['pre_pull_wharf_id'] !== $originalPrePullWharfId;
-                    if ($prePullWharfIdChanged || empty($originalPrePullWharfName) || $forceRefreshContainerWharfSnapshot) {
-                        $container['pre_pull_wharf_name'] = Wharf::query()->find($container['pre_pull_wharf_id'])?->name ?? '';
+                    if ($prePullWharfIdChanged || empty($originalPrePullWharfName) || $forceRefreshContainerWharfSnapshotCurrent) {
+                        $container['pre_pull_wharf_name'] = YardWharf::query()->find($container['pre_pull_wharf_id'])?->name ?? '';
                     } else {
                         $container['pre_pull_wharf_name'] = $originalPrePullWharfName;
                     }
@@ -675,7 +696,7 @@ class OrdersController extends Controller
 
                 if (!empty($container['wharf_id'])) {
                     $wharfIdChanged = (int)$container['wharf_id'] !== $originalWharfId;
-                    if ($wharfIdChanged || empty($originalWharfName) || $forceRefreshContainerWharfSnapshot) {
+                    if ($wharfIdChanged || empty($originalWharfName) || $forceRefreshContainerWharfSnapshotCurrent) {
                         $container['wharf_name'] = Wharf::query()->find($container['wharf_id'])?->name ?? '';
                     } else {
                         $container['wharf_name'] = $originalWharfName;
@@ -686,8 +707,8 @@ class OrdersController extends Controller
 
                 if (!empty($container['drop_off_wharf_id'])) {
                     $dropOffWharfIdChanged = (int)$container['drop_off_wharf_id'] !== $originalDropOffWharfId;
-                    if ($dropOffWharfIdChanged || empty($originalDropOffWharfName) || $forceRefreshContainerWharfSnapshot) {
-                        $container['drop_off_wharf_name'] = Wharf::query()->find($container['drop_off_wharf_id'])?->name ?? '';
+                    if ($dropOffWharfIdChanged || empty($originalDropOffWharfName) || $forceRefreshContainerWharfSnapshotCurrent) {
+                        $container['drop_off_wharf_name'] = YardWharf::query()->find($container['drop_off_wharf_id'])?->name ?? '';
                     } else {
                         $container['drop_off_wharf_name'] = $originalDropOffWharfName;
                     }
