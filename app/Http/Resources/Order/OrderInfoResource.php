@@ -84,8 +84,12 @@ class OrderInfoResource extends JsonResource
     {
         $shippingCompanyDetail = $this->shipping_company_display;
         $shippingCompanyName = $shippingCompanyDetail['name'] ?? '';
-        $enteredPortWharfDetail = $this->entered_port_wharf_display;
-        $enteredPortWharfName = $enteredPortWharfDetail['name'] ?? '';
+        $enteredPortWharfId = empty($this->entered_port_wharf_id) ? null : (int)$this->entered_port_wharf_id;
+        $enteredPortWharfSnapshotName = (string)($this->entered_port_wharf_name ?? '');
+        // 使用已加载的关联返回当前主数据名，保证两端展示一致；快照保留在 entered_port_wharf_name
+        $enteredPortWharfCurrentName = ($this->relationLoaded('enteredPortWharf') && $this->enteredPortWharf?->name !== null)
+            ? (string)$this->enteredPortWharf->name
+            : ($enteredPortWharfSnapshotName !== '' ? $enteredPortWharfSnapshotName : '');
 
         $orderFiles = collect($this->orderFiles)->map(function ($item) {
             return [
@@ -134,10 +138,10 @@ class OrderInfoResource extends JsonResource
             'order_files' => $orderFiles,
             'containers' => ContainerResource::collection($this->containers),
             'is_finish' => $this->is_finish,
-            'entered_port_wharf_id' => $enteredPortWharfDetail['id'],
-            'entered_port_wharf_name' => $enteredPortWharfName,
-            'entered_port_wharf' => $enteredPortWharfName,
-            'entered_port_wharf_detail' => $enteredPortWharfDetail,
+            'entered_port_wharf_id' => $enteredPortWharfId,
+            'entered_port_wharf_name' => $enteredPortWharfSnapshotName,
+            'entered_port_wharf' => $enteredPortWharfCurrentName,
+            'entered_port_wharf_detail' => ['id' => $enteredPortWharfId, 'name' => $enteredPortWharfCurrentName],
             'insurance' => $this->insurance,
             'is_allowed' => $this->is_allowed,
             'port_open_at' => formatAt($this->port_open_at, 'Y-m-d H:i'),

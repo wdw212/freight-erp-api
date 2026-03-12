@@ -20,6 +20,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $created_at
  * @property mixed $cny_amount
  * @property mixed $usd_amount
+ * @property mixed $order
+ * @property mixed $order_id
  */
 class OrderBillResource extends JsonResource
 {
@@ -32,6 +34,7 @@ class OrderBillResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'order_id' => $this->order_id,
             'delegation_header' => $this->delegation_header,
             'job_no' => $this->job_no,
             'contract_no' => $this->contract_no,
@@ -45,6 +48,7 @@ class OrderBillResource extends JsonResource
             'cny_amount' => $this->cny_amount,
             'usd_amount' => $this->usd_amount,
             'remark' => $this->remark,
+            'business_user' => $this->order?->businessUser,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }

@@ -38,6 +38,7 @@ class OrderBillInfoResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'order_id' => $this->order_id,
             'delegation_header' => $this->delegation_header,
             'job_no' => $this->job_no,
             'contract_no' => $this->contract_no,

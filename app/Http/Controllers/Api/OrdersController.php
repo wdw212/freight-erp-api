@@ -20,6 +20,7 @@ use App\Models\ContainerItem;
 use App\Models\ContainerLoadingAddress;
 use App\Models\ContainerType;
 use App\Models\Fleet;
+use App\Models\Harbor;
 use App\Models\LoadingAddress;
 use App\Models\Order;
 use App\Models\ShippingCompany;
@@ -140,7 +141,7 @@ class OrdersController extends Controller
             throw new InvalidRequestException('工作编号重复,请重试！');
         }
         if (!empty($data['booking_info'])) {
-            $data['booking_info'] = json_decode($data['booking_info'], true);
+            $data['booking_info'] = $this->normalizeJsonArray($data['booking_info']);
         } else {
             $data['booking_info'] = [];
         }
@@ -149,7 +150,7 @@ class OrdersController extends Controller
         }
         $incomingShippingCompanyName = $this->extractShippingCompanySnapshotCandidate($data);
         $data['shipping_company_id'] = empty($data['shipping_company_id'])
-            ? null
+            ? 0
             : (int)$data['shipping_company_id'];
         $data['shipping_company_name'] = $this->resolveShippingCompanySnapshotName(
             $data['shipping_company_id'],
@@ -176,23 +177,29 @@ class OrdersController extends Controller
                 $companyHeaderId = empty($orderReceipt['company_header_id'])
                     ? null
                     : (int)$orderReceipt['company_header_id'];
-                $orderReceipt['company_header_id'] = $companyHeaderId;
-                $orderReceipt['company_header_name'] = $this->resolveCompanyHeaderSnapshotName($companyHeaderId);
-                $orderReceiptRelations[] = new OrderReceipt($orderReceipt);
+                $companyHeaderName = $this->resolveCompanyHeaderSnapshotName($companyHeaderId);
+                $orderReceiptRelations[] = new OrderReceipt(
+                    $this->buildOrderReceiptPayload($orderReceipt, $companyHeaderId, $companyHeaderName)
+                );
             }
             $order->orderReceipts()->saveMany($orderReceiptRelations);
         }
 
         // 单据委托抬头
         if (!empty($data['order_delegation_header'])) {
-            $temp = $this->normalizeJsonArray($data['order_delegation_header']);
+            $temp = $this->stripModelMetaFields(
+                $this->normalizeJsonArray($data['order_delegation_header'])
+            );
             if (!empty($temp['company_header_id'])) {
                 $companyHeader = CompanyHeader::query()->where('id', $temp['company_header_id'])->first();
                 $temp['contact_person'] = $companyHeader?->contact_person;
                 $temp['contact_phone'] = $companyHeader?->contact_phone;
                 $temp['company_header_name'] = $companyHeader?->company_name ?? '';
             } else {
-                $temp['company_header_id'] = null;
+                $temp['company_header_id'] = 0;
+                $temp['company_header_name'] = '';
+                $temp['contact_person'] = '';
+                $temp['contact_phone'] = '';
             }
             $orderDelegationHeader = new OrderDelegationHeader();
             $orderDelegationHeader->fill($temp);
@@ -207,6 +214,7 @@ class OrdersController extends Controller
             foreach ($orderFiles as $item) {
                 $orderFileRelations[] = new OrderFile([
                     'file' => $item['file'],
+                    'size' => (int)($item['size'] ?? 0),
                 ]);
             }
             $order->orderFiles()->saveMany($orderFileRelations);
@@ -216,10 +224,26 @@ class OrdersController extends Controller
         if (!empty($data['containers'])) {
             $containers = $this->normalizeJsonArray($data['containers']);
             foreach ($containers as $container) {
+                $container = $this->normalizeContainerPayload($container);
+                if ($this->isBlankContainer($container)) {
+                    continue;
+                }
+                $container['no'] = trim((string)($container['no'] ?? ''));
+                $container['seal_number'] = trim((string)($container['seal_number'] ?? ''));
+                $container['cargo_weight'] = trim((string)($container['cargo_weight'] ?? ''));
                 $container['no_image'] = $container['no_image']['path'] ?? '';
                 $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                 $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
                 $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
+                unset(
+                    $container['container_type_snapshot_refresh'],
+                    $container['fleet_snapshot_refresh'],
+                    $container['driver_snapshot_refresh'],
+                    $container['container_wharf_snapshot_refresh'],
+                    $container['pre_pull_wharf_snapshot_refresh'],
+                    $container['wharf_snapshot_refresh'],
+                    $container['drop_off_wharf_snapshot_refresh']
+                );
                 $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? null : (int)$container['drop_off_wharf_id'];
                 $container['fleet_id'] = empty($container['fleet_id']) ? null : (int)$container['fleet_id'];
                 $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
@@ -249,6 +273,10 @@ class OrdersController extends Controller
                 if (isset($container['container_items'])) {
                     $containerItems = $this->normalizeJsonArray($container['container_items']);
                     foreach ($containerItems as $containerItem) {
+                        $containerItem = $this->normalizeContainerItemPayload($containerItem, $order->bl_no);
+                        if ($this->isBlankContainerItem($containerItem)) {
+                            continue;
+                        }
                         $containerItem = new ContainerItem($containerItem);
                         $containerItem->container()->associate($containerModel);
                         $containerItem->save();
@@ -259,6 +287,9 @@ class OrdersController extends Controller
                     $containerLoadingAddresses = $this->normalizeJsonArray($container['container_loading_addresses']);
                     foreach ($containerLoadingAddresses as $containerLoadingAddress) {
                         $containerLoadingAddress = $this->normalizeJsonArray($containerLoadingAddress);
+                        if ($this->isBlankContainerLoadingAddress($containerLoadingAddress)) {
+                            continue;
+                        }
                         $loadingAddressId = empty($containerLoadingAddress['loading_address_id'])
                             ? null
                             : (int)$containerLoadingAddress['loading_address_id'];
@@ -278,7 +309,9 @@ class OrdersController extends Controller
 
         // 处理提单信息
         if (!empty($data['bl_info'])) {
-            $tempBlInfo = $this->normalizeOrderBlInfoPayload($this->normalizeJsonArray($data['bl_info']));
+            $tempBlInfo = $this->normalizeOrderBlInfoPayload(
+                $this->stripModelMetaFields($this->normalizeJsonArray($data['bl_info']))
+            );
             $orderBlInfo = new OrderBlInfo();
             $orderBlInfo->order()->associate($order);
             $orderBlInfo->fill($tempBlInfo);
@@ -349,19 +382,29 @@ class OrdersController extends Controller
         $originalShippingCompanyName = (string)($order->shipping_company_name ?? '');
         $originalEnteredPortWharfId = (int)($order->entered_port_wharf_id ?? 0);
         $originalEnteredPortWharfName = (string)($order->entered_port_wharf_name ?? '');
+        $originalOriginHarborId = (int)($order->origin_harbor_id ?? 0);
+        $originalOriginHarborSnapshot = $order->origin_harbor;
+        $originalDestinationHarborId = (int)($order->destination_harbor_id ?? 0);
+        $originalDestinationHarborSnapshot = $order->destination_harbor;
         $forceRefreshShippingCompanySnapshot = !empty($data['shipping_company_snapshot_refresh']);
         $forceRefreshDelegationHeaderSnapshot = !empty($data['delegation_header_snapshot_refresh']);
         $forceRefreshEnteredPortWharfSnapshot = !empty($data['entered_port_wharf_snapshot_refresh']);
         $forceRefreshContainerWharfSnapshot = !empty($data['container_wharf_snapshot_refresh']);
+        $forceRefreshHarborSnapshot = !empty($data['harbor_snapshot_refresh']);
+        $forceRefreshOriginHarborSnapshot = !empty($data['origin_harbor_snapshot_refresh']) || $forceRefreshHarborSnapshot;
+        $forceRefreshDestinationHarborSnapshot = !empty($data['destination_harbor_snapshot_refresh']) || $forceRefreshHarborSnapshot;
         unset(
             $data['shipping_company_snapshot_refresh'],
             $data['delegation_header_snapshot_refresh'],
             $data['entered_port_wharf_snapshot_refresh'],
-            $data['container_wharf_snapshot_refresh']
+            $data['container_wharf_snapshot_refresh'],
+            $data['harbor_snapshot_refresh'],
+            $data['origin_harbor_snapshot_refresh'],
+            $data['destination_harbor_snapshot_refresh']
         );
 
         if (!empty($data['booking_info'])) {
-            $data['booking_info'] = json_decode($data['booking_info'], true);
+            $data['booking_info'] = $this->normalizeJsonArray($data['booking_info']);
         } else {
             $data['booking_info'] = [];
         }
@@ -377,7 +420,7 @@ class OrdersController extends Controller
         if (array_key_exists('shipping_company_id', $data)) {
             $incomingShippingCompanyName = $this->extractShippingCompanySnapshotCandidate($data);
             $data['shipping_company_id'] = empty($data['shipping_company_id'])
-                ? null
+                ? 0
                 : (int)$data['shipping_company_id'];
             $data['shipping_company_name'] = $this->resolveShippingCompanySnapshotName(
                 $data['shipping_company_id'],
@@ -402,6 +445,38 @@ class OrdersController extends Controller
                 }
             } else {
                 $data['entered_port_wharf_name'] = '';
+            }
+        }
+
+        if (array_key_exists('origin_harbor_id', $data)) {
+            $data['origin_harbor_id'] = empty($data['origin_harbor_id']) ? null : (int)$data['origin_harbor_id'];
+            if (!empty($data['origin_harbor_id'])) {
+                $originHarborIdChanged = (int)$data['origin_harbor_id'] !== $originalOriginHarborId;
+                if ($originHarborIdChanged || empty($originalOriginHarborSnapshot) || $forceRefreshOriginHarborSnapshot) {
+                    $data['origin_harbor'] = $this->encodeHarborSnapshotName(
+                        Harbor::query()->find($data['origin_harbor_id'])?->name
+                    );
+                } else {
+                    $data['origin_harbor'] = $originalOriginHarborSnapshot;
+                }
+            } else {
+                $data['origin_harbor'] = null;
+            }
+        }
+
+        if (array_key_exists('destination_harbor_id', $data)) {
+            $data['destination_harbor_id'] = empty($data['destination_harbor_id']) ? null : (int)$data['destination_harbor_id'];
+            if (!empty($data['destination_harbor_id'])) {
+                $destinationHarborIdChanged = (int)$data['destination_harbor_id'] !== $originalDestinationHarborId;
+                if ($destinationHarborIdChanged || empty($originalDestinationHarborSnapshot) || $forceRefreshDestinationHarborSnapshot) {
+                    $data['destination_harbor'] = $this->encodeHarborSnapshotName(
+                        Harbor::query()->find($data['destination_harbor_id'])?->name
+                    );
+                } else {
+                    $data['destination_harbor'] = $originalDestinationHarborSnapshot;
+                }
+            } else {
+                $data['destination_harbor'] = null;
             }
         }
 
@@ -435,40 +510,23 @@ class OrdersController extends Controller
                 $companyHeaderId = empty($orderPayment['company_header_id'])
                     ? null
                     : (int)$orderPayment['company_header_id'];
+                $incomingCompanyHeaderName = trim((string)($orderPayment['company_header_name'] ?? ''));
                 $companyHeaderName = $this->resolveCompanyHeaderSnapshotName(
                     $companyHeaderId,
                     $existingOrderPayment?->company_header_name,
-                    $existingOrderPayment?->company_header_id
+                    $existingOrderPayment?->company_header_id,
+                    $incomingCompanyHeaderName
                 );
 
                 if ($orderPaymentId) {
-                    OrderPayment::query()->where('id', $orderPaymentId)->update([
-                        'order_id' => $order->id,
-                        'company_header_id' => $companyHeaderId,
-                        'company_header_name' => $companyHeaderName,
-                        'no_invoice_remark' => $orderPayment['no_invoice_remark'] ?? '',
-                        'cny_amount' => $orderPayment['cny_amount'] ?? 0,
-                        'cny_invoice_number' => $orderPayment['cny_invoice_number'] ?? '',
-                        'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
-                        'usd_amount' => $orderPayment['usd_amount'] ?? 0,
-                        'usd_invoice_number' => $orderPayment['usd_invoice_number'] ?? '',
-                        'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
-                        'remark' => $orderPayment['remark'] ?? '',
-                    ]);
+                    OrderPayment::query()->where('id', $orderPaymentId)->update(array_merge(
+                        ['order_id' => $order->id],
+                        $this->buildOrderPaymentPayload($orderPayment, $companyHeaderId, $companyHeaderName)
+                    ));
                 } else {
-                    $orderPaymentData = [
-                        'company_header_id' => $companyHeaderId,
-                        'company_header_name' => $companyHeaderName,
-                        'no_invoice_remark' => $orderPayment['no_invoice_remark'] ?? '',
-                        'cny_amount' => $orderPayment['cny_amount'] ?? 0,
-                        'cny_invoice_number' => $orderPayment['cny_invoice_number'] ?? '',
-                        'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
-                        'usd_amount' => $orderPayment['usd_amount'] ?? 0,
-                        'usd_invoice_number' => $orderPayment['usd_invoice_number'] ?? '',
-                        'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
-                        'remark' => $orderPayment['remark'] ?? '',
-                    ];
-                    $orderPaymentRelations[] = new OrderPayment($orderPaymentData);
+                    $orderPaymentRelations[] = new OrderPayment(
+                        $this->buildOrderPaymentPayload($orderPayment, $companyHeaderId, $companyHeaderName)
+                    );
                 }
             }
             $order->orderPayments()->saveMany($orderPaymentRelations);
@@ -506,37 +564,23 @@ class OrdersController extends Controller
                 $companyHeaderId = empty($orderReceipt['company_header_id'])
                     ? null
                     : (int)$orderReceipt['company_header_id'];
+                $incomingCompanyHeaderName = trim((string)($orderReceipt['company_header_name'] ?? ''));
                 $companyHeaderName = $this->resolveCompanyHeaderSnapshotName(
                     $companyHeaderId,
                     $existingOrderReceipt?->company_header_name,
-                    $existingOrderReceipt?->company_header_id
+                    $existingOrderReceipt?->company_header_id,
+                    $incomingCompanyHeaderName
                 );
 
                 if ($orderReceiptId) {
-                    OrderReceipt::query()->where('id', $orderReceiptId)->update([
-                        'order_id' => $order->id,
-                        'company_header_id' => $companyHeaderId,
-                        'company_header_name' => $companyHeaderName,
-                        'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
-                        'cny_invoice_number' => $orderReceipt['cny_invoice_number'] ?? '',
-                        'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
-                        'usd_amount' => $orderReceipt['usd_amount'] ?? 0,
-                        'usd_invoice_number' => $orderReceipt['usd_invoice_number'] ?? '',
-                        'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
-                        'remark' => $orderReceipt['remark'] ?? '',
-                    ]);
+                    OrderReceipt::query()->where('id', $orderReceiptId)->update(array_merge(
+                        ['order_id' => $order->id],
+                        $this->buildOrderReceiptPayload($orderReceipt, $companyHeaderId, $companyHeaderName)
+                    ));
                 } else {
-                    $orderReceiptRelations[] = new OrderReceipt([
-                        'company_header_id' => $companyHeaderId,
-                        'company_header_name' => $companyHeaderName,
-                        'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
-                        'cny_invoice_number' => $orderReceipt['cny_invoice_number'] ?? '',
-                        'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
-                        'usd_amount' => $orderReceipt['usd_amount'] ?? 0,
-                        'usd_invoice_number' => $orderReceipt['usd_invoice_number'] ?? '',
-                        'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
-                        'remark' => $orderReceipt['remark'] ?? '',
-                    ]);
+                    $orderReceiptRelations[] = new OrderReceipt(
+                        $this->buildOrderReceiptPayload($orderReceipt, $companyHeaderId, $companyHeaderName)
+                    );
                 }
             }
             $order->orderReceipts()->saveMany($orderReceiptRelations);
@@ -549,7 +593,9 @@ class OrdersController extends Controller
 
         // 单据委托抬头
         if (!empty($data['order_delegation_header'])) {
-            $temp = $this->normalizeJsonArray($data['order_delegation_header']);
+            $temp = $this->stripModelMetaFields(
+                $this->normalizeJsonArray($data['order_delegation_header'])
+            );
             $orderDelegationHeader = OrderDelegationHeader::query()->where('order_id', $order->id)->first();
             if (!$orderDelegationHeader) {
                 $orderDelegationHeader = new OrderDelegationHeader();
@@ -575,29 +621,54 @@ class OrdersController extends Controller
                     $temp['company_header_name'] = $originalCompanyHeaderName;
                 }
             } else {
-                $temp['company_header_id'] = null;
+                $temp['company_header_id'] = 0;
                 $temp['company_header_name'] = '';
+                $temp['contact_person'] = '';
+                $temp['contact_phone'] = '';
             }
             $orderDelegationHeader->fill($temp);
             $orderDelegationHeader->save();
         }
 
         // 单据文件
-        if (!empty($data['order_files'])) {
+        if (array_key_exists('order_files', $data)) {
             $orderFiles = $this->normalizeJsonArray($data['order_files']);
+            $existingOrderFiles = OrderFile::query()
+                ->where('order_id', $order->id)
+                ->get()
+                ->keyBy('id');
+
+            $oldOrderFileIds = $existingOrderFiles->keys()->toArray();
+            $newOrderFileIds = collect($orderFiles)
+                ->pluck('id')
+                ->filter()
+                ->map(static fn($id) => (int)$id)
+                ->toArray();
+            $deleteOrderFileIds = array_diff($oldOrderFileIds, $newOrderFileIds);
+            OrderFile::query()->whereIn('id', $deleteOrderFileIds)->delete();
+
             $orderFileRelations = [];
             foreach ($orderFiles as $item) {
-                if (isset($item['id'])) {
-                    $orderFile = OrderFile::query()->where('id', $item['id'])->first();
-                    $orderFile->file = $item['file'];
-                    $orderFile->update();
-                } else {
+                $orderFileId = empty($item['id']) ? null : (int)$item['id'];
+                if ($orderFileId) {
+                    $orderFile = $existingOrderFiles->get($orderFileId);
+                    if (!$orderFile) {
+                        $orderFile = new OrderFile();
+                        $orderFile->order()->associate($order);
+                    }
+                    $orderFile->file = $item['file'] ?? '';
+                    $orderFile->size = (int)($item['size'] ?? 0);
+                    $orderFile->save();
+                } elseif (!empty($item['file'])) {
                     $orderFileRelations[] = new OrderFile([
                         'file' => $item['file'],
+                        'size' => (int)($item['size'] ?? 0),
                     ]);
                 }
             }
-            $order->orderFiles()->saveMany($orderFileRelations);
+            if (!empty($orderFileRelations)) {
+                $order->orderFiles()->saveMany($orderFileRelations);
+            }
         }
 
         // 处理箱子
@@ -610,6 +681,10 @@ class OrdersController extends Controller
             Container::query()->whereIn('id', $deletedContainerIds)->delete();
 
             foreach ($containers as $container) {
+                $container = $this->normalizeContainerPayload($container);
+                if ($this->isBlankContainer($container)) {
+                    continue;
+                }
                 if (isset($container['id'])) {
                     $containerModel = Container::query()->where('id', $container['id'])->first();
                     if (!$containerModel) {
@@ -634,14 +709,34 @@ class OrdersController extends Controller
                 $forceRefreshContainerTypeSnapshot = !empty($container['container_type_snapshot_refresh']);
                 $forceRefreshFleetSnapshot = !empty($container['fleet_snapshot_refresh']);
                 $forceRefreshDriverSnapshot = !empty($container['driver_snapshot_refresh']);
+                $hasSpecificContainerWharfRefreshFlags =
+                    array_key_exists('pre_pull_wharf_snapshot_refresh', $container) ||
+                    array_key_exists('wharf_snapshot_refresh', $container) ||
+                    array_key_exists('drop_off_wharf_snapshot_refresh', $container);
                 $forceRefreshContainerWharfSnapshotInContainer = !empty($container['container_wharf_snapshot_refresh']);
-                $forceRefreshContainerWharfSnapshotCurrent = $forceRefreshContainerWharfSnapshot || $forceRefreshContainerWharfSnapshotInContainer;
-                unset($container['container_type_snapshot_refresh'], $container['fleet_snapshot_refresh'], $container['driver_snapshot_refresh'], $container['container_wharf_snapshot_refresh']);
+                $legacyForceRefreshContainerWharfSnapshot =
+                    !$hasSpecificContainerWharfRefreshFlags &&
+                    ($forceRefreshContainerWharfSnapshot || $forceRefreshContainerWharfSnapshotInContainer);
+                $forceRefreshPrePullWharfSnapshot = !empty($container['pre_pull_wharf_snapshot_refresh']) || $legacyForceRefreshContainerWharfSnapshot;
+                $forceRefreshWharfSnapshot = !empty($container['wharf_snapshot_refresh']) || $legacyForceRefreshContainerWharfSnapshot;
+                $forceRefreshDropOffWharfSnapshot = !empty($container['drop_off_wharf_snapshot_refresh']) || $legacyForceRefreshContainerWharfSnapshot;
+                unset(
+                    $container['container_type_snapshot_refresh'],
+                    $container['fleet_snapshot_refresh'],
+                    $container['driver_snapshot_refresh'],
+                    $container['container_wharf_snapshot_refresh'],
+                    $container['pre_pull_wharf_snapshot_refresh'],
+                    $container['wharf_snapshot_refresh'],
+                    $container['drop_off_wharf_snapshot_refresh']
+                );
 
                 $container['no_image'] = $container['no_image']['path'] ?? '';
                 $container['seal_number_image'] = $container['seal_number_image']['path'] ?? '';
                 $container['wharf_record_image'] = $container['wharf_record_image']['path'] ?? '';
                 $container['entered_port_record_image'] = $container['entered_port_record_image']['path'] ?? '';
+                $container['no'] = trim((string)($container['no'] ?? ''));
+                $container['seal_number'] = trim((string)($container['seal_number'] ?? ''));
+                $container['cargo_weight'] = trim((string)($container['cargo_weight'] ?? ''));
                 $container['drop_off_wharf_id'] = empty($container['drop_off_wharf_id']) ? null : (int)$container['drop_off_wharf_id'];
                 $container['fleet_id'] = empty($container['fleet_id']) ? null : (int)$container['fleet_id'];
                 $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
@@ -671,7 +766,19 @@ class OrdersController extends Controller
                     $container['fleet_name'] = '';
                 }
 
-                $currentDriver = trim((string)($container['driver'] ?? ''));
+                // 剥离前端 snapshot/latest token，还原真实司机名称
+                $rawDriver = trim((string)($container['driver'] ?? ''));
+                $snapshotPrefix = '__driver_snapshot__';
+                $latestPrefix = '__driver_latest__';
+                if (str_starts_with($rawDriver, $snapshotPrefix)) {
+                    $currentDriver = substr($rawDriver, strlen($snapshotPrefix));
+                } elseif (str_starts_with($rawDriver, $latestPrefix)) {
+                    $currentDriver = substr($rawDriver, strlen($latestPrefix));
+                } else {
+                    $currentDriver = $rawDriver;
+                }
+                $container['driver'] = $currentDriver;
+
                 if ($currentDriver !== '') {
                     $driverChanged = $currentDriver !== $originalDriver;
                     if ($driverChanged || empty($originalDriverName) || $forceRefreshDriverSnapshot) {
@@ -685,7 +792,7 @@ class OrdersController extends Controller
 
                 if (!empty($container['pre_pull_wharf_id'])) {
                     $prePullWharfIdChanged = (int)$container['pre_pull_wharf_id'] !== $originalPrePullWharfId;
-                    if ($prePullWharfIdChanged || empty($originalPrePullWharfName) || $forceRefreshContainerWharfSnapshotCurrent) {
+                    if ($prePullWharfIdChanged || empty($originalPrePullWharfName) || $forceRefreshPrePullWharfSnapshot) {
                         $container['pre_pull_wharf_name'] = YardWharf::query()->find($container['pre_pull_wharf_id'])?->name ?? '';
                     } else {
                         $container['pre_pull_wharf_name'] = $originalPrePullWharfName;
@@ -696,7 +803,7 @@ class OrdersController extends Controller
 
                 if (!empty($container['wharf_id'])) {
                     $wharfIdChanged = (int)$container['wharf_id'] !== $originalWharfId;
-                    if ($wharfIdChanged || empty($originalWharfName) || $forceRefreshContainerWharfSnapshotCurrent) {
+                    if ($wharfIdChanged || empty($originalWharfName) || $forceRefreshWharfSnapshot) {
                         $container['wharf_name'] = Wharf::query()->find($container['wharf_id'])?->name ?? '';
                     } else {
                         $container['wharf_name'] = $originalWharfName;
@@ -707,7 +814,7 @@ class OrdersController extends Controller
 
                 if (!empty($container['drop_off_wharf_id'])) {
                     $dropOffWharfIdChanged = (int)$container['drop_off_wharf_id'] !== $originalDropOffWharfId;
-                    if ($dropOffWharfIdChanged || empty($originalDropOffWharfName) || $forceRefreshContainerWharfSnapshotCurrent) {
+                    if ($dropOffWharfIdChanged || empty($originalDropOffWharfName) || $forceRefreshDropOffWharfSnapshot) {
                         $container['drop_off_wharf_name'] = YardWharf::query()->find($container['drop_off_wharf_id'])?->name ?? '';
                     } else {
                         $container['drop_off_wharf_name'] = $originalDropOffWharfName;
@@ -734,6 +841,10 @@ class OrdersController extends Controller
                         } else {
                             $containerItemModel = new ContainerItem();
                         }
+                        $containerItem = $this->normalizeContainerItemPayload($containerItem, $order->bl_no);
+                        if ($this->isBlankContainerItem($containerItem)) {
+                            continue;
+                        }
                         $containerItemModel->fill($containerItem);
                         $containerItemModel->container()->associate($containerModel);
                         $containerItemModel->save();
@@ -758,6 +869,9 @@ class OrdersController extends Controller
 
                     foreach ($containerLoadingAddresses as $containerLoadingAddress) {
                         $containerLoadingAddress = $this->normalizeJsonArray($containerLoadingAddress);
+                        if ($this->isBlankContainerLoadingAddress($containerLoadingAddress)) {
+                            continue;
+                        }
                         $containerLoadingAddressId = empty($containerLoadingAddress['id'])
                             ? null
                             : (int)$containerLoadingAddress['id'];
@@ -798,7 +912,7 @@ class OrdersController extends Controller
         // 处理提单信息
         if (!empty($data['bl_info'])) {
             $tempBlInfo = $this->normalizeOrderBlInfoPayload(
-                $this->normalizeJsonArray($data['bl_info']),
+                $this->stripModelMetaFields($this->normalizeJsonArray($data['bl_info'])),
                 $order->orderBlInfo
             );
             $orderBlInfo = $order->orderBlInfo;
@@ -909,7 +1023,8 @@ class OrdersController extends Controller
     private function resolveCompanyHeaderSnapshotName(
         ?int $companyHeaderId,
         mixed $originalCompanyHeaderName = '',
-        mixed $originalCompanyHeaderId = null
+        mixed $originalCompanyHeaderId = null,
+        mixed $incomingCompanyHeaderName = ''
     ): string {
         if (empty($companyHeaderId)) {
             return '';
@@ -918,9 +1033,17 @@ class OrdersController extends Controller
         $companyHeaderId = (int)$companyHeaderId;
         $oldCompanyHeaderId = empty($originalCompanyHeaderId) ? null : (int)$originalCompanyHeaderId;
         $oldCompanyHeaderName = trim((string)($originalCompanyHeaderName ?? ''));
+        $incomingName = trim((string)($incomingCompanyHeaderName ?? ''));
 
         if (!empty($oldCompanyHeaderId) && $oldCompanyHeaderId === $companyHeaderId && $oldCompanyHeaderName !== '') {
+            if ($incomingName !== '' && $incomingName !== $oldCompanyHeaderName) {
+                return $incomingName;
+            }
             return $oldCompanyHeaderName;
+        }
+
+        if ($incomingName !== '') {
+            return $incomingName;
         }
 
         return CompanyHeader::query()->find($companyHeaderId)?->company_name ?? '';
@@ -946,6 +1069,16 @@ class OrdersController extends Controller
         return LoadingAddress::query()->find($loadingAddressId)?->address ?? '';
     }
 
+    private function encodeHarborSnapshotName(?string $name): ?string
+    {
+        $trimmedName = trim((string)($name ?? ''));
+        if ($trimmedName === '') {
+            return null;
+        }
+
+        return json_encode($trimmedName, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
     private function buildContainerLoadingAddressPayload(
         array $containerLoadingAddress,
         ?int $loadingAddressId,
@@ -961,8 +1094,171 @@ class OrdersController extends Controller
         ];
     }
 
+    private function buildOrderPaymentPayload(array $orderPayment, ?int $companyHeaderId, string $companyHeaderName): array
+    {
+        return [
+            'company_header_id' => $companyHeaderId,
+            'company_header_name' => $companyHeaderName,
+            'no_invoice_remark' => $orderPayment['no_invoice_remark'] ?? '',
+            'cny_amount' => $orderPayment['cny_amount'] ?? 0,
+            'cny_invoice_number' => $orderPayment['cny_invoice_number'] ?? '',
+            'cny_is_cashed' => $orderPayment['cny_is_cashed'] ?? 0,
+            'usd_amount' => $orderPayment['usd_amount'] ?? 0,
+            'usd_invoice_number' => $orderPayment['usd_invoice_number'] ?? '',
+            'usd_is_cashed' => $orderPayment['usd_is_cashed'] ?? 0,
+            'remark' => $orderPayment['remark'] ?? '',
+        ];
+    }
+
+    private function buildOrderReceiptPayload(array $orderReceipt, ?int $companyHeaderId, string $companyHeaderName): array
+    {
+        return [
+            'company_header_id' => $companyHeaderId,
+            'company_header_name' => $companyHeaderName,
+            'cny_amount' => $orderReceipt['cny_amount'] ?? 0,
+            'cny_invoice_number' => $orderReceipt['cny_invoice_number'] ?? '',
+            'cny_is_cashed' => $orderReceipt['cny_is_cashed'] ?? 0,
+            'usd_amount' => $orderReceipt['usd_amount'] ?? 0,
+            'usd_invoice_number' => $orderReceipt['usd_invoice_number'] ?? '',
+            'usd_is_cashed' => $orderReceipt['usd_is_cashed'] ?? 0,
+            'remark' => $orderReceipt['remark'] ?? '',
+        ];
+    }
+
+    private function normalizeContainerPayload(array $container): array
+    {
+        $container['no'] = trim((string)($container['no'] ?? ''));
+        if ($container['no'] === '箱号') {
+            $container['no'] = '';
+        }
+        $container['seal_number'] = trim((string)($container['seal_number'] ?? ''));
+        $container['serial_number'] = trim((string)($container['serial_number'] ?? ''));
+        $container['cargo_weight'] = trim((string)($container['cargo_weight'] ?? ''));
+        $container['driver'] = trim((string)($container['driver'] ?? ''));
+        $container['driver_name'] = trim((string)($container['driver_name'] ?? ''));
+        $container['freight_status'] = ($container['freight_status'] === '' || $container['freight_status'] === null)
+            ? 0
+            : (int)$container['freight_status'];
+        $container['freight_remark'] = trim((string)($container['freight_remark'] ?? ''));
+        $container['is_entered_port'] = ($container['is_entered_port'] === '' || $container['is_entered_port'] === null)
+            ? 0
+            : (int)$container['is_entered_port'];
+        $container['loading_at'] = empty($container['loading_at']) ? null : $container['loading_at'];
+        if (isset($container['container_items'])) {
+            $container['container_items'] = array_values(array_filter(
+                $this->normalizeJsonArray($container['container_items']),
+                function ($item) use ($container) {
+                    $normalizedItem = $this->normalizeContainerItemPayload(
+                        $this->normalizeJsonArray($item),
+                        $container['bl_no'] ?? ''
+                    );
+                    return !$this->isBlankContainerItem($normalizedItem);
+                }
+            ));
+        }
+        if (isset($container['container_loading_addresses'])) {
+            $container['container_loading_addresses'] = array_values(array_filter(
+                $this->normalizeJsonArray($container['container_loading_addresses']),
+                fn($item) => !$this->isBlankContainerLoadingAddress($this->normalizeJsonArray($item))
+            ));
+        }
+
+        return $container;
+    }
+
+    private function isBlankContainer(array $container): bool
+    {
+        $no = trim((string)($container['no'] ?? ''));
+        $sealNumber = trim((string)($container['seal_number'] ?? ''));
+        $serialNumber = trim((string)($container['serial_number'] ?? ''));
+        $driver = trim((string)($container['driver'] ?? ''));
+        $cargoWeight = trim((string)($container['cargo_weight'] ?? ''));
+        $freightRemark = trim((string)($container['freight_remark'] ?? ''));
+        $containerTypeId = empty($container['container_type_id']) ? null : (int)$container['container_type_id'];
+        $fleetId = empty($container['fleet_id']) ? null : (int)$container['fleet_id'];
+        $prePullWharfId = empty($container['pre_pull_wharf_id']) ? null : (int)$container['pre_pull_wharf_id'];
+        $wharfId = empty($container['wharf_id']) ? null : (int)$container['wharf_id'];
+        $dropOffWharfId = empty($container['drop_off_wharf_id']) ? null : (int)$container['drop_off_wharf_id'];
+        $loadingAt = trim((string)($container['loading_at'] ?? ''));
+        $hasItems = !empty($container['container_items']);
+        $hasLoadingAddresses = !empty($container['container_loading_addresses']);
+
+        return $containerTypeId === null
+            && ($no === '' || $no === '箱号')
+            && $sealNumber === ''
+            && $serialNumber === ''
+            && $driver === ''
+            && $cargoWeight === ''
+            && $freightRemark === ''
+            && $fleetId === null
+            && $prePullWharfId === null
+            && $wharfId === null
+            && $dropOffWharfId === null
+            && $loadingAt === ''
+            && !$hasItems
+            && !$hasLoadingAddresses;
+    }
+
+    private function normalizeContainerItemPayload(array $containerItem, ?string $fallbackBlNo): array
+    {
+        return [
+            'id' => empty($containerItem['id']) ? null : (int)$containerItem['id'],
+            'bl_no' => trim((string)($containerItem['bl_no'] ?? $fallbackBlNo ?? '')),
+            'quantity' => (string)($containerItem['quantity'] ?? 0),
+            'gross_weight' => (string)($containerItem['gross_weight'] ?? 0),
+            'volume' => (string)($containerItem['volume'] ?? 0),
+            'remark' => trim((string)($containerItem['remark'] ?? '')),
+        ];
+    }
+
+    private function isBlankContainerItem(array $containerItem): bool
+    {
+        $quantity = trim((string)($containerItem['quantity'] ?? ''));
+        $grossWeight = trim((string)($containerItem['gross_weight'] ?? ''));
+        $volume = trim((string)($containerItem['volume'] ?? ''));
+        $remark = trim((string)($containerItem['remark'] ?? ''));
+        $blNo = trim((string)($containerItem['bl_no'] ?? ''));
+
+        return $blNo === ''
+            && ($quantity === '' || (float)$quantity === 0.0)
+            && ($grossWeight === '' || (float)$grossWeight === 0.0)
+            && ($volume === '' || (float)$volume === 0.0)
+            && $remark === '';
+    }
+
+    private function isBlankContainerLoadingAddress(array $containerLoadingAddress): bool
+    {
+        $loadingAddressId = empty($containerLoadingAddress['loading_address_id'])
+            ? null
+            : (int)$containerLoadingAddress['loading_address_id'];
+        $loadingAddress = trim((string)($containerLoadingAddress['loading_address'] ?? ''));
+        $loadingAddressName = trim((string)($containerLoadingAddress['loading_address_name'] ?? ''));
+        $address = trim((string)($containerLoadingAddress['address'] ?? ''));
+        $contactName = trim((string)($containerLoadingAddress['contact_name'] ?? ''));
+        $phone = trim((string)($containerLoadingAddress['phone'] ?? ''));
+        $remark = trim((string)($containerLoadingAddress['remark'] ?? ''));
+
+        return $loadingAddressId === null
+            && $loadingAddress === ''
+            && $loadingAddressName === ''
+            && $address === ''
+            && $contactName === ''
+            && $phone === ''
+            && $remark === '';
+    }
+
     private function normalizeOrderBlInfoPayload(array $payload, ?OrderBlInfo $existingOrderBlInfo = null): array
     {
+        $payload = $this->stripModelMetaFields($payload);
+        unset(
+            $payload['sender_name'],
+            $payload['receiver_name'],
+            $payload['notifier_name'],
+            $payload['sender_detail'],
+            $payload['receiver_detail'],
+            $payload['notifier_detail']
+        );
+
         foreach (['sender', 'receiver', 'notifier'] as $partyKey) {
             $partyIdKey = $partyKey . '_id';
             $hasPartyPayload = array_key_exists($partyKey, $payload);
@@ -1007,18 +1303,26 @@ class OrdersController extends Controller
         $incomingSnapshot = $this->normalizeJsonArray($partySnapshotPayload);
 
         if (!empty($partyId)) {
+            $resolvedSnapshot = $this->buildSftSnapshotById($partyId);
+            $incomingSnapshot['id'] = $partyId;
+
             if (!empty($existingPartyId) && $partyId === $existingPartyId && !empty($existingPartySnapshot)) {
+                $incomingName = trim((string)($incomingSnapshot['name'] ?? ''));
+                $existingName = trim((string)($existingPartySnapshot['name'] ?? ''));
+
+                if ($incomingName !== '' && $incomingName !== $existingName) {
+                    return array_merge($existingPartySnapshot, $incomingSnapshot);
+                }
+
                 $existingPartySnapshot['id'] = $partyId;
                 return $existingPartySnapshot;
             }
 
-            $resolvedSnapshot = $this->buildSftSnapshotById($partyId);
             if (!empty($resolvedSnapshot)) {
                 return $resolvedSnapshot;
             }
 
             if (!empty($incomingSnapshot)) {
-                $incomingSnapshot['id'] = $partyId;
                 return $incomingSnapshot;
             }
 
@@ -1034,6 +1338,18 @@ class OrdersController extends Controller
         }
 
         return [];
+    }
+
+    private function stripModelMetaFields(array $payload): array
+    {
+        unset(
+            $payload['id'],
+            $payload['order_id'],
+            $payload['created_at'],
+            $payload['updated_at']
+        );
+
+        return $payload;
     }
 
     private function buildSftSnapshotById(?int $sftRecordId): array
@@ -1225,6 +1541,7 @@ class OrdersController extends Controller
     {
         $adminUser = $request->user();
         $keyword = $request->input('keyword');
+        $excludeOrderId = (int)$request->input('exclude_order_id');
         // 财务单据
         $builder = Order::query()
             ->with([
@@ -1249,6 +1566,9 @@ class OrdersController extends Controller
                     ->orWhere('origin_port', 'like', '%' . $keyword . '%')
                     ->orWhere('bl_no', 'like', '%' . $keyword . '%');
             });
+        }
+        if (!empty($excludeOrderId)) {
+            $builder = $builder->where('id', '<>', $excludeOrderId);
         }
         $orders = $builder->paginate();
         return BusinessOrderResource::collection($orders);

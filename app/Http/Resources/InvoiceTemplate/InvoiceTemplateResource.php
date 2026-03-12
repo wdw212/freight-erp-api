@@ -29,7 +29,7 @@ class InvoiceTemplateResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'invoice_type_id' => $this->invoice_type_id,
+            'invoice_type_id' => empty($this->invoice_type_id) ? null : (int)$this->invoice_type_id,
             'name' => $this->name,
             'email' => $this->email,
             'remark' => $this->remark,

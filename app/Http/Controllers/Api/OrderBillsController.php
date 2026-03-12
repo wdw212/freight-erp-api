@@ -45,10 +45,35 @@ class OrderBillsController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $orderId = $request->input('order_id');
-        $orderBills = OrderBill::query()
-            ->where('order_id', $orderId)
-            ->latest()
-            ->paginate();
+        $keyword = trim((string)$request->input('keyword', ''));
+        $adminUser = $request->user();
+        $roleCodes = method_exists($adminUser, 'roles')
+            ? $adminUser->roles()->pluck('code')->toArray()
+            : [];
+
+        $builder = OrderBill::query()
+            ->with(['order.businessUser:id,name'])
+            ->latest();
+
+        if (!empty($orderId)) {
+            $builder->where('order_id', $orderId);
+        }
+
+        if (in_array('BUSINESS', $roleCodes, true) && !in_array('SUPER_ADMIN', $roleCodes, true)) {
+            $builder->whereHas('order', function ($query) use ($adminUser) {
+                $query->where('business_user_id', $adminUser->id);
+            });
+        }
+
+        if ($keyword !== '') {
+            $builder->where(function ($query) use ($keyword) {
+                $query->where('delegation_header', 'like', "%{$keyword}%")
+                    ->orWhere('job_no', 'like', "%{$keyword}%")
+                    ->orWhere('contract_no', 'like', "%{$keyword}%");
+            });
+        }
+
+        $orderBills = $builder->paginate();
         return OrderBillResource::collection($orderBills);
     }
 
@@ -141,7 +166,11 @@ class OrderBillsController extends Controller
             if (!json_validate($orderBillItems)) {
                 throw new InvalidRequestException('璐﹀崟璇︽儏鏍煎紡閿欒');
             }
-            $orderBill->update($request->all());
+            $updateData = $request->all();
+            if (empty($updateData['order_id'])) {
+                unset($updateData['order_id']);
+            }
+            $orderBill->update($updateData);
             
             // 澶勭悊璐﹀崟璇︽儏
             $orderBillItems = json_decode($orderBillItems, true);
@@ -171,11 +200,20 @@ class OrderBillsController extends Controller
                     }
                     $originalFeeTypeId = (int)($orderBillItem->fee_type_id ?? 0);
                     $originalFeeTypeName = (string)($orderBillItem->fee_type_name ?? '');
+                    $incomingFeeTypeName = trim((string)($item['fee_type_name'] ?? ''));
                     if (!empty($item['fee_type_id'])) {
                         $feeTypeIdChanged = (int)$item['fee_type_id'] !== $originalFeeTypeId;
-                        $item['fee_type_name'] = ($feeTypeIdChanged || empty($originalFeeTypeName))
-                            ? $this->resolveFeeTypeName($item['fee_type_id'])
-                            : $originalFeeTypeName;
+                        if ($feeTypeIdChanged) {
+                            $item['fee_type_name'] = $this->resolveFeeTypeName($item['fee_type_id']);
+                        } elseif ($incomingFeeTypeName !== '' && $incomingFeeTypeName !== $originalFeeTypeName) {
+                            $item['fee_type_name'] = $incomingFeeTypeName;
+                        } elseif (empty($originalFeeTypeName)) {
+                            $item['fee_type_name'] = $incomingFeeTypeName !== ''
+                                ? $incomingFeeTypeName
+                                : $this->resolveFeeTypeName($item['fee_type_id']);
+                        } else {
+                            $item['fee_type_name'] = $originalFeeTypeName;
+                        }
                     }
                 } else {
                     $orderBillItem = new OrderBillItem();
@@ -269,12 +307,25 @@ class OrderBillsController extends Controller
             }
         }
 
-        $newOrderBill = DB::transaction(function () use ($orderBill, $targetOrderId) {
+        $newOrderBill = DB::transaction(function () use ($orderBill, $targetOrder, $targetOrderId) {
             $sourceOrderBill = $orderBill->load(['orderBillItems', 'orderBillContainers']);
+            $targetOrder->loadMissing(['orderDelegationHeader', 'containers']);
 
             $newOrderBill = new OrderBill();
             $orderBillData = Arr::except($sourceOrderBill->getAttributes(), ['id', 'order_id', 'cny_amount', 'usd_amount', 'created_at', 'updated_at']);
             $orderBillData['order_id'] = $targetOrderId;
+            $orderBillData['delegation_header'] = $targetOrder->orderDelegationHeader?->company_header_display_name ?? '';
+            $orderBillData['job_no'] = $targetOrder->job_no ?? '';
+            $orderBillData['contract_no'] = $targetOrder->contract_no ?? '';
+            $orderBillData['bl_no'] = $targetOrder->bl_no ?? '';
+            $orderBillData['origin_port'] = $targetOrder->origin_port ?? '';
+            $orderBillData['destination_port'] = $targetOrder->destination_port ?? '';
+            $orderBillData['ship_name'] = $targetOrder->ship_name ?? '';
+            $orderBillData['ship_no'] = $targetOrder->ship_no ?? '';
+            $orderBillData['sailing_at'] = $targetOrder->sailing_at;
+            $orderBillData['arrival_at'] = $targetOrder->arrival_at;
+            $orderBillData['is_show_seal'] = 1;
+            $orderBillData['remark'] = null;
             $newOrderBill->fill($orderBillData);
             $newOrderBill->save();
 
@@ -311,9 +362,12 @@ class OrderBillsController extends Controller
             }
 
             $orderBillContainerRelation = [];
-            foreach ($sourceOrderBill->orderBillContainers as $orderBillContainer) {
-                $containerData = Arr::except($orderBillContainer->getAttributes(), ['id', 'order_bill_id']);
-                $orderBillContainerRelation[] = new OrderBillContainer($containerData);
+            foreach ($targetOrder->containers as $container) {
+                $orderBillContainerRelation[] = new OrderBillContainer([
+                    'no' => $container->no ?? '',
+                    'container_type' => $container->container_type_id ?? $container->container_type ?? '',
+                    'driver' => $container->driver ?? '',
+                ]);
             }
             if (!empty($orderBillContainerRelation)) {
                 $newOrderBill->orderBillContainers()->saveMany($orderBillContainerRelation);

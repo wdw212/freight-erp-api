@@ -20,8 +20,23 @@ class OrderFileObserver
      */
     public function saving(OrderFile $orderFile): void
     {
-        $size = Storage::fileSize($orderFile->file);
-        $orderFile->size = $size;
+        if (!empty($orderFile->size)) {
+            $orderFile->size = (int)$orderFile->size;
+            return;
+        }
+
+        $filePath = trim((string)($orderFile->file ?? ''));
+        if ($filePath === '') {
+            $orderFile->size = 0;
+            return;
+        }
+
+        try {
+            $orderFile->size = (int)Storage::fileSize($filePath);
+        } catch (\Throwable $e) {
+            // 某些存储驱动无法稳定返回文件大小，兜底为 0，避免单据保存失败。
+            $orderFile->size = 0;
+        }
     }
 
     /**

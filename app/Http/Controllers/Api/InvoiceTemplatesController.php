@@ -10,12 +10,46 @@ use App\Http\Requests\InvoiceTemplateRequest;
 use App\Http\Resources\InvoiceTemplate\InvoiceTemplateInfoResource;
 use App\Http\Resources\InvoiceTemplate\InvoiceTemplateResource;
 use App\Models\InvoiceTemplate;
+use App\Models\InvoiceType;
+use App\Support\InvoiceTypeValueResolver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class InvoiceTemplatesController extends Controller
 {
+    /**
+     * 归一化模板提交数据
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function normalizeTemplatePayload(array $data): array
+    {
+        $invoiceTypeRaw = $data['invoice_type_id'] ?? ($data['invoice_type'] ?? ($data['invoice_type_detail'] ?? ($data['invoice_type_name'] ?? null)));
+        $invoiceTypeId = InvoiceTypeValueResolver::resolveInvoiceTypeId(
+            $invoiceTypeRaw,
+            static fn(string $name): ?int => InvoiceType::query()
+                ->where('name', $name)
+                ->value('id')
+        );
+        $data['invoice_type_id'] = $invoiceTypeId;
+
+        if (!empty($data['cny_invoice_items'])) {
+            $data['cny_invoice_items'] = json_decode((string)$data['cny_invoice_items'], true);
+        } else {
+            $data['cny_invoice_items'] = [];
+        }
+
+        if (!empty($data['usd_invoice_items'])) {
+            $data['usd_invoice_items'] = json_decode((string)$data['usd_invoice_items'], true);
+        } else {
+            $data['usd_invoice_items'] = [];
+        }
+
+        return $data;
+    }
+
     /**
      * 列表
      * @param Request $request
@@ -42,19 +76,7 @@ class InvoiceTemplatesController extends Controller
     {
         $adminUser = $request->user();
 
-        $data = $request->all();
-
-        if (!empty($data['cny_invoice_items'])) {
-            $data['cny_invoice_items'] = json_decode($data['cny_invoice_items'], true);
-        } else {
-            $data['cny_invoice_items'] = [];
-        }
-
-        if (!empty($data['usd_invoice_items'])) {
-            $data['usd_invoice_items'] = json_decode($data['usd_invoice_items'], true);
-        } else {
-            $data['usd_invoice_items'] = [];
-        }
+        $data = $this->normalizeTemplatePayload($request->all());
 
         $invoiceTemplate->fill($data);
         $invoiceTemplate->adminUser()->associate($adminUser);
@@ -74,19 +96,7 @@ class InvoiceTemplatesController extends Controller
 
     public function update(InvoiceTemplateRequest $request, InvoiceTemplate $invoiceTemplate)
     {
-        $data = $request->all();
-
-        if (!empty($data['cny_invoice_items'])) {
-            $data['cny_invoice_items'] = json_decode($data['cny_invoice_items'], true);
-        } else {
-            $data['cny_invoice_items'] = [];
-        }
-
-        if (!empty($data['usd_invoice_items'])) {
-            $data['usd_invoice_items'] = json_decode($data['usd_invoice_items'], true);
-        } else {
-            $data['usd_invoice_items'] = [];
-        }
+        $data = $this->normalizeTemplatePayload($request->all());
 
         $invoiceTemplate->fill($data);
         $invoiceTemplate->update();

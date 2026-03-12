@@ -126,7 +126,9 @@ class SnapshotBackfillCommand extends Command
                     if ($name !== null) {
                         $count++;
                         if (!$this->dryRun) {
-                            DB::table('orders')->where('id', $row->id)->update(['origin_harbor' => $name]);
+                            DB::table('orders')->where('id', $row->id)->update([
+                                'origin_harbor' => json_encode($name, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                            ]);
                         }
                     }
                 }
@@ -153,7 +155,9 @@ class SnapshotBackfillCommand extends Command
                     if ($name !== null) {
                         $count++;
                         if (!$this->dryRun) {
-                            DB::table('orders')->where('id', $row->id)->update(['destination_harbor' => $name]);
+                            DB::table('orders')->where('id', $row->id)->update([
+                                'destination_harbor' => json_encode($name, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                            ]);
                         }
                     }
                 }
@@ -246,12 +250,14 @@ class SnapshotBackfillCommand extends Command
     private function backfillContainerWharves(): void
     {
         $wharfFields = [
-            'pre_pull_wharf_id' => 'pre_pull_wharf_name',
-            'wharf_id'          => 'wharf_name',
-            'drop_off_wharf_id' => 'drop_off_wharf_name',
+            'pre_pull_wharf_id' => ['nameField' => 'pre_pull_wharf_name', 'table' => 'yard_wharves'],
+            'wharf_id'          => ['nameField' => 'wharf_name', 'table' => 'wharves'],
+            'drop_off_wharf_id' => ['nameField' => 'drop_off_wharf_name', 'table' => 'yard_wharves'],
         ];
 
-        foreach ($wharfFields as $idField => $nameField) {
+        foreach ($wharfFields as $idField => $config) {
+            $nameField = $config['nameField'];
+            $lookupTable = $config['table'];
             $this->line("→ containers.{$nameField} ...");
             $count = 0;
 
@@ -262,9 +268,9 @@ class SnapshotBackfillCommand extends Command
                         ->orWhere($nameField, '');
                 })
                 ->orderBy('id')
-                ->chunk(200, function ($rows) use (&$count, $idField, $nameField) {
+                ->chunk(200, function ($rows) use (&$count, $idField, $nameField, $lookupTable) {
                     foreach ($rows as $row) {
-                        $name = DB::table('wharves')->where('id', $row->{$idField})->value('name');
+                        $name = DB::table($lookupTable)->where('id', $row->{$idField})->value('name');
                         if ($name !== null) {
                             $count++;
                             if (!$this->dryRun) {
