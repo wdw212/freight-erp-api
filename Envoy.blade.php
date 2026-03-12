@@ -4,24 +4,31 @@
     $appDir = '/www/wwwroot/124.222.232.138_82/freight-erp-api';
     $backupDir = '/www/backup/freight-erp-api';
     $timestamp = date('YmdHis');
+    $branch = 'main';
 @endsetup
 
 {{-- 仅拉代码，不迁移（日常热更新） --}}
 @task('deploy', ['on' => 'web'])
 cd {{ $appDir }}
-git pull
-php artisan config:cache
-php artisan route:cache
+git fetch --all --prune
+git checkout {{ $branch }}
+git pull --ff-only origin {{ $branch }}
+php artisan optimize:clear
+php artisan optimize
+php artisan queue:restart
 @endtask
 
 {{-- 拉代码 + 依赖 + 迁移（有新依赖或迁移时使用） --}}
 @task('deploy-update', ['on' => 'web'])
 cd {{ $appDir }}
-git pull
+git fetch --all --prune
+git checkout {{ $branch }}
+git pull --ff-only origin {{ $branch }}
 composer install --no-dev --optimize-autoloader
 php artisan migrate --force
-php artisan config:cache
-php artisan route:cache
+php artisan optimize:clear
+php artisan optimize
+php artisan queue:restart
 @endtask
 
 {{-- 完整部署：备份 DB + 拉代码 + 迁移 + 快照回填（首次上线快照功能时使用） --}}
@@ -35,7 +42,9 @@ echo "备份完成: {{ $backupDir }}/db_{{ $timestamp }}.sql"
 
 echo "=== [2/5] 拉取最新代码 ==="
 cd {{ $appDir }}
-git pull
+git fetch --all --prune
+git checkout {{ $branch }}
+git pull --ff-only origin {{ $branch }}
 
 echo "=== [3/5] 安装依赖 ==="
 composer install --no-dev --optimize-autoloader
@@ -47,8 +56,9 @@ echo "=== [5/5] 回填历史快照字段 ==="
 php artisan snapshot:backfill
 
 echo "=== 清理缓存 ==="
-php artisan config:cache
-php artisan route:cache
+php artisan optimize:clear
+php artisan optimize
+php artisan queue:restart
 
 echo "=== 部署完成 ==="
 @endtask
