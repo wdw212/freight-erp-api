@@ -26,6 +26,11 @@ use Throwable;
 
 class InvoicesController extends Controller
 {
+    private function hasRole(Request $request, string $roleCode): bool
+    {
+        return in_array($roleCode, $this->currentRoleCodes($request), true);
+    }
+
     private function currentRoleCodes(Request $request): array
     {
         $adminUser = $request->user();
@@ -38,7 +43,17 @@ class InvoicesController extends Controller
 
     private function isSuperAdmin(Request $request): bool
     {
-        return in_array('SUPER_ADMIN', $this->currentRoleCodes($request), true);
+        return $this->hasRole($request, 'SUPER_ADMIN');
+    }
+
+    private function isFinance(Request $request): bool
+    {
+        return $this->hasRole($request, 'FINANCE');
+    }
+
+    private function isBusiness(Request $request): bool
+    {
+        return $this->hasRole($request, 'BUSINESS');
     }
 
     private function normalizeInvoiceNumber(mixed $value): string
@@ -60,6 +75,52 @@ class InvoicesController extends Controller
         if ($cnyInvoiceNo === '' && $usdInvoiceNo === '') {
             throw new InvalidRequestException('确认开票前请先填写发票号');
         }
+    }
+
+    private function hasInvoiceNumber(string $cnyInvoiceNo, string $usdInvoiceNo): bool
+    {
+        return $cnyInvoiceNo !== '' || $usdInvoiceNo !== '';
+    }
+
+    private function isInvoiceLockedForBusiness(Invoice $invoice): bool
+    {
+        return $this->hasInvoiceNumber(
+            $this->normalizeInvoiceNumber($invoice->cny_invoice_no),
+            $this->normalizeInvoiceNumber($invoice->usd_invoice_no)
+        ) || !empty($invoice->confirm_at);
+    }
+
+    private function ensureBusinessCannotOperateInvoiceNumber(
+        Request $request,
+        string $cnyInvoiceNo,
+        string $usdInvoiceNo,
+        bool $shouldConfirm
+    ): void {
+        if ($this->isSuperAdmin($request) || !$this->isBusiness($request) || $this->isFinance($request)) {
+            return;
+        }
+
+        if ($this->hasInvoiceNumber($cnyInvoiceNo, $usdInvoiceNo) || $shouldConfirm) {
+            throw new InvalidRequestException('仅财务或超管可以填写发票号并确认开票', 403);
+        }
+    }
+
+    private function currentInvoiceItemsForUpdate(Invoice $invoice): array
+    {
+        return $invoice->invoiceItems()
+            ->orderBy('id')
+            ->get()
+            ->map(function (InvoiceItem $invoiceItem) {
+                return [
+                    'id' => $invoiceItem->id,
+                    'currency' => $invoiceItem->currency,
+                    'fee_type_id' => empty($invoiceItem->fee_type_id) ? null : (int)$invoiceItem->fee_type_id,
+                    'unit' => $this->normalizeNullableInteger($invoiceItem->unit),
+                    'quantity' => $this->normalizeNullableInteger($invoiceItem->quantity),
+                    'amount' => $this->normalizeDecimal($invoiceItem->amount),
+                ];
+            })
+            ->all();
     }
 
     private function syncOrderInvoiceLockStatus(mixed $orderId): void
@@ -355,6 +416,7 @@ class InvoicesController extends Controller
         $cnyInvoiceNo = $this->normalizeInvoiceNumber($cnyInvoiceNo);
         $usdInvoiceNo = $this->normalizeInvoiceNumber($usdInvoiceNo);
         $shouldConfirm = $this->shouldConfirmInvoice($request);
+        $this->ensureBusinessCannotOperateInvoiceNumber($request, $cnyInvoiceNo, $usdInvoiceNo, $shouldConfirm);
         $this->ensureConfirmRequiresInvoiceNumber($shouldConfirm, $cnyInvoiceNo, $usdInvoiceNo);
 
         $this->syncOrderFinishStatus($orderId, $isFinish, $commission);
@@ -448,10 +510,43 @@ class InvoicesController extends Controller
             $amountSummary = $this->summarizeInvoiceItemAmounts($invoiceItems);
 
             $isSuperAdmin = $this->isSuperAdmin($request);
+            $isFinance = $this->isFinance($request);
+            $isBusiness = $this->isBusiness($request);
             $cnyInvoiceNo = $this->normalizeInvoiceNumber($cnyInvoiceNo);
             $usdInvoiceNo = $this->normalizeInvoiceNumber($usdInvoiceNo);
             $isAlreadyConfirmed = !empty($invoice->confirm_at);
             $shouldConfirm = $isAlreadyConfirmed || $this->shouldConfirmInvoice($request);
+
+            if (!$isSuperAdmin && $isFinance) {
+                $orderId = $invoice->order_id;
+                $invoiceTypeId = (int)($invoice->invoice_type_id ?? 0);
+                $email = (string)($invoice->email ?? '');
+                $remark = (string)($invoice->remark ?? '');
+                $invoiceDate = $invoice->invoice_date;
+                $isFinish = (int)($invoice->is_finish ?? 0);
+                $commission = $this->normalizeDecimal($invoice->commission);
+                $taxRate = $this->normalizeDecimal($invoice->tax_rate);
+                $taxAmount = $this->normalizeDecimal($invoice->tax_amount);
+                $cnyRemark = (string)($invoice->cny_remark ?? '');
+                $usdRemark = (string)($invoice->usd_remark ?? '');
+                $purchaseEntityId = $invoice->purchase_entity_id;
+                $purchaseUscCode = (string)($invoice->purchase_usc_code ?? '');
+                $saleEntityId = $invoice->sale_entity_id;
+                $saleUscCode = (string)($invoice->sale_usc_code ?? '');
+                $invoiceItems = $this->currentInvoiceItemsForUpdate($invoice);
+                $amountSummary = [
+                    'cny' => number_format((float)($invoice->total_cny_amount ?? 0), 2, '.', ''),
+                    'usd' => number_format((float)($invoice->total_usd_amount ?? 0), 2, '.', ''),
+                ];
+            }
+
+            if (!$isSuperAdmin && $isBusiness && !$isFinance) {
+                $this->ensureBusinessCannotOperateInvoiceNumber($request, $cnyInvoiceNo, $usdInvoiceNo, $shouldConfirm);
+                if ($this->isInvoiceLockedForBusiness($invoice)) {
+                    throw new InvalidRequestException('发票号已填写或已确认开票，业务员不可修改申请开票', 403);
+                }
+            }
+
             if ($isAlreadyConfirmed && !$isSuperAdmin) {
                 $cnyInvoiceNo = $this->normalizeInvoiceNumber($invoice->cny_invoice_no);
                 $usdInvoiceNo = $this->normalizeInvoiceNumber($invoice->usd_invoice_no);
@@ -554,10 +649,14 @@ class InvoicesController extends Controller
      */
     public function destroy(Request $request, Invoice $invoice): Response
     {
-        $adminUser = $request->user();
-        $roleCodes = $adminUser->roles()->pluck('code')->toArray();
-        if (!in_array('SUPER_ADMIN', $roleCodes, true)) {
-            throw new InvalidRequestException('仅超管可以删除开票管理信息', 403);
+        if (!$this->isSuperAdmin($request)) {
+            if ($this->isBusiness($request) && !$this->isFinance($request) && !$this->isInvoiceLockedForBusiness($invoice)) {
+                // 业务员仅允许删除未填发票号且未确认的申请开票
+            } elseif ($this->isBusiness($request) && !$this->isFinance($request)) {
+                throw new InvalidRequestException('发票号已填写或已确认开票，业务员不可删除申请开票', 403);
+            } else {
+                throw new InvalidRequestException('仅业务员在未填发票号且未确认时可删除，或超管可删除开票管理信息', 403);
+            }
         }
 
         DB::transaction(function () use ($invoice) {
