@@ -26,17 +26,7 @@ class SystemInstall extends Command
      */
     public function handle(): int
     {
-        if (app()->isProduction()) {
-            $this->error('生产环境禁止执行 system:install，该命令包含 migrate:fresh。');
-            return SymfonyCommand::FAILURE;
-        }
-
-        $this->info('--系统数据初始化开始--');
-        $this->call('migrate');
-        $this->call('migrate:fresh');
-        $this->call('db:seed');
-        $this->call('storage:link');
-        $this->info('--系统数据初始化完成--');
-        return SymfonyCommand::SUCCESS;
+        $this->error('system:install 已禁用，该命令包含 migrate:fresh，禁止在任何环境直接执行。');
+        return SymfonyCommand::FAILURE;
     }
 }
