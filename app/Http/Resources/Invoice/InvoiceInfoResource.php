@@ -9,11 +9,6 @@ class InvoiceInfoResource extends JsonResource
 {
     private function resolveFinishStatus(): int
     {
-        $orderFinishStatus = $this->order?->is_finish;
-        if ($orderFinishStatus !== null) {
-            return (int)$orderFinishStatus;
-        }
-
         return (int)($this->is_finish ?? 0);
     }
 
